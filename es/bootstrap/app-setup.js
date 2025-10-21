@@ -1,0 +1,10 @@
+/*!
+ * ***********************************
+ * ldesign-simple-app v1.0.0       *
+ * Built with rollup               *
+ * Build time: 2024-10-21 11:21:49 *
+ * Build mode: production          *
+ * Minified: No                    *
+ * ***********************************
+ */import{watch as w}from"vue";function y(t,n){const{localeRef:c,i18nPlugin:o,cachePlugin:s,colorPlugin:g,sizePlugin:u,templatePlugin:e}=n;t.provide("locale",c),t.provide("app-locale",c),s&&t.use(s),t.use(e),t.use(g),t.use(u),o.setupVueApp&&o.setupVueApp(t),t.config.globalProperties.$getLocale=()=>c.value,t.config.globalProperties.$setLocale=l=>{o.api?.changeLocale&&o.api.changeLocale(l)},import.meta.env.DEV&&typeof window<"u"&&(window.__APP__=t)}const f=new WeakMap;function _(t,n,c,o,s,g){const u=[];if(t?.state){t.state.set("locale",n.value);const e=w(n,l=>{t.state.set("locale",l)},{flush:"post"});u.push(e)}try{const e=t?.api,l=t?.router,i=e?.i18n;if(i&&l&&typeof i.on=="function"){let a=null;const d=E=>{a!==null&&clearTimeout(a),a=window.setTimeout(()=>{try{const p=(typeof l.getCurrentRoute=="function"?l.getCurrentRoute().value:null)?.meta?.titleKey,r=typeof e?.t=="function"?e.t.bind(e):m=>m;p?document.title=`${r(p)} - ${r("app.name")}`:document.title=r("app.name")}catch(p){console.warn("Failed to update title on locale change:",p)}a=null},100)};i.on("localeChanged",d),u.push(()=>{a!==null&&(clearTimeout(a),a=null),typeof i.off=="function"&&i.off("localeChanged",d)})}}catch(e){console.warn("i18n title sync setup failed:",e)}if(t&&u.length>0&&(f.set(t,u),typeof t.onBeforeUnmount=="function"&&t.onBeforeUnmount(()=>{h(t)})),import.meta.env.DEV)try{typeof window<"u"&&(window.__ENGINE__=t(window).__LOCALE__=n)}catch{}}function h(t){const n=f.get(t);n&&(n.forEach(c=>{try{c()}catch(o){console.warn("Error during engine cleanup:",o)}}),f.delete(t))}/*! End of ldesign-simple-app | Powered by @ldesign/builder */export{h as cleanupEngineReady,_ as setupEngineReady,y as setupVueApp};
+//# sourceMappingURL=app-setup.js.map
