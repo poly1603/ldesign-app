@@ -1,24 +1,10 @@
 <template>
   <div class="image-captcha-wrapper">
-    <BaseInput
-      v-model="inputValue"
-      :placeholder="placeholder"
-      :maxlength="maxlength"
-      :error-message="errorMessage"
-      prefix-icon="icon-shield"
-      @update:model-value="handleInput"
-      @enter="$emit('enter')"
-    />
+    <BaseInput v-model="inputValue" :placeholder="placeholder" :maxlength="maxlength" :error-message="errorMessage"
+      prefix-icon="icon-shield" @update:model-value="handleInput" @enter="$emit('enter')" />
     <div class="captcha-image-container" @click="refreshCaptcha">
-      <img
-        v-if="imageUrl"
-        :src="imageUrl"
-        alt="验证码"
-        class="captcha-image"
-        :class="{ loading: isLoading }"
-        loading="lazy"
-        decoding="async"
-      />
+      <img v-if="imageUrl" :src="imageUrl" alt="验证码" class="captcha-image" :class="{ loading: isLoading }"
+        loading="lazy" decoding="async" />
       <div v-else class="captcha-placeholder">
         <span>点击获取验证码</span>
       </div>
@@ -65,15 +51,15 @@ const handleInput = (value: string) => {
 
 const refreshCaptcha = async () => {
   if (isLoading.value) return
-  
+
   isLoading.value = true
   emit('refresh')
-  
+
   // 清理之前的定时器
   if (loadingTimer !== null) {
     clearTimeout(loadingTimer)
   }
-  
+
   // 模拟加载延迟
   loadingTimer = window.setTimeout(() => {
     isLoading.value = false
@@ -106,6 +92,7 @@ onBeforeUnmount(() => {
 
 .image-captcha-wrapper :deep(.base-input-wrapper) {
   flex: 1;
+  overflow: hidden;
   margin-bottom: 0;
 }
 
@@ -169,8 +156,13 @@ onBeforeUnmount(() => {
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* 图标样式 */

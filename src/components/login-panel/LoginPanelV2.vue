@@ -55,20 +55,20 @@
         </div>
 
         <div class="form-item">
-          <div class="sms-row">
-            <BaseInput v-model="phoneForm.code" placeholder="验证码" prefix-icon="messageSquare" :maxlength="6" />
-            <button type="button" class="sms-btn" :disabled="countdown > 0 || !phoneForm.phone" @click="sendSmsCode">
-              {{ countdown > 0 ? `${countdown}s` : '获取验证码' }}
-            </button>
-          </div>
-        </div>
-
-        <div class="form-item">
           <div class="captcha-row">
             <BaseInput v-model="phoneForm.captcha" placeholder="请输入验证码" prefix-icon="shield" :maxlength="4" />
             <div class="captcha-image" @click="refreshCaptcha">
               <img :src="captchaUrl" alt="验证码" loading="lazy" decoding="async" />
             </div>
+          </div>
+        </div>
+
+        <div class="form-item">
+          <div class="sms-row">
+            <BaseInput v-model="phoneForm.code" placeholder="验证码" prefix-icon="messageSquare" :maxlength="6" />
+            <button type="button" class="sms-btn" :disabled="countdown > 0 || !phoneForm.phone" @click="sendSmsCode">
+              {{ countdown > 0 ? `${countdown}s` : '获取验证码' }}
+            </button>
           </div>
         </div>
 
@@ -262,16 +262,12 @@ onBeforeUnmount(() => {
 
 .login-container {
   width: 100%;
-  max-width: 400px;
-  background: white;
-  border-radius: 20px;
-  padding: 40px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  max-width: 450px;
 }
 
 /* Tab 样式 */
 .login-tabs {
-  margin-bottom: 32px;
+  margin-bottom: 24px;
 }
 
 .tabs-track {
@@ -341,10 +337,12 @@ onBeforeUnmount(() => {
 
 .captcha-row :deep(.base-input-wrapper) {
   flex: 1;
+  overflow: hidden;
 }
 
 .sms-row :deep(.base-input-wrapper) {
   flex: 1;
+  overflow: hidden;
 }
 
 .captcha-image {

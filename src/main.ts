@@ -61,11 +61,11 @@ async function main() {
     // 启动应用
     const { bootstrap } = await import('./bootstrap')
     const { showErrorPage } = await import('./bootstrap/error-handler')
-    
+
     try {
       await bootstrap()
     } catch (error) {
-      console.error('❌ 应用启动失败:', error)
+      console.error('[ERROR] 应用启动失败:', error)
       showErrorPage(error as Error)
     }
 
@@ -76,7 +76,7 @@ async function main() {
         performance.measure('app-boot-time', 'app-start', 'app-ready')
         const measure = performance.getEntriesByName('app-boot-time')[0]
         if (import.meta.env.DEV) {
-          console.log(`🚀 App boot time: ${Math.round(measure.duration)}ms`)
+          console.log(`[INFO] App boot time: ${Math.round(measure.duration)}ms`)
         }
       } catch (e) {
         // Ignore
@@ -90,7 +90,7 @@ async function main() {
       })
     }
   } catch (error) {
-    console.error('❌ 启动失败:', error)
+    console.error('[ERROR] 启动失败:', error)
   }
 }
 

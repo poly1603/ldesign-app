@@ -175,7 +175,7 @@
     "dev:vite": "vite --host 0.0.0.0",
     "build": "launcher build",
     "build:vite": "vite build",
-    "build:lib": "node ../packages/builder/bin/ldesign-builder.js build",
+    "build:lib": "ldesign-builder build",
     "build:test": "node build-test.js",
     "build:all": "npm run build:lib && npm run build",
     "preview": "launcher preview",
