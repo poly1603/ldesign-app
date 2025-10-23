@@ -21,22 +21,22 @@
 
     <!-- Demo Showcase -->
     <div class="demos">
-      <h2 class="demos-title">功能演示</h2>
+      <h2 class="demos-title">{{ t('home.demos.title') }}</h2>
       <div class="demos-grid">
         <RouterLink to="/crypto" class="demo-card">
           <Lock class="demo-icon" />
-          <h3>加密演示</h3>
-          <p>体验 AES、RSA、哈希算法等加密功能</p>
+          <h3>{{ t('home.demos.crypto.title') }}</h3>
+          <p>{{ t('home.demos.crypto.description') }}</p>
         </RouterLink>
         <RouterLink to="/http" class="demo-card">
           <Globe class="demo-icon" />
-          <h3>HTTP 演示</h3>
-          <p>体验网络请求、拦截器、缓存等功能</p>
+          <h3>{{ t('home.demos.http.title') }}</h3>
+          <p>{{ t('home.demos.http.description') }}</p>
         </RouterLink>
         <RouterLink to="/api" class="demo-card">
           <Server class="demo-icon" />
-          <h3>API 演示</h3>
-          <p>体验 API 引擎、插件系统、批量请求等功能</p>
+          <h3>{{ t('home.demos.api.title') }}</h3>
+          <p>{{ t('home.demos.api.description') }}</p>
         </RouterLink>
       </div>
     </div>
@@ -114,7 +114,7 @@ onMounted(() => {
   const currentVisits = parseInt(localStorage.getItem('visitCount') || '0', 10)
   const newVisits = currentVisits + 1
   visitCount.value = newVisits
-  
+
   // 使用 requestIdleCallback 延迟非关键的 localStorage 写入
   if ('requestIdleCallback' in window) {
     requestIdleCallback(() => {
@@ -143,52 +143,52 @@ onMounted(() => {
 .home-container {
   width: 100%;
   margin: 0 auto;
-  padding: 20px;
+  padding: var(--size-spacing-xl);
 }
 
 /* Hero section */
 .hero {
   text-align: center;
-  padding: 60px 20px;
+  padding: var(--size-spacing-4xl) var(--size-spacing-xl);
   background: var(--color-bg-container);
-  border-radius: 16px;
+  border-radius: var(--size-radius-2xl);
   box-shadow: var(--shadow-md);
-  margin-bottom: 40px;
+  margin-bottom: var(--size-spacing-4xl);
 }
 
 .hero-title {
-  font-size: 48px;
-  font-weight: 800;
-  margin: 0 0 20px 0;
+  font-size: var(--size-font-display2);
+  font-weight: var(--size-font-weight-extrabold);
+  margin: 0 0 var(--size-spacing-xl) 0;
   color: var(--color-primary-default);
 }
 
 .hero-subtitle {
-  font-size: 20px;
+  font-size: var(--size-font-xl);
   color: var(--color-text-secondary);
-  margin: 0 0 10px 0;
+  margin: 0 0 var(--size-spacing-md) 0;
 }
 
 .hero-description {
-  font-size: 16px;
+  font-size: var(--size-font-md);
   color: var(--color-text-tertiary);
-  margin: 0 0 40px 0;
+  margin: 0 0 var(--size-spacing-4xl) 0;
 }
 
 .hero-actions {
   display: flex;
-  gap: 20px;
+  gap: var(--size-spacing-xl);
   justify-content: center;
   flex-wrap: wrap;
 }
 
 .btn {
-  padding: 14px 32px;
-  border-radius: 8px;
+  padding: var(--size-comp-paddingTB-l) var(--size-comp-paddingLR-xl);
+  border-radius: var(--size-radius-lg);
   text-decoration: none;
-  font-size: 16px;
-  font-weight: 600;
-  transition: all 0.3s;
+  font-size: var(--size-font-md);
+  font-weight: var(--size-font-weight-semibold);
+  transition: all var(--size-duration-normal);
   display: inline-block;
 }
 
@@ -215,33 +215,33 @@ onMounted(() => {
 
 /* Demo showcase */
 .demos {
-  margin-bottom: 40px;
+  margin-bottom: var(--size-spacing-4xl);
 }
 
 .demos-title {
   text-align: center;
-  font-size: 36px;
+  font-size: var(--size-font-display3);
   color: var(--color-text-primary);
-  margin: 0 0 40px 0;
+  margin: 0 0 var(--size-spacing-4xl) 0;
 }
 
 .demos-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 24px;
-  margin-bottom: 40px;
+  gap: var(--size-spacing-2xl);
+  margin-bottom: var(--size-spacing-4xl);
 }
 
 .demo-card {
   background: var(--color-bg-container);
-  padding: 30px;
-  border-radius: 12px;
+  padding: var(--size-spacing-3xl);
+  border-radius: var(--size-radius-xl);
   box-shadow: var(--shadow-sm);
   text-align: center;
-  transition: all 0.3s;
+  transition: all var(--size-duration-normal);
   text-decoration: none;
   color: inherit;
-  border: 2px solid transparent;
+  border: var(--size-border-width-medium) solid transparent;
 }
 
 .demo-card:hover {
@@ -251,50 +251,50 @@ onMounted(() => {
 }
 
 .demo-icon {
-  width: 48px;
-  height: 48px;
-  margin: 0 auto 20px;
+  width: var(--size-icon-giant);
+  height: var(--size-icon-giant);
+  margin: 0 auto var(--size-spacing-xl);
   color: var(--color-primary-default);
 }
 
 .demo-card h3 {
-  font-size: 20px;
+  font-size: var(--size-font-xl);
   color: var(--color-text-primary);
-  margin: 0 0 10px 0;
+  margin: 0 0 var(--size-spacing-md) 0;
 }
 
 .demo-card p {
   color: var(--color-text-secondary);
   margin: 0;
-  line-height: 1.6;
-  font-size: 14px;
+  line-height: var(--size-line-relaxed);
+  font-size: var(--size-font-base);
 }
 
 /* Features display */
 .features {
-  margin-bottom: 40px;
+  margin-bottom: var(--size-spacing-4xl);
 }
 
 .features-title {
   text-align: center;
-  font-size: 36px;
+  font-size: var(--size-font-display3);
   color: var(--color-text-primary);
-  margin: 0 0 40px 0;
+  margin: 0 0 var(--size-spacing-4xl) 0;
 }
 
 .features-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 30px;
+  gap: var(--size-spacing-3xl);
 }
 
 .feature-card {
   background: var(--color-bg-container);
-  padding: 30px;
-  border-radius: 12px;
+  padding: var(--size-spacing-3xl);
+  border-radius: var(--size-radius-xl);
   box-shadow: var(--shadow-sm);
   text-align: center;
-  transition: all 0.3s;
+  transition: all var(--size-duration-normal);
 }
 
 .feature-card:hover {
@@ -303,34 +303,34 @@ onMounted(() => {
 }
 
 .feature-icon {
-  width: 48px;
-  height: 48px;
-  margin: 0 auto 20px;
+  width: var(--size-icon-giant);
+  height: var(--size-icon-giant);
+  margin: 0 auto var(--size-spacing-xl);
   color: var(--color-primary-default);
 }
 
 .feature-card h3 {
-  font-size: 20px;
+  font-size: var(--size-font-xl);
   color: var(--color-text-primary);
-  margin: 0 0 10px 0;
+  margin: 0 0 var(--size-spacing-md) 0;
 }
 
 .feature-card p {
   color: var(--color-text-secondary);
   margin: 0;
-  line-height: 1.6;
+  line-height: var(--size-line-relaxed);
 }
 
 /* 统计数据 */
 .stats {
   background: var(--color-bg-container);
-  border-radius: 12px;
-  padding: 40px;
+  border-radius: var(--size-radius-xl);
+  padding: var(--size-spacing-4xl);
   display: flex;
   justify-content: space-around;
   box-shadow: var(--shadow-sm);
   flex-wrap: wrap;
-  gap: 30px;
+  gap: var(--size-spacing-3xl);
 }
 
 .stat-item {
@@ -338,26 +338,26 @@ onMounted(() => {
 }
 
 .stat-value {
-  font-size: 36px;
-  font-weight: 800;
+  font-size: var(--size-font-display3);
+  font-weight: var(--size-font-weight-extrabold);
   color: var(--color-primary-default);
-  margin-bottom: 10px;
+  margin-bottom: var(--size-spacing-md);
 }
 
 .stat-label {
-  font-size: 14px;
+  font-size: var(--size-font-base);
   color: var(--color-text-secondary);
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: var(--size-letter-normal);
 }
 
 @media (max-width: 768px) {
   .hero-title {
-    font-size: 32px;
+    font-size: var(--size-font-h1);
   }
 
   .hero-subtitle {
-    font-size: 16px;
+    font-size: var(--size-font-md);
   }
 
   .features-grid {

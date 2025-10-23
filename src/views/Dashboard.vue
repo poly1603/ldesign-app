@@ -159,11 +159,11 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="route in allRoutes" :key="route.path">
-                <td>{{ route.path }}</td>
-                <td>{{ route.name || '-' }}</td>
+              <tr v-for="routeItem in allRoutes" :key="routeItem.path">
+                <td>{{ routeItem.path }}</td>
+                <td>{{ routeItem.name || '-' }}</td>
                 <td>
-                  <span v-if="route.meta?.requiresAuth" class="badge badge-warning">
+                  <span v-if="routeItem.meta?.requiresAuth" class="badge badge-warning">
                     {{ t('dashboard.requiresAuth') || '需要认证' }}
                   </span>
                   <span v-else class="badge badge-success">
@@ -171,7 +171,7 @@
                   </span>
                 </td>
                 <td>
-                  <button @click="navigateTo(route.path)" class="link-button">
+                  <button @click="navigateTo(routeItem.path)" class="link-button">
                     {{ t('common.visit') || '访问' }}
                   </button>
                 </td>
@@ -299,7 +299,7 @@ const updateHistory = () => {
     time: timeStr
   })
   
-  // 只保留最近5条记录（从10条减少到5条，减少内存占用）
+  // 只保留最近5条记录
   const MAX_HISTORY = 5
   if (routeHistory.value.length > MAX_HISTORY) {
     routeHistory.value = routeHistory.value.slice(0, MAX_HISTORY)
@@ -317,7 +317,6 @@ const updateHistory = () => {
 
 // 更新性能数据
 const updatePerformance = () => {
-  // 模拟性能数据
   performance.value = {
     navigationTime: Math.round(Math.random() * 100 + 50),
     cacheHitRate: Math.round(Math.random() * 30 + 70),
@@ -370,7 +369,7 @@ onMounted(() => {
   // 刷新缓存统计
   refreshCacheStats()
   
-  // 定时更新性能数据 - 增加间隔到 10 秒以减少 CPU 和内存占用
+  // 定时更新性能数据
   performanceTimer = window.setInterval(() => {
     updatePerformance()
     refreshCacheStats()

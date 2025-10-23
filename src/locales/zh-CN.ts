@@ -29,7 +29,14 @@ export default {
     dashboard: '仪表盘',
     login: '登录',
     logout: '退出登录',
-    language: '语言'
+    language: '语言',
+    performance: '性能监控',
+    state: '状态管理',
+    event: '事件系统',
+    concurrency: '并发控制',
+    plugin: '插件系统',
+    demos: '功能演示',
+    engineDemos: 'Engine 演示'
   },
 
   // 首页
@@ -37,6 +44,21 @@ export default {
     title: '欢迎来到 LDesign',
     subtitle: '现代化、高性能的前端开发框架',
     description: '这是一个基于 @ldesign/engine 构建的简单应用示例',
+    demos: {
+      title: '功能演示',
+      crypto: {
+        title: '加密演示',
+        description: '体验 AES、RSA、哈希算法等加密功能'
+      },
+      http: {
+        title: 'HTTP 演示',
+        description: '体验网络请求、拦截器、缓存等功能'
+      },
+      api: {
+        title: 'API 演示',
+        description: '体验 API 引擎、插件系统、批量请求等功能'
+      }
+    },
     features: {
       title: '核心特性',
       list: {
@@ -135,19 +157,447 @@ export default {
   // 加密演示页面
   crypto: {
     title: '加密演示',
-    subtitle: '体验 @ldesign/crypto 加密功能'
+    subtitle: '体验 @ldesign/crypto 加密功能',
+    aes: {
+      title: 'AES 加密',
+      plaintext: '原始文本',
+      plaintextPlaceholder: '输入要加密的文本',
+      key: '密钥',
+      keyPlaceholder: '输入密钥',
+      encrypt: '加密',
+      decrypt: '解密',
+      clear: '清除',
+      encryptedResult: '加密结果',
+      decryptedResult: '解密结果'
+    },
+    hash: {
+      title: '哈希算法',
+      plaintext: '原始文本',
+      plaintextPlaceholder: '输入要计算哈希的文本',
+      algorithm: '算法',
+      compute: '计算哈希',
+      clear: '清除',
+      result: '哈希结果'
+    },
+    hmac: {
+      title: 'HMAC 消息认证',
+      message: '消息内容',
+      messagePlaceholder: '输入消息内容',
+      key: '密钥',
+      keyPlaceholder: '输入密钥',
+      generate: '生成 HMAC',
+      verify: '验证',
+      clear: '清除',
+      result: 'HMAC 结果',
+      verification: '验证结果',
+      valid: '有效',
+      invalid: '无效'
+    },
+    rsa: {
+      title: 'RSA 加密',
+      generateKeys: '生成密钥对',
+      publicKey: '公钥',
+      privateKey: '私钥',
+      plaintext: '原始文本',
+      plaintextPlaceholder: '输入要加密的文本',
+      encrypt: '加密',
+      decrypt: '解密',
+      clear: '清除',
+      encryptedResult: '加密结果',
+      decryptedResult: '解密结果'
+    },
+    base64: {
+      title: 'Base64 编码',
+      plaintext: '原始文本',
+      plaintextPlaceholder: '输入要编码的文本',
+      encode: '编码',
+      decode: '解码',
+      clear: '清除',
+      encodedResult: '编码结果',
+      decodedResult: '解码结果'
+    }
   },
 
   // HTTP 演示页面
   http: {
     title: 'HTTP 演示',
-    subtitle: '体验 @ldesign/http 网络请求功能'
+    subtitle: '体验 @ldesign/http 网络请求功能',
+    get: {
+      title: 'GET 请求',
+      url: '请求 URL',
+      urlPlaceholder: '输入 API 地址',
+      send: '发送请求',
+      sending: '请求中...',
+      clear: '清除',
+      response: '响应结果',
+      error: '错误信息'
+    },
+    post: {
+      title: 'POST 请求',
+      url: '请求 URL',
+      urlPlaceholder: '输入 API 地址',
+      data: '请求数据 (JSON)',
+      dataPlaceholder: '输入 JSON 数据',
+      send: '发送请求',
+      sending: '请求中...',
+      clear: '清除',
+      response: '响应结果',
+      error: '错误信息'
+    },
+    interceptor: {
+      title: '拦截器',
+      description: '拦截器可以拦截请求和响应，用于添加认证、日志记录等功能。',
+      addRequest: '添加请求拦截器',
+      addResponse: '添加响应拦截器',
+      clear: '清除拦截器',
+      logs: '拦截器日志'
+    },
+    cache: {
+      title: '请求缓存',
+      url: '缓存 URL',
+      urlPlaceholder: '输入要缓存的 API',
+      ttl: '缓存时间 (秒)',
+      fetch: '获取（带缓存）',
+      clearCache: '清除缓存',
+      stats: '缓存统计',
+      hits: '命中次数',
+      misses: '未命中次数',
+      hitRate: '命中率'
+    },
+    retry: {
+      title: '重试机制',
+      url: '请求 URL',
+      urlPlaceholder: '输入可能失败的 API',
+      maxRetries: '最大重试次数',
+      retryDelay: '重试延迟 (毫秒)',
+      sendWithRetry: '发送（带重试）',
+      response: '响应结果',
+      error: '错误信息'
+    },
+    timeout: {
+      title: '超时控制',
+      url: '请求 URL',
+      timeout: '超时时间 (毫秒)',
+      sendWithTimeout: '发送（带超时）',
+      response: '响应结果',
+      error: '错误信息'
+    }
   },
 
   // API 演示页面
   api: {
     title: 'API 演示',
-    subtitle: '体验 @ldesign/api 接口管理功能'
+    subtitle: '体验 @ldesign/api 接口管理功能',
+    basic: {
+      title: 'API Engine 基础',
+      description: 'API Engine 提供统一的接口管理能力，支持插件化扩展。',
+      basicCall: '基础调用',
+      viewStatus: '查看状态',
+      engineStatus: 'Engine 状态'
+    },
+    system: {
+      title: '系统 API',
+      username: '用户名',
+      usernamePlaceholder: '输入用户名',
+      password: '密码',
+      passwordPlaceholder: '输入密码',
+      simulateLogin: '模拟登录',
+      getUserInfo: '获取用户信息',
+      logout: '登出',
+      userInfo: '用户信息',
+      error: '错误'
+    },
+    caching: {
+      title: '缓存策略',
+      method: 'API 方法名',
+      methodPlaceholder: '例如: getUser',
+      ttl: '缓存 TTL (秒)',
+      callWithCache: '带缓存调用',
+      cacheStats: '缓存统计',
+      clearCache: '清除缓存',
+      items: '缓存项数',
+      hitRate: '命中率'
+    },
+    batch: {
+      title: '批量请求',
+      description: '批量请求可以同时发送多个 API 调用，提高效率。',
+      api1: 'API 1',
+      api2: 'API 2',
+      api3: 'API 3',
+      sendBatch: '发送批量请求',
+      results: '批量结果',
+      error: '错误'
+    },
+    plugin: {
+      title: '插件系统',
+      description: 'API Engine 支持插件扩展，可以添加日志、重试、缓存等功能。',
+      addLogger: '添加日志插件',
+      addRetry: '添加重试插件',
+      addCache: '添加缓存插件',
+      removePlugins: '移除所有插件',
+      pluginLogs: '插件日志'
+    }
+  },
+
+  // 性能监控页面
+  performance: {
+    title: '性能监控仪表板',
+    subtitle: '实时监控应用性能指标，展示 Engine 的性能监控能力',
+    overview: {
+      title: '性能概览',
+      startupTime: '启动时间',
+      memoryUsage: '内存使用',
+      ms: '毫秒',
+      mb: 'MB'
+    },
+    marks: {
+      title: '性能标记',
+      addMark: '添加标记',
+      name: '标记名称',
+      namePlaceholder: '例如: feature-loaded',
+      time: '时间',
+      clear: '清除所有'
+    },
+    cache: {
+      title: '缓存统计',
+      entries: '缓存条目',
+      hitRate: '命中率',
+      size: '缓存大小',
+      kb: 'KB'
+    },
+    realtime: {
+      title: '实时监控',
+      start: '开始监控',
+      stop: '停止监控',
+      fps: '帧率',
+      cpu: 'CPU 使用率',
+      memory: '内存',
+      network: '网络'
+    },
+    testing: {
+      title: '性能测试工具',
+      stressTest: '压力测试',
+      memoryTest: '内存测试',
+      renderTest: '渲染测试',
+      startTest: '开始测试',
+      stopTest: '停止测试',
+      results: '测试结果'
+    }
+  },
+
+  // 状态管理页面
+  state: {
+    title: '状态管理演示',
+    subtitle: '展示 Engine StateManager 的强大功能：状态 CRUD、时间旅行、持久化',
+    crud: {
+      title: '状态 CRUD 操作',
+      key: '键名',
+      keyPlaceholder: '例如: user.name',
+      value: '值（JSON）',
+      valuePlaceholder: '{"name": "张三"}',
+      setState: '设置状态',
+      getState: '获取状态',
+      deleteState: '删除状态',
+      currentValue: '当前值'
+    },
+    watch: {
+      title: '状态监听（Watch）',
+      key: '监听键名',
+      keyPlaceholder: '例如: user',
+      startWatch: '开始监听',
+      stopWatch: '停止监听',
+      events: '监听事件',
+      recent: '最近{count}条',
+      noEvents: '暂无事件'
+    },
+    history: {
+      title: '时间旅行（History）',
+      undo: '撤销',
+      redo: '重做',
+      clear: '清除历史',
+      currentIndex: '当前索引',
+      totalSteps: '总步骤',
+      timeline: '时间线'
+    },
+    persistence: {
+      title: '持久化',
+      save: '保存到 LocalStorage',
+      load: '从 LocalStorage 加载',
+      clear: '清除持久化',
+      status: '持久化状态',
+      enabled: '已启用',
+      disabled: '未启用'
+    },
+    computed: {
+      title: '计算状态',
+      description: '基于其他状态自动计算的派生状态',
+      fullName: '全名',
+      age: '年龄',
+      isAdult: '是否成年'
+    }
+  },
+
+  // 事件系统页面
+  event: {
+    title: '事件系统演示',
+    subtitle: '展示 Engine 事件系统的强大功能：发布订阅、优先级、事件回放',
+    emit: {
+      title: '事件发布（Emit）',
+      name: '事件名称',
+      namePlaceholder: '例如: user:login',
+      data: '事件数据（JSON）',
+      dataPlaceholder: '{"user": "张三"}',
+      send: '发送事件',
+      sendOnce: '发送一次',
+      broadcast: '广播事件'
+    },
+    subscribe: {
+      title: '事件订阅（On）',
+      name: '订阅事件名称',
+      namePlaceholder: '例如: user:*',
+      priority: '优先级',
+      priorityHigh: '高（100）',
+      priorityMedium: '中（50）',
+      priorityLow: '低（0）',
+      subscribe: '订阅事件',
+      subscribeOnce: '订阅一次',
+      unsubscribeAll: '取消所有订阅',
+      current: '当前订阅',
+      count: '{count} 个订阅'
+    },
+    logs: {
+      title: '事件日志',
+      recent: '最近{count}条',
+      clear: '清除日志',
+      noLogs: '暂无日志',
+      event: '事件',
+      data: '数据',
+      time: '时间'
+    },
+    replay: {
+      title: '事件回放',
+      description: '可以回放历史事件，用于调试和测试',
+      start: '开始录制',
+      stop: '停止录制',
+      replay: '回放',
+      clear: '清除记录',
+      recorded: '已录制 {count} 个事件'
+    },
+    wildcard: {
+      title: '通配符订阅',
+      description: '支持通配符模式订阅多个事件',
+      pattern: '事件模式',
+      patternPlaceholder: '例如: user:* 或 *.created',
+      subscribe: '订阅模式',
+      matched: '匹配到 {count} 个事件'
+    }
+  },
+
+  // 并发控制页面
+  concurrency: {
+    title: '并发控制演示',
+    subtitle: '展示 Engine 并发控制功能：限流、队列、优先级调度',
+    queue: {
+      title: '任务队列',
+      description: '控制同时执行的任务数量，避免资源过载',
+      concurrency: '并发数',
+      addTask: '添加任务',
+      addMultiple: '批量添加',
+      pause: '暂停队列',
+      resume: '恢复队列',
+      clear: '清空队列',
+      status: '队列状态',
+      pending: '等待中',
+      running: '执行中',
+      completed: '已完成',
+      failed: '失败'
+    },
+    throttle: {
+      title: '节流（Throttle）',
+      description: '限制函数执行频率，在指定时间内只执行一次',
+      interval: '节流间隔 (毫秒)',
+      trigger: '触发函数',
+      count: '执行次数',
+      reset: '重置计数'
+    },
+    debounce: {
+      title: '防抖（Debounce）',
+      description: '延迟函数执行，只在最后一次调用后执行',
+      delay: '防抖延迟 (毫秒)',
+      trigger: '触发函数',
+      count: '执行次数',
+      reset: '重置计数'
+    },
+    priority: {
+      title: '优先级调度',
+      description: '根据任务优先级进行调度执行',
+      taskName: '任务名称',
+      taskNamePlaceholder: '例如: 数据加载',
+      priority: '优先级',
+      high: '高',
+      medium: '中',
+      low: '低',
+      addTask: '添加任务',
+      queue: '任务队列',
+      noTasks: '暂无任务'
+    },
+    semaphore: {
+      title: '信号量',
+      description: '控制并发访问资源的数量',
+      maxConcurrent: '最大并发数',
+      acquire: '获取许可',
+      release: '释放许可',
+      available: '可用许可',
+      waiting: '等待队列'
+    }
+  },
+
+  // 插件系统页面
+  plugin: {
+    title: '插件系统演示',
+    subtitle: '展示 Engine 插件系统的强大功能：动态加载、生命周期、通信',
+    basic: {
+      title: '插件基础',
+      description: 'Engine 提供完整的插件系统，支持动态加载和卸载',
+      installed: '已安装插件',
+      available: '可用插件',
+      install: '安装',
+      uninstall: '卸载',
+      enable: '启用',
+      disable: '禁用',
+      configure: '配置'
+    },
+    lifecycle: {
+      title: '生命周期',
+      description: '插件拥有完整的生命周期钩子',
+      onInstall: '安装时',
+      onEnable: '启用时',
+      onDisable: '禁用时',
+      onUninstall: '卸载时',
+      logs: '生命周期日志'
+    },
+    communication: {
+      title: '插件间通信',
+      description: '插件可以通过事件总线相互通信',
+      sender: '发送者插件',
+      receiver: '接收者插件',
+      message: '消息内容',
+      send: '发送消息',
+      logs: '通信日志'
+    },
+    custom: {
+      title: '自定义插件',
+      description: '创建并注册自定义插件',
+      pluginName: '插件名称',
+      pluginNamePlaceholder: '例如: my-plugin',
+      version: '版本',
+      versionPlaceholder: '例如: 1.0.0',
+      author: '作者',
+      authorPlaceholder: '您的名字',
+      create: '创建插件',
+      register: '注册插件',
+      created: '插件已创建'
+    }
   },
 
   // 仪表盘页面
@@ -179,7 +629,9 @@ export default {
       totalUsers: '总用户数',
       activeUsers: '活跃用户',
       newUsers: '新用户',
-      revenue: '收入'
+      revenue: '收入',
+      totalVisits: '总访问量',
+      orders: '订单数'
     },
     stats: {
       title: '统计数据',

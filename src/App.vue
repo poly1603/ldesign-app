@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { RouterView } from '@ldesign/router';
+// 导入模板系统的 CSS 变量
+import '@ldesign/template/styles/variables.css';
 </script>
 
 <template>

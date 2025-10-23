@@ -5,86 +5,114 @@
       <RouterView :key="$route.fullPath" transition="fade" />
     </template>
 
-    <!-- 默认布局 -->
+    <!-- 默认布局 - 使用 TemplateRenderer 渲染 Dashboard 模板 -->
     <template v-else>
-      <!-- 导航栏 -->
-      <nav class="navbar">
-        <div class="nav-brand">
-          <Rocket class="logo" />
-          <span class="brand-text">{{ t('app.name') }}</span>
-        </div>
+      <TemplateRenderer category="dashboard" :component-props="{
+        title: t('app.name'),
+        username: isLoggedIn ? username : t('common.guest'),
+        stats: appStats
+      }">
 
-        <div class="nav-links">
-          <RouterLink to="/" class="nav-link" :class="{ active: $route.path === '/' }">
-            {{ t('nav.home') }}
-          </RouterLink>
-          <RouterLink to="/about" class="nav-link" :class="{ active: $route.path === '/about' }">
-            {{ t('nav.about') }}
-          </RouterLink>
-          <RouterLink to="/crypto" class="nav-link" :class="{ active: $route.path === '/crypto' }">
-            {{ t('nav.crypto') }}
-          </RouterLink>
-          <RouterLink to="/http" class="nav-link" :class="{ active: $route.path === '/http' }">
-            {{ t('nav.http') }}
-          </RouterLink>
-          <RouterLink to="/api" class="nav-link" :class="{ active: $route.path === '/api' }">
-            {{ t('nav.api') }}
-          </RouterLink>
-          <RouterLink to="/performance" class="nav-link" :class="{ active: $route.path === '/performance' }">
-            ⚡ 性能
-          </RouterLink>
-          <RouterLink to="/state" class="nav-link" :class="{ active: $route.path === '/state' }">
-            🔄 状态
-          </RouterLink>
-          <RouterLink to="/event" class="nav-link" :class="{ active: $route.path === '/event' }">
-            📡 事件
-          </RouterLink>
-          <RouterLink to="/concurrency" class="nav-link" :class="{ active: $route.path === '/concurrency' }">
-            ⚡ 并发
-          </RouterLink>
-          <RouterLink to="/plugin" class="nav-link" :class="{ active: $route.path === '/plugin' }">
-            🔌 插件
-          </RouterLink>
-          <RouterLink v-if="isLoggedIn" to="/dashboard" class="nav-link"
-            :class="{ active: $route.path === '/dashboard' }">
-            {{ t('nav.dashboard') }}
-          </RouterLink>
-
-          <div class="nav-spacer"></div>
-
-          <!-- 语言切换器 -->
-          <LanguageSwitcher class="nav-locale" />
-
-          <!-- 主题模式切换器（亮/暗/跟随系统） -->
-          <VueThemeModeSwitcher class="nav-theme-mode" />
-
-          <!-- 主题颜色切换器 -->
-          <VueThemePicker class="nav-theme" />
-
-          <!-- 尺寸管理器 -->
-          <SizeSelector class="nav-size" />
-
-          <button v-if="!isLoggedIn" @click="goToLogin" class="nav-button login">
-            {{ t('nav.login') }}
-          </button>
-          <div v-else class="user-menu">
-            <span class="username">{{ username }}</span>
-            <button @click="logout" class="nav-button logout">
-              {{ t('nav.logout') }}
-            </button>
+        <!-- Logo 插槽 - 自定义品牌 -->
+        <template #logo>
+          <div class="nav-brand">
+            <Rocket class="logo" />
+            <span class="brand-text">{{ t('app.name') }}</span>
           </div>
-        </div>
-      </nav>
+        </template>
 
-      <!-- 路由视图 -->
-      <main class="main-content">
-        <RouterView :key="$route.fullPath" transition="fade" />
-      </main>
+        <!-- Header 右侧功能区插槽 -->
+        <template #header-actions>
+          <div class="header-actions">
+            <!-- 语言切换器 -->
+            <LanguageSwitcher />
 
-      <!-- 页脚 -->
-      <footer class="footer">
-        <p>{{ t('app.copyright') }}</p>
-      </footer>
+            <!-- 主题模式切换器（亮/暗/跟随系统） -->
+            <VueThemeModeSwitcher />
+
+            <!-- 主题颜色切换器 -->
+            <VueThemePicker />
+
+            <!-- 尺寸管理器 -->
+            <SizeSelector />
+
+            <!-- 登录/用户菜单 -->
+            <button v-if="!isLoggedIn" @click="goToLogin" class="nav-button login">
+              {{ t('nav.login') }}
+            </button>
+            <div v-else class="user-menu">
+              <span class="username-tag">{{ username }}</span>
+              <button @click="logout" class="nav-button logout">
+                {{ t('nav.logout') }}
+              </button>
+            </div>
+          </div>
+        </template>
+
+        <!-- 侧边栏导航插槽 -->
+        <template #sidebar>
+          <nav class="custom-nav-menu">
+            <RouterLink to="/" class="nav-item" :class="{ active: $route.path === '/' }">
+              🏠 {{ t('nav.home') }}
+            </RouterLink>
+            <RouterLink to="/about" class="nav-item" :class="{ active: $route.path === '/about' }">
+              ℹ️ {{ t('nav.about') }}
+            </RouterLink>
+
+            <div class="nav-divider">{{ t('nav.demos') }}</div>
+
+            <RouterLink to="/crypto" class="nav-item" :class="{ active: $route.path === '/crypto' }">
+              🔒 {{ t('nav.crypto') }}
+            </RouterLink>
+            <RouterLink to="/http" class="nav-item" :class="{ active: $route.path === '/http' }">
+              🌐 {{ t('nav.http') }}
+            </RouterLink>
+            <RouterLink to="/api" class="nav-item" :class="{ active: $route.path === '/api' }">
+              📡 {{ t('nav.api') }}
+            </RouterLink>
+
+            <div class="nav-divider">{{ t('nav.engineDemos') }}</div>
+
+            <RouterLink to="/performance" class="nav-item" :class="{ active: $route.path === '/performance' }">
+              ⚡ {{ t('nav.performance') }}
+            </RouterLink>
+            <RouterLink to="/state" class="nav-item" :class="{ active: $route.path === '/state' }">
+              🔄 {{ t('nav.state') }}
+            </RouterLink>
+            <RouterLink to="/event" class="nav-item" :class="{ active: $route.path === '/event' }">
+              📡 {{ t('nav.event') }}
+            </RouterLink>
+            <RouterLink to="/concurrency" class="nav-item" :class="{ active: $route.path === '/concurrency' }">
+              ⚡ {{ t('nav.concurrency') }}
+            </RouterLink>
+            <RouterLink to="/plugin" class="nav-item" :class="{ active: $route.path === '/plugin' }">
+              🔌 {{ t('nav.plugin') }}
+            </RouterLink>
+
+            <RouterLink v-if="isLoggedIn" to="/dashboard" class="nav-item"
+              :class="{ active: $route.path === '/dashboard' }">
+              📊 {{ t('nav.dashboard') }}
+            </RouterLink>
+          </nav>
+        </template>
+
+        <!-- 隐藏默认的统计卡片 -->
+        <template #stats>
+          <!-- 空的，不显示默认统计 -->
+        </template>
+
+        <!-- 默认插槽 - 主要内容 -->
+        <template #default>
+          <div class="page-content">
+            <RouterView :key="$route.fullPath" transition="fade" />
+          </div>
+
+          <!-- 页脚 -->
+          <footer class="custom-footer">
+            <p>{{ t('app.copyright') }}</p>
+          </footer>
+        </template>
+      </TemplateRenderer>
     </template>
   </div>
 </template>
@@ -94,6 +122,7 @@ import { computed, onMounted } from 'vue'
 import { useRoute, useRouter, RouterView, RouterLink } from '@ldesign/router'
 import { useI18n } from '../i18n'
 import { auth } from '../shared/composables/useAuth'
+import { TemplateRenderer } from '@ldesign/template'
 import LanguageSwitcher from '../components/LanguageSwitcher.vue'
 import { VueThemePicker, VueThemeModeSwitcher } from '@ldesign/color/vue'
 import { SizeSelector } from '@ldesign/size/vue'
@@ -106,6 +135,14 @@ const { t } = useI18n()
 // 使用认证模块的状态
 const isLoggedIn = computed(() => auth.isLoggedIn.value)
 const username = computed(() => auth.userInfo.value?.username || '')
+
+// 应用统计数据（传递给 dashboard 模板）
+const appStats = computed(() => ({
+  visits: localStorage.getItem('visitCount') || '0',
+  users: '1,234',
+  orders: '567',
+  revenue: '89,012'
+}))
 
 // 跳转到登录页
 const goToLogin = () => {
@@ -131,92 +168,45 @@ onMounted(() => {
 </script>
 
 <style scoped>
-html,
-body {
-  height: 100%;
-  margin: 0;
-}
-
 .app-container {
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: var(--color-bg-page);
+  width: 100%;
 }
 
-/* 导航栏样式 */
-.navbar {
-  background: var(--color-bg-container);
-  backdrop-filter: blur(10px);
-  box-shadow: var(--shadow-sm);
-  padding: 0 20px;
-  display: flex;
-  align-items: center;
-  height: 60px;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
-
+/* Logo 和品牌样式 */
 .nav-brand {
   display: flex;
   align-items: center;
-  font-size: 20px;
-  font-weight: bold;
-  color: var(--color-text-primary);
-  margin-right: 40px;
+  gap: var(--size-spacing-md);
 }
 
 .logo {
-  width: 28px;
-  height: 28px;
-  margin-right: 10px;
+  width: var(--size-icon-large);
+  height: var(--size-icon-large);
   color: var(--color-primary-default);
 }
 
 .brand-text {
+  font-size: var(--size-font-xl);
+  font-weight: var(--size-font-weight-semibold);
   color: var(--color-text-primary);
 }
 
-.nav-links {
+/* Header 右侧功能区 */
+.header-actions {
   display: flex;
   align-items: center;
-  flex: 1;
-}
-
-.nav-link {
-  color: var(--color-text-primary);
-  text-decoration: none;
-  padding: 8px 16px;
-  margin: 0 5px;
-  border-radius: 6px;
-  transition: all 0.3s;
-  font-weight: 500;
-}
-
-.nav-link:hover {
-  background: var(--color-primary-lighter);
-  color: var(--color-primary-default);
-}
-
-.nav-link.active {
-  background: linear-gradient(135deg, var(--color-primary-default) 0%, var(--color-primary-active) 100%);
-  color: var(--color-text-inverse);
-}
-
-.nav-spacer {
-  flex: 1;
+  gap: var(--size-spacing-lg);
 }
 
 .nav-button {
-  padding: 8px 20px;
+  padding: var(--size-spacing-md) var(--size-spacing-xl);
   border: none;
-  border-radius: 6px;
-  font-size: 14px;
-  font-weight: 600;
+  border-radius: var(--size-radius-md);
+  font-size: var(--size-font-base);
+  font-weight: var(--size-font-weight-semibold);
   cursor: pointer;
-  transition: all 0.3s;
+  transition: all var(--size-duration-normal);
 }
 
 .nav-button.login {
@@ -232,7 +222,6 @@ body {
 .nav-button.logout {
   background: var(--color-danger-default);
   color: var(--color-text-inverse);
-  margin-left: 10px;
 }
 
 .nav-button.logout:hover {
@@ -242,60 +231,87 @@ body {
 .user-menu {
   display: flex;
   align-items: center;
+  gap: var(--size-spacing-md);
 }
 
-.username {
-  color: var(--color-text-primary);
-  font-weight: 600;
-  margin-right: 10px;
-  padding: 8px 12px;
-  background: var(--color-primary-lighter);
-  border-radius: 6px;
+.username-tag {
+  padding: var(--size-spacing-sm) var(--size-spacing-lg);
+  background: color-mix(in srgb, var(--color-primary-default) 10%, transparent);
+  color: var(--color-primary-default);
+  border-radius: var(--size-radius-md);
+  font-size: var(--size-font-base);
+  font-weight: var(--size-font-weight-semibold);
 }
 
-.nav-locale,
-.nav-theme-mode,
-.nav-theme,
-.nav-size {
-  margin: 0 10px;
-}
-
-/* 主内容区域 */
-.main-content {
-  flex: 1;
-  min-height: calc(100vh - 140px);
-  /* 减去导航栏和页脚高度 */
-  padding: 40px;
+/* 自定义导航菜单 */
+.custom-nav-menu {
   display: flex;
-  justify-content: center;
-  align-items: flex-start;
+  flex-direction: column;
+  padding: var(--size-spacing-xl) 0;
+}
+
+.nav-item {
+  display: block;
+  padding: var(--size-spacing-lg) var(--size-spacing-2xl);
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  transition: all var(--size-duration-normal);
+  border-left: var(--size-border-width-thick) solid transparent;
+  font-size: var(--size-font-base);
+}
+
+.nav-item:hover {
+  color: var(--color-primary-default);
+  background: var(--color-bg-component);
+  border-left-color: var(--color-primary-default);
+}
+
+.nav-item.active {
+  color: var(--color-primary-default);
+  background: var(--color-bg-component);
+  border-left-color: var(--color-primary-default);
+  font-weight: var(--size-font-weight-semibold);
+}
+
+.nav-divider {
+  margin: var(--size-spacing-xl) var(--size-spacing-2xl) var(--size-spacing-md);
+  padding-bottom: var(--size-spacing-md);
+  font-size: var(--size-font-sm);
+  font-weight: var(--size-font-weight-semibold);
+  color: var(--color-text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: var(--size-letter-normal);
+  border-bottom: var(--size-border-width-thin) solid var(--color-border);
+}
+
+/* 页面内容 */
+.page-content {
   width: 100%;
-  box-sizing: border-box;
+  min-height: 400px;
 }
 
-/* 页脚 */
-.footer {
-  background: var(--color-bg-container-tertiary);
-  color: var(--color-text-inverse);
+/* 自定义页脚 */
+.custom-footer {
+  margin-top: var(--size-spacing-4xl);
+  padding: var(--size-spacing-xl);
   text-align: center;
-  padding: 20px;
-  font-size: 14px;
+  color: var(--color-text-tertiary);
+  font-size: var(--size-font-base);
+  border-top: var(--size-border-width-thin) solid var(--color-border);
 }
 
-/* 过渡动画 - 使用fade作为transition name */
+.custom-footer p {
+  margin: 0;
+}
+
+/* 过渡动画 */
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.3s ease;
+  transition: opacity var(--size-duration-normal) ease;
 }
 
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
-}
-
-/* 确保路由组件占据完整宽度 */
-.main-content>* {
-  width: 100%;
-  max-width: 1400px;
 }
 </style>

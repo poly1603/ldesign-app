@@ -10,44 +10,44 @@
       <div class="crypto-card">
         <h3 class="card-title">
           <Lock class="icon" /> 
-          AES 加密
+          {{ t('crypto.aes.title') }}
         </h3>
         <div class="card-content">
           <div class="input-group">
-            <label>原始文本</label>
+            <label>{{ t('crypto.aes.plaintext') }}</label>
             <input 
               v-model="aesInput" 
               type="text" 
-              placeholder="输入要加密的文本"
+              :placeholder="t('crypto.aes.plaintextPlaceholder')"
               class="input-field"
             />
           </div>
           <div class="input-group">
-            <label>密钥</label>
+            <label>{{ t('crypto.aes.key') }}</label>
             <input 
               v-model="aesKey" 
               type="text" 
-              placeholder="输入密钥"
+              :placeholder="t('crypto.aes.keyPlaceholder')"
               class="input-field"
             />
           </div>
           <div class="button-group">
             <button @click="encryptAES" class="action-btn primary">
-              <Lock class="btn-icon" /> 加密
+              <Lock class="btn-icon" /> {{ t('crypto.aes.encrypt') }}
             </button>
             <button @click="decryptAES" class="action-btn secondary">
-              <Unlock class="btn-icon" /> 解密
+              <Unlock class="btn-icon" /> {{ t('crypto.aes.decrypt') }}
             </button>
             <button @click="clearAES" class="action-btn danger">
-              <Trash2 class="btn-icon" /> 清除
+              <Trash2 class="btn-icon" /> {{ t('crypto.aes.clear') }}
             </button>
           </div>
           <div v-if="aesEncrypted" class="result-box">
-            <label>加密结果</label>
+            <label>{{ t('crypto.aes.encryptedResult') }}</label>
             <div class="result-content">{{ aesEncrypted }}</div>
           </div>
           <div v-if="aesDecrypted" class="result-box success">
-            <label>解密结果</label>
+            <label>{{ t('crypto.aes.decryptedResult') }}</label>
             <div class="result-content">{{ aesDecrypted }}</div>
           </div>
         </div>
@@ -57,20 +57,20 @@
       <div class="crypto-card">
         <h3 class="card-title">
           <Hash class="icon" /> 
-          哈希算法
+          {{ t('crypto.hash.title') }}
         </h3>
         <div class="card-content">
           <div class="input-group">
-            <label>原始文本</label>
+            <label>{{ t('crypto.hash.plaintext') }}</label>
             <input 
               v-model="hashInput" 
               type="text" 
-              placeholder="输入要计算哈希的文本"
+              :placeholder="t('crypto.hash.plaintextPlaceholder')"
               class="input-field"
             />
           </div>
           <div class="input-group">
-            <label>算法</label>
+            <label>{{ t('crypto.hash.algorithm') }}</label>
             <select v-model="hashAlgorithm" class="select-field">
               <option value="md5">MD5</option>
               <option value="sha1">SHA1</option>
@@ -80,14 +80,14 @@
           </div>
           <div class="button-group">
             <button @click="computeHash" class="action-btn primary">
-              <Hash class="btn-icon" /> 计算哈希
+              <Hash class="btn-icon" /> {{ t('crypto.hash.compute') }}
             </button>
             <button @click="clearHash" class="action-btn danger">
-              <Trash2 class="btn-icon" /> 清除
+              <Trash2 class="btn-icon" /> {{ t('crypto.hash.clear') }}
             </button>
           </div>
           <div v-if="hashResult" class="result-box">
-            <label>哈希结果 ({{ hashAlgorithm.toUpperCase() }})</label>
+            <label>{{ t('crypto.hash.result') }} ({{ hashAlgorithm.toUpperCase() }})</label>
             <div class="result-content hash-result">{{ hashResult }}</div>
           </div>
         </div>
