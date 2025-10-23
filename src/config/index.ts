@@ -1,14 +1,25 @@
 /**
- * 统一配置管理
+ * 统一配置管理入口
+ * 从单一配置文件导出所有配置
  */
 
-// 导出各个配置模块
-export { appConfig, engineConfig } from './app.config'
-export { i18nConfig } from './i18n.config'
-export { routerConfig } from './router.config'
-export { storeConfig } from './store.config'
-export { createCacheConfig } from './cache.config'
-export { createColorConfig } from './color.config'
-export { createSizeConfig } from './size.config'
-export { templateConfig } from './template.config'
+export {
+  // 基础配置
+  APP_NAME,
+  APP_VERSION,
+  appConfig,
 
+  // Engine 配置
+  engineConfig,
+
+  // 各模块配置
+  i18nConfig,
+  routerConfig,
+  storeConfig,
+  templateConfig,
+
+  // 插件配置工厂
+  createCacheConfig,
+  createColorConfig,
+  createSizeConfig
+} from './app.config'

@@ -5,7 +5,7 @@
 import { createRouterEnginePlugin } from '@ldesign/router'
 import routes from './routes'
 import { setupGuards } from './guards'
-import { routerConfig } from '../config/router.config'
+import { routerConfig } from '../config'
 
 /**
  * 创建路由器插件

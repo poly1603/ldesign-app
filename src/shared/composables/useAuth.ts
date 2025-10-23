@@ -4,7 +4,7 @@
  */
 
 import { ref, computed } from 'vue'
-import type { User } from '../types/user'
+import type { User } from '../../types/user'
 import { storage } from '../utils/storage'
 
 // 全局用户状态
@@ -166,7 +166,7 @@ export function useAuth() {
   }
 }
 
-// 创建全局认证实例（不使用router）
+// 创建全局认证实例
 export const auth = {
   // 状态
   currentUser,
@@ -286,3 +286,6 @@ export const auth = {
     }
   }
 }
+
+
+

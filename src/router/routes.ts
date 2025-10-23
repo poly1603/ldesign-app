@@ -14,6 +14,11 @@ const About = () => import('../views/About.vue')
 const CryptoDemo = () => import('../views/CryptoDemo.vue')
 const HttpDemo = () => import('../views/HttpDemo.vue')
 const ApiDemo = () => import('../views/ApiDemo.vue')
+const PerformanceDemo = () => import('../views/PerformanceDemo.vue')
+const StateDemo = () => import('../views/StateDemo.vue')
+const EventDemo = () => import('../views/EventDemo.vue')
+const ConcurrencyDemo = () => import('../views/ConcurrencyDemo.vue')
+const PluginDemo = () => import('../views/PluginDemo.vue')
 
 /**
  * 公开路由
@@ -76,6 +81,56 @@ export const publicRoutes: RouteRecordRaw[] = [
         component: ApiDemo,
         meta: {
           titleKey: 'nav.api',
+          requiresAuth: false,
+          layout: 'default'
+        }
+      },
+      {
+        path: 'performance',
+        name: 'PerformanceDemo',
+        component: PerformanceDemo,
+        meta: {
+          titleKey: 'nav.performance',
+          requiresAuth: false,
+          layout: 'default'
+        }
+      },
+      {
+        path: 'state',
+        name: 'StateDemo',
+        component: StateDemo,
+        meta: {
+          titleKey: 'nav.state',
+          requiresAuth: false,
+          layout: 'default'
+        }
+      },
+      {
+        path: 'event',
+        name: 'EventDemo',
+        component: EventDemo,
+        meta: {
+          titleKey: 'nav.event',
+          requiresAuth: false,
+          layout: 'default'
+        }
+      },
+      {
+        path: 'concurrency',
+        name: 'ConcurrencyDemo',
+        component: ConcurrencyDemo,
+        meta: {
+          titleKey: 'nav.concurrency',
+          requiresAuth: false,
+          layout: 'default'
+        }
+      },
+      {
+        path: 'plugin',
+        name: 'PluginDemo',
+        component: PluginDemo,
+        meta: {
+          titleKey: 'nav.plugin',
           requiresAuth: false,
           layout: 'default'
         }

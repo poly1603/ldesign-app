@@ -4,7 +4,7 @@
  */
 
 import type { RouterEnginePlugin } from '@ldesign/router'
-import { auth } from '../../composables/useAuth'
+import { auth } from '../../shared/composables/useAuth'
 
 const LOGIN_PATH = '/login'
 const DEFAULT_REDIRECT = '/'  // 默认重定向到首页而不是 dashboard

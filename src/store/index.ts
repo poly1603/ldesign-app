@@ -12,7 +12,7 @@ import {
   StoreFactory
 } from '@ldesign/store'
 import type { StoreEnginePluginOptions } from '@ldesign/store'
-import { storeConfig } from '../config/store.config'
+import { storeConfig } from '../config'
 
 // 导出 Vue 专用的 hooks
 export const useStore = useVueStore

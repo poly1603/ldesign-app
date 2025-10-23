@@ -41,7 +41,7 @@
 import { ref, reactive, onMounted } from 'vue'
 import { useRouter, useRoute } from '@ldesign/router'
 import { useI18n } from '../i18n'
-import { auth } from '../composables/useAuth'
+import { auth } from '../shared/composables/useAuth'
 import { TemplateRenderer } from '@ldesign/template'
 import CustomLoginPanel from '../components/CustomLoginPanel.vue'
 

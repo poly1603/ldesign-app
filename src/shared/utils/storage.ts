@@ -1,9 +1,9 @@
 /**
  * 本地存储工具
- * 提供统一的存储接口
+ * 提供统一的存储接口，支持过期时间和前缀
  */
 
-import { appConfig } from '../config'
+import { appConfig } from '../../config'
 
 const { prefix, expire } = appConfig.storage
 
@@ -206,3 +206,6 @@ class SessionStorage extends Storage {
 }
 
 export const sessionStorage = new SessionStorage(prefix)
+
+
+

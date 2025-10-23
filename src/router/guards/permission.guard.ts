@@ -4,7 +4,7 @@
  */
 
 import type { RouterEnginePlugin } from '@ldesign/router'
-import { auth } from '../../composables/useAuth'
+import { auth } from '../../shared/composables/useAuth'
 
 /**
  * 设置权限守卫

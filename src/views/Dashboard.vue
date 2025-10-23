@@ -188,7 +188,7 @@
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { useRoute, useRouter } from '@ldesign/router'
 import { useI18n } from '../i18n'
-import { useAppCache } from '../composables/useAppCache'
+import { useAppCache } from '../shared/composables/useAppCache'
 import { MapPin, Settings, ScrollText, Rocket, Home, Info, RefreshCw, Trash2, BarChart3, FileText } from 'lucide-vue-next'
 
 const route = useRoute()

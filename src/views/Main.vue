@@ -30,6 +30,21 @@
           <RouterLink to="/api" class="nav-link" :class="{ active: $route.path === '/api' }">
             {{ t('nav.api') }}
           </RouterLink>
+          <RouterLink to="/performance" class="nav-link" :class="{ active: $route.path === '/performance' }">
+            ⚡ 性能
+          </RouterLink>
+          <RouterLink to="/state" class="nav-link" :class="{ active: $route.path === '/state' }">
+            🔄 状态
+          </RouterLink>
+          <RouterLink to="/event" class="nav-link" :class="{ active: $route.path === '/event' }">
+            📡 事件
+          </RouterLink>
+          <RouterLink to="/concurrency" class="nav-link" :class="{ active: $route.path === '/concurrency' }">
+            ⚡ 并发
+          </RouterLink>
+          <RouterLink to="/plugin" class="nav-link" :class="{ active: $route.path === '/plugin' }">
+            🔌 插件
+          </RouterLink>
           <RouterLink v-if="isLoggedIn" to="/dashboard" class="nav-link"
             :class="{ active: $route.path === '/dashboard' }">
             {{ t('nav.dashboard') }}
@@ -78,7 +93,7 @@
 import { computed, onMounted } from 'vue'
 import { useRoute, useRouter, RouterView, RouterLink } from '@ldesign/router'
 import { useI18n } from '../i18n'
-import { auth } from '../composables/useAuth'
+import { auth } from '../shared/composables/useAuth'
 import LanguageSwitcher from '../components/LanguageSwitcher.vue'
 import { VueThemePicker, VueThemeModeSwitcher } from '@ldesign/color/vue'
 import { SizeSelector } from '@ldesign/size/vue'
