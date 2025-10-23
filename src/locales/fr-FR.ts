@@ -242,6 +242,31 @@ export default {
       clear: 'Effacer',
       encodedResult: 'Résultat encodé',
       decodedResult: 'Résultat décodé'
+    },
+    keyGenerator: {
+      title: 'Générateur de clés',
+      keyLength: 'Longueur de clé (octets)',
+      bytes16: '16 octets (128 bits)',
+      bytes24: '24 octets (192 bits)',
+      bytes32: '32 octets (256 bits)',
+      generate: 'Générer la clé',
+      copy: 'Copier',
+      result: 'Clé générée',
+      copied: 'Clé copiée dans le presse-papiers',
+      copyFailed: 'Échec de la copie, veuillez copier manuellement'
+    },
+    passwordStrength: {
+      title: 'Vérificateur de force du mot de passe',
+      password: 'Mot de passe',
+      passwordPlaceholder: 'Entrez le mot de passe',
+      checkStrength: 'Vérifier la force',
+      strength: 'Force du mot de passe',
+      result: 'Résultat de force',
+      weak: 'Faible',
+      medium: 'Moyen',
+      strong: 'Fort',
+      veryStrong: 'Très fort',
+      pleaseEnter: 'Veuillez entrer le mot de passe'
     }
   },
 

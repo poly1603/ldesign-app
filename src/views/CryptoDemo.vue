@@ -4,32 +4,23 @@
       <h1 class="crypto-title">{{ t('crypto.title') || '加密演示' }}</h1>
       <p class="crypto-subtitle">{{ t('crypto.subtitle') || '体验 @ldesign/crypto 加密功能' }}</p>
     </div>
-    
+
     <div class="crypto-grid">
       <!-- AES 加密演示 -->
       <div class="crypto-card">
         <h3 class="card-title">
-          <Lock class="icon" /> 
+          <Lock class="icon" />
           {{ t('crypto.aes.title') }}
         </h3>
         <div class="card-content">
           <div class="input-group">
             <label>{{ t('crypto.aes.plaintext') }}</label>
-            <input 
-              v-model="aesInput" 
-              type="text" 
-              :placeholder="t('crypto.aes.plaintextPlaceholder')"
-              class="input-field"
-            />
+            <input v-model="aesInput" type="text" :placeholder="t('crypto.aes.plaintextPlaceholder')"
+              class="input-field" />
           </div>
           <div class="input-group">
             <label>{{ t('crypto.aes.key') }}</label>
-            <input 
-              v-model="aesKey" 
-              type="text" 
-              :placeholder="t('crypto.aes.keyPlaceholder')"
-              class="input-field"
-            />
+            <input v-model="aesKey" type="text" :placeholder="t('crypto.aes.keyPlaceholder')" class="input-field" />
           </div>
           <div class="button-group">
             <button @click="encryptAES" class="action-btn primary">
@@ -56,18 +47,14 @@
       <!-- Hash 哈希演示 -->
       <div class="crypto-card">
         <h3 class="card-title">
-          <Hash class="icon" /> 
+          <Hash class="icon" />
           {{ t('crypto.hash.title') }}
         </h3>
         <div class="card-content">
           <div class="input-group">
             <label>{{ t('crypto.hash.plaintext') }}</label>
-            <input 
-              v-model="hashInput" 
-              type="text" 
-              :placeholder="t('crypto.hash.plaintextPlaceholder')"
-              class="input-field"
-            />
+            <input v-model="hashInput" type="text" :placeholder="t('crypto.hash.plaintextPlaceholder')"
+              class="input-field" />
           </div>
           <div class="input-group">
             <label>{{ t('crypto.hash.algorithm') }}</label>
@@ -96,47 +83,39 @@
       <!-- HMAC 消息认证码演示 -->
       <div class="crypto-card">
         <h3 class="card-title">
-          <ShieldCheck class="icon" /> 
-          HMAC 消息认证
+          <ShieldCheck class="icon" />
+          {{ t('crypto.hmac.title') }}
         </h3>
         <div class="card-content">
           <div class="input-group">
-            <label>消息内容</label>
-            <input 
-              v-model="hmacMessage" 
-              type="text" 
-              placeholder="输入消息内容"
-              class="input-field"
-            />
+            <label>{{ t('crypto.hmac.message') }}</label>
+            <input v-model="hmacMessage" type="text" :placeholder="t('crypto.hmac.messagePlaceholder')"
+              class="input-field" />
           </div>
           <div class="input-group">
-            <label>密钥</label>
-            <input 
-              v-model="hmacKey" 
-              type="text" 
-              placeholder="输入密钥"
-              class="input-field"
-            />
+            <label>{{ t('crypto.hmac.key') }}</label>
+            <input v-model="hmacKey" type="text" :placeholder="t('crypto.hmac.keyPlaceholder')" class="input-field" />
           </div>
           <div class="button-group">
             <button @click="computeHMAC" class="action-btn primary">
-              <ShieldCheck class="btn-icon" /> 生成 HMAC
+              <ShieldCheck class="btn-icon" /> {{ t('crypto.hmac.generate') }}
             </button>
             <button @click="verifyHMAC" class="action-btn secondary">
-              <Check class="btn-icon" /> 验证
+              <Check class="btn-icon" /> {{ t('crypto.hmac.verify') }}
             </button>
             <button @click="clearHMAC" class="action-btn danger">
-              <Trash2 class="btn-icon" /> 清除
+              <Trash2 class="btn-icon" /> {{ t('crypto.hmac.clear') }}
             </button>
           </div>
           <div v-if="hmacResult" class="result-box">
-            <label>HMAC 结果</label>
+            <label>{{ t('crypto.hmac.result') }}</label>
             <div class="result-content hash-result">{{ hmacResult }}</div>
           </div>
-          <div v-if="hmacVerifyResult !== null" class="result-box" :class="{ success: hmacVerifyResult, error: !hmacVerifyResult }">
-            <label>验证结果</label>
+          <div v-if="hmacVerifyResult !== null" class="result-box"
+            :class="{ success: hmacVerifyResult, error: !hmacVerifyResult }">
+            <label>{{ t('crypto.hmac.verification') }}</label>
             <div class="result-content">
-              {{ hmacVerifyResult ? '✓ 验证通过' : '✗ 验证失败' }}
+              {{ hmacVerifyResult ? '✓ ' + t('crypto.hmac.valid') : '✗ ' + t('crypto.hmac.invalid') }}
             </div>
           </div>
         </div>
@@ -145,36 +124,32 @@
       <!-- Base64 编码演示 -->
       <div class="crypto-card">
         <h3 class="card-title">
-          <Binary class="icon" /> 
-          Base64 编码
+          <Binary class="icon" />
+          {{ t('crypto.base64.title') }}
         </h3>
         <div class="card-content">
           <div class="input-group">
-            <label>原始文本</label>
-            <input 
-              v-model="base64Input" 
-              type="text" 
-              placeholder="输入要编码的文本"
-              class="input-field"
-            />
+            <label>{{ t('crypto.base64.plaintext') }}</label>
+            <input v-model="base64Input" type="text" :placeholder="t('crypto.base64.plaintextPlaceholder')"
+              class="input-field" />
           </div>
           <div class="button-group">
             <button @click="encodeBase64" class="action-btn primary">
-              <ArrowRight class="btn-icon" /> 编码
+              <ArrowRight class="btn-icon" /> {{ t('crypto.base64.encode') }}
             </button>
             <button @click="decodeBase64" class="action-btn secondary">
-              <ArrowLeft class="btn-icon" /> 解码
+              <ArrowLeft class="btn-icon" /> {{ t('crypto.base64.decode') }}
             </button>
             <button @click="clearBase64" class="action-btn danger">
-              <Trash2 class="btn-icon" /> 清除
+              <Trash2 class="btn-icon" /> {{ t('crypto.base64.clear') }}
             </button>
           </div>
           <div v-if="base64Encoded" class="result-box">
-            <label>编码结果</label>
+            <label>{{ t('crypto.base64.encodedResult') }}</label>
             <div class="result-content">{{ base64Encoded }}</div>
           </div>
           <div v-if="base64Decoded" class="result-box success">
-            <label>解码结果</label>
+            <label>{{ t('crypto.base64.decodedResult') }}</label>
             <div class="result-content">{{ base64Decoded }}</div>
           </div>
         </div>
@@ -183,28 +158,28 @@
       <!-- 随机密钥生成 -->
       <div class="crypto-card">
         <h3 class="card-title">
-          <Key class="icon" /> 
-          密钥生成器
+          <Key class="icon" />
+          {{ t('crypto.keyGenerator.title') }}
         </h3>
         <div class="card-content">
           <div class="input-group">
-            <label>密钥长度（字节）</label>
+            <label>{{ t('crypto.keyGenerator.keyLength') }}</label>
             <select v-model.number="keyLength" class="select-field">
-              <option :value="16">16 字节 (128 位)</option>
-              <option :value="24">24 字节 (192 位)</option>
-              <option :value="32">32 字节 (256 位)</option>
+              <option :value="16">{{ t('crypto.keyGenerator.bytes16') }}</option>
+              <option :value="24">{{ t('crypto.keyGenerator.bytes24') }}</option>
+              <option :value="32">{{ t('crypto.keyGenerator.bytes32') }}</option>
             </select>
           </div>
           <div class="button-group">
             <button @click="generateRandomKey" class="action-btn primary">
-              <RefreshCw class="btn-icon" /> 生成密钥
+              <RefreshCw class="btn-icon" /> {{ t('crypto.keyGenerator.generate') }}
             </button>
             <button @click="copyKey" class="action-btn secondary" :disabled="!generatedKey">
-              <Copy class="btn-icon" /> 复制
+              <Copy class="btn-icon" /> {{ t('crypto.keyGenerator.copy') }}
             </button>
           </div>
           <div v-if="generatedKey" class="result-box">
-            <label>生成的密钥</label>
+            <label>{{ t('crypto.keyGenerator.result') }}</label>
             <div class="result-content hash-result">{{ generatedKey }}</div>
           </div>
         </div>
@@ -213,50 +188,49 @@
       <!-- 密码强度检测 -->
       <div class="crypto-card">
         <h3 class="card-title">
-          <ShieldAlert class="icon" /> 
-          密码强度检测
+          <ShieldAlert class="icon" />
+          {{ t('crypto.passwordStrength.title') }}
         </h3>
         <div class="card-content">
           <form @submit.prevent="checkPasswordStrength">
             <div class="input-group">
-              <label>密码</label>
-              <input 
-                v-model="passwordInput" 
-                type="password" 
-                placeholder="输入密码"
-                class="input-field"
-                autocomplete="new-password"
-              />
+              <label>{{ t('crypto.passwordStrength.password') }}</label>
+              <input v-model="passwordInput" type="password"
+                :placeholder="t('crypto.passwordStrength.passwordPlaceholder')" class="input-field"
+                autocomplete="new-password" />
             </div>
             <button type="submit" class="action-btn primary">
-              <ShieldAlert class="btn-icon" /> 检测强度
+              <ShieldAlert class="btn-icon" /> {{ t('crypto.passwordStrength.checkStrength') }}
             </button>
           </form>
           <div v-if="passwordStrength" class="result-box">
-            <label>强度评估</label>
+            <label>{{ t('crypto.passwordStrength.result') }}</label>
             <div class="password-strength">
               <div class="strength-bar" :class="strengthClass">
-                <div class="strength-fill" :style="{ width: ((passwordStrength.score || passwordStrength.strength || 0) <= 4 ? (passwordStrength.score || passwordStrength.strength || 0) * 25 : (passwordStrength.score || 0)) + '%' }"></div>
+                <div class="strength-fill"
+                  :style="{ width: ((passwordStrength.score || passwordStrength.strength || 0) <= 4 ? (passwordStrength.score || passwordStrength.strength || 0) * 25 : (passwordStrength.score || 0)) + '%' }">
+                </div>
               </div>
               <div class="strength-info">
-                <div><strong>得分：</strong>{{ passwordStrength.score || passwordStrength.strength || 0 }}{{ (passwordStrength.score || passwordStrength.strength || 0) <= 4 ? '/4' : '/100' }}</div>
-                <div><strong>等级：</strong>{{ strengthLabel }}</div>
+                <div><strong>得分：</strong>{{ passwordStrength.score || passwordStrength.strength || 0 }}{{
+                  (passwordStrength.score || passwordStrength.strength || 0) <= 4 ? '/4' : '/100' }}</div>
+                    <div><strong>等级：</strong>{{ strengthLabel }}</div>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useI18n } from '../i18n'
 import { aes, hash, hmac, encoding, RandomUtils, PasswordStrengthChecker } from '@ldesign/crypto'
-import { 
-  Lock, Unlock, Hash, ShieldCheck, ShieldAlert, Binary, Key, 
-  Trash2, Check, ArrowRight, ArrowLeft, RefreshCw, Copy 
+import {
+  Lock, Unlock, Hash, ShieldCheck, ShieldAlert, Binary, Key,
+  Trash2, Check, ArrowRight, ArrowLeft, RefreshCw, Copy
 } from 'lucide-vue-next'
 
 const { t } = useI18n()
@@ -313,7 +287,7 @@ const computeHash = () => {
     alert('请输入文本')
     return
   }
-  
+
   try {
     let result = ''
     switch (hashAlgorithm.value) {
@@ -353,7 +327,7 @@ const computeHMAC = () => {
     alert('请输入消息和密钥')
     return
   }
-  
+
   try {
     const result = hmac.sha256(hmacMessage.value, hmacKey.value)
     hmacResult.value = result
@@ -369,7 +343,7 @@ const verifyHMAC = () => {
     alert('请先生成 HMAC')
     return
   }
-  
+
   try {
     const isValid = hmac.verify(hmacMessage.value, hmacKey.value, hmacResult.value, 'SHA256')
     hmacVerifyResult.value = isValid
@@ -396,7 +370,7 @@ const encodeBase64 = () => {
     alert('请输入文本')
     return
   }
-  
+
   try {
     const result = encoding.encode(base64Input.value, 'base64')
     base64Encoded.value = result
@@ -412,7 +386,7 @@ const decodeBase64 = () => {
     alert('请先编码')
     return
   }
-  
+
   try {
     const result = encoding.decode(base64Encoded.value, 'base64')
     base64Decoded.value = result
@@ -444,12 +418,12 @@ const generateRandomKey = () => {
 
 const copyKey = async () => {
   if (!generatedKey.value) return
-  
+
   try {
     await navigator.clipboard.writeText(generatedKey.value)
-    alert('密钥已复制到剪贴板')
+    alert(t('crypto.keyGenerator.copied'))
   } catch (error) {
-    alert('复制失败，请手动复制')
+    alert(t('crypto.keyGenerator.copyFailed'))
   }
 }
 
@@ -459,17 +433,17 @@ const passwordStrength = ref<any>(null)
 
 const checkPasswordStrength = () => {
   if (!passwordInput.value) {
-    alert('请输入密码')
+    alert(t('crypto.passwordStrength.pleaseEnter'))
     return
   }
-  
+
   try {
     const checker = new PasswordStrengthChecker()
     const result = checker.analyze(passwordInput.value)
     passwordStrength.value = result
-    console.log('密码强度:', result)
+    console.log(t('crypto.passwordStrength.strength') + ':', result)
   } catch (error: any) {
-    alert('检测失败: ' + error.message)
+    alert(t('common.error') + ': ' + error.message)
   }
 }
 
@@ -479,7 +453,7 @@ const strengthClass = computed(() => {
   const score = passwordStrength.value.score || passwordStrength.value.strength || 0
   // 如果是0-4的分数，转换为百分比
   const normalizedScore = score <= 4 ? score * 25 : score
-  
+
   if (normalizedScore <= 20) return 'weak'
   if (normalizedScore <= 40) return 'fair'
   if (normalizedScore <= 60) return 'good'
@@ -493,7 +467,7 @@ const strengthLabel = computed(() => {
   const score = passwordStrength.value.score || passwordStrength.value.strength || 0
   // 如果是0-4的分数，转换为百分比
   const normalizedScore = score <= 4 ? score * 25 : score
-  
+
   if (normalizedScore <= 20) return '很弱'
   if (normalizedScore <= 40) return '弱'
   if (normalizedScore <= 60) return '中等'
@@ -735,12 +709,9 @@ const strengthLabel = computed(() => {
   .crypto-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .button-group {
     flex-direction: column;
   }
 }
 </style>
-
-
-

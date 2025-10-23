@@ -247,6 +247,31 @@ export default {
       clear: 'Clear',
       encodedResult: 'Encoded Result',
       decodedResult: 'Decoded Result'
+    },
+    keyGenerator: {
+      title: 'Key Generator',
+      keyLength: 'Key Length (bytes)',
+      bytes16: '16 bytes (128 bits)',
+      bytes24: '24 bytes (192 bits)',
+      bytes32: '32 bytes (256 bits)',
+      generate: 'Generate Key',
+      copy: 'Copy',
+      result: 'Generated Key',
+      copied: 'Key copied to clipboard',
+      copyFailed: 'Copy failed, please copy manually'
+    },
+    passwordStrength: {
+      title: 'Password Strength Checker',
+      password: 'Password',
+      passwordPlaceholder: 'Enter password',
+      checkStrength: 'Check Strength',
+      strength: 'Password Strength',
+      result: 'Strength Result',
+      weak: 'Weak',
+      medium: 'Medium',
+      strong: 'Strong',
+      veryStrong: 'Very Strong',
+      pleaseEnter: 'Please enter password'
     }
   },
 

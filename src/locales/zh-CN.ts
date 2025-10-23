@@ -215,6 +215,31 @@ export default {
       clear: '清除',
       encodedResult: '编码结果',
       decodedResult: '解码结果'
+    },
+    keyGenerator: {
+      title: '密钥生成器',
+      keyLength: '密钥长度（字节）',
+      bytes16: '16 字节 (128 位)',
+      bytes24: '24 字节 (192 位)',
+      bytes32: '32 字节 (256 位)',
+      generate: '生成密钥',
+      copy: '复制',
+      result: '生成的密钥',
+      copied: '密钥已复制到剪贴板',
+      copyFailed: '复制失败，请手动复制'
+    },
+    passwordStrength: {
+      title: '密码强度检测',
+      password: '密码',
+      passwordPlaceholder: '输入密码',
+      checkStrength: '检测强度',
+      strength: '密码强度',
+      result: '强度结果',
+      weak: '弱',
+      medium: '中',
+      strong: '强',
+      veryStrong: '非常强',
+      pleaseEnter: '请输入密码'
     }
   },
 

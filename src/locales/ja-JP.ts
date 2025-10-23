@@ -240,6 +240,31 @@ export default {
       clear: 'クリア',
       encodedResult: 'エンコード結果',
       decodedResult: 'デコード結果'
+    },
+    keyGenerator: {
+      title: 'キー生成器',
+      keyLength: 'キー長（バイト）',
+      bytes16: '16 バイト (128 ビット)',
+      bytes24: '24 バイト (192 ビット)',
+      bytes32: '32 バイト (256 ビット)',
+      generate: 'キー生成',
+      copy: 'コピー',
+      result: '生成されたキー',
+      copied: 'キーがクリップボードにコピーされました',
+      copyFailed: 'コピーに失敗しました。手動でコピーしてください'
+    },
+    passwordStrength: {
+      title: 'パスワード強度チェッカー',
+      password: 'パスワード',
+      passwordPlaceholder: 'パスワードを入力',
+      checkStrength: '強度チェック',
+      strength: 'パスワード強度',
+      result: '強度結果',
+      weak: '弱い',
+      medium: '中',
+      strong: '強い',
+      veryStrong: '非常に強い',
+      pleaseEnter: 'パスワードを入力してください'
     }
   },
 
