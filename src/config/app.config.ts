@@ -77,9 +77,17 @@ export const engineConfig = {
   // 缓存配置
   cache: {
     enabled: true,
-    maxSize: 100, // 增加缓存大小
+    maxSize: 150, // 增加缓存大小从100到150
     defaultTTL: 5 * 60 * 1000, // 5分钟
-    strategy: 'lru' as const // 使用 LRU 策略
+    strategy: 'lru' as const, // 使用 LRU 策略
+    // 智能TTL策略
+    ttlByType: {
+      templates: 10 * 60 * 1000, // 模板缓存10分钟
+      locale: Infinity,           // 语言永久缓存
+      routes: 5 * 60 * 1000,      // 路由缓存5分钟
+      api: 2 * 60 * 1000,         // API缓存2分钟
+      static: 30 * 60 * 1000      // 静态资源缓存30分钟
+    }
   },
 
   // 性能监控

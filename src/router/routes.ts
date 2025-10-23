@@ -5,20 +5,70 @@
 
 import type { RouteRecordRaw } from '@ldesign/router'
 
-// 路由懒加载
-const Main = () => import('../views/Main.vue')
-const Home = () => import('../views/Home.vue')
-const Login = () => import('../views/Login.vue')
-const Dashboard = () => import('../views/Dashboard.vue')
-const About = () => import('../views/About.vue')
-const CryptoDemo = () => import('../views/CryptoDemo.vue')
-const HttpDemo = () => import('../views/HttpDemo.vue')
-const ApiDemo = () => import('../views/ApiDemo.vue')
-const PerformanceDemo = () => import('../views/PerformanceDemo.vue')
-const StateDemo = () => import('../views/StateDemo.vue')
-const EventDemo = () => import('../views/EventDemo.vue')
-const ConcurrencyDemo = () => import('../views/ConcurrencyDemo.vue')
-const PluginDemo = () => import('../views/PluginDemo.vue')
+// 路由懒加载 - 使用分组和预加载优化
+
+// 核心布局（立即加载）
+const MainLayout = () => import(/* webpackChunkName: "layout" */ '../views/MainLayout.vue')
+
+// 首页（预加载）
+const Home = () => import(
+  /* webpackChunkName: "home" */
+  /* webpackPrefetch: true */
+  '../views/Home.vue'
+)
+
+// 登录和仪表盘（关键页面）
+const Login = () => import(
+  /* webpackChunkName: "auth" */
+  /* webpackPrefetch: true */
+  '../views/Login.vue'
+)
+const Dashboard = () => import(
+  /* webpackChunkName: "auth" */
+  '../views/Dashboard.vue'
+)
+
+// 基础页面（按需加载）
+const About = () => import(
+  /* webpackChunkName: "pages" */
+  '../views/About.vue'
+)
+
+// Demo页面分组（低优先级，按需加载）
+const CryptoDemo = () => import(
+  /* webpackChunkName: "demos-basic" */
+  '../views/CryptoDemo.vue'
+)
+const HttpDemo = () => import(
+  /* webpackChunkName: "demos-basic" */
+  '../views/HttpDemo.vue'
+)
+const ApiDemo = () => import(
+  /* webpackChunkName: "demos-basic" */
+  '../views/ApiDemo.vue'
+)
+
+// Engine Demo页面分组（低优先级，按需加载）
+const PerformanceDemo = () => import(
+  /* webpackChunkName: "demos-engine" */
+  '../views/PerformanceDemo.vue'
+)
+const StateDemo = () => import(
+  /* webpackChunkName: "demos-engine" */
+  '../views/StateDemo.vue'
+)
+const EventDemo = () => import(
+  /* webpackChunkName: "demos-engine" */
+  '../views/EventDemo.vue'
+)
+const ConcurrencyDemo = () => import(
+  /* webpackChunkName: "demos-engine" */
+  '../views/ConcurrencyDemo.vue'
+)
+const PluginDemo = () => import(
+  /* webpackChunkName: "demos-engine" */
+  '../views/PluginDemo.vue'
+)
 
 /**
  * 公开路由
@@ -28,7 +78,7 @@ export const publicRoutes: RouteRecordRaw[] = [
   {
     path: '/',
     name: 'home',
-    component: Main,
+    component: MainLayout,
     meta: {
       titleKey: 'nav.home',
       requiresAuth: false,

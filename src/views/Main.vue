@@ -7,11 +7,11 @@
 
     <!-- 默认布局 - 使用 TemplateRenderer 渲染 Dashboard 模板 -->
     <template v-else>
-      <TemplateRenderer category="dashboard" :component-props="{
+      <TemplateRenderer category="dashboard" :name="currentTemplate || undefined" :component-props="{
         title: t('app.name'),
         username: isLoggedIn ? username : t('common.guest'),
         stats: appStats
-      }">
+      }" @device-change="handleDeviceChange" @template-change="handleTemplateSelect">
 
         <!-- Logo 插槽 - 自定义品牌 -->
         <template #logo>
@@ -24,6 +24,10 @@
         <!-- Header 右侧功能区插槽 -->
         <template #header-actions>
           <div class="header-actions">
+            <!-- 模板选择器 -->
+            <TemplateSelector category="dashboard" :device="currentDevice" :current-template="currentTemplate"
+              @select="handleTemplateSelect" />
+
             <!-- 语言切换器 -->
             <LanguageSwitcher />
 
@@ -118,11 +122,11 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter, RouterView, RouterLink } from '@ldesign/router'
 import { useI18n } from '../i18n'
 import { auth } from '../shared/composables/useAuth'
-import { TemplateRenderer } from '@ldesign/template'
+import { TemplateRenderer, TemplateSelector } from '@ldesign/template'
 import LanguageSwitcher from '../components/LanguageSwitcher.vue'
 import { VueThemePicker, VueThemeModeSwitcher } from '@ldesign/color/vue'
 import { SizeSelector } from '@ldesign/size/vue'
@@ -131,6 +135,10 @@ import { Rocket } from 'lucide-vue-next'
 const route = useRoute()
 const router = useRouter()
 const { t } = useI18n()
+
+// 模板选择器状态
+const currentDevice = ref<'desktop' | 'mobile' | 'tablet'>('desktop')
+const currentTemplate = ref<string>('')
 
 // 使用认证模块的状态
 const isLoggedIn = computed(() => auth.isLoggedIn.value)
@@ -159,6 +167,25 @@ const logout = async () => {
       await router.push('/')
     }
   }
+}
+
+// 处理模板选择
+const handleTemplateSelect = (templateName: string) => {
+  // 更新当前模板名称，TemplateRenderer 会通过 watch 响应这个变化
+  currentTemplate.value = templateName
+  // 保存到 localStorage
+  localStorage.setItem('preferred-dashboard-template', templateName)
+}
+
+// 处理设备变化
+const handleDeviceChange = (device: string) => {
+  currentDevice.value = device as 'desktop' | 'mobile' | 'tablet'
+}
+
+// 初始化时恢复保存的模板偏好
+const savedTemplate = localStorage.getItem('preferred-dashboard-template')
+if (savedTemplate) {
+  currentTemplate.value = savedTemplate
 }
 
 onMounted(() => {

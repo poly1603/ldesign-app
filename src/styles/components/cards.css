@@ -1,0 +1,95 @@
+/**
+ * 卡片样式库
+ * 提供统一的卡片样式
+ */
+
+.card {
+  background: var(--color-bg-container);
+  border-radius: var(--size-radius-xl);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  transition: all var(--size-duration-normal);
+}
+
+.card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+/* 卡片头部 */
+.card-header {
+  padding: var(--size-spacing-xl) var(--size-spacing-2xl);
+  border-bottom: var(--size-border-width-thin) solid var(--color-border);
+}
+
+.card-header-title {
+  font-size: var(--size-font-xl);
+  font-weight: var(--size-font-weight-semibold);
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+/* 卡片内容 */
+.card-body {
+  padding: var(--size-spacing-2xl);
+}
+
+/* 卡片底部 */
+.card-footer {
+  padding: var(--size-spacing-xl) var(--size-spacing-2xl);
+  border-top: var(--size-border-width-thin) solid var(--color-border);
+  background: var(--color-bg-component);
+}
+
+/* 可悬浮的卡片 */
+.card-hoverable {
+  cursor: pointer;
+}
+
+.card-hoverable:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--color-primary-default);
+}
+
+/* 带边框的卡片 */
+.card-bordered {
+  border: var(--size-border-width-medium) solid var(--color-border);
+}
+
+/* 紧凑卡片 */
+.card-compact .card-header,
+.card-compact .card-footer {
+  padding: var(--size-spacing-md) var(--size-spacing-lg);
+}
+
+.card-compact .card-body {
+  padding: var(--size-spacing-lg);
+}
+
+/* 带图标的卡片头 */
+.card-header-with-icon {
+  display: flex;
+  align-items: center;
+  gap: var(--size-spacing-md);
+}
+
+.card-icon {
+  width: var(--size-icon-large);
+  height: var(--size-icon-large);
+  color: var(--color-primary-default);
+  flex-shrink: 0;
+}
+
+/* 卡片网格 */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--size-spacing-2xl);
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+  .card-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,9 +1,11 @@
 /**
  * 本地存储工具
  * 提供统一的存储接口，支持过期时间和前缀
+ * 使用 StorageOptimizer 优化批量操作
  */
 
 import { appConfig } from '../../config'
+import { storageOptimizer } from './storage-optimizer'
 
 const { prefix, expire } = appConfig.storage
 
@@ -28,7 +30,7 @@ class Storage {
   }
 
   /**
-   * 设置存储项
+   * 设置存储项（使用 StorageOptimizer 批量写入）
    */
   set<T = any>(key: string, value: T, ttl?: number): void {
     const data: StorageData<T> = {
@@ -38,24 +40,22 @@ class Storage {
     }
 
     try {
-      localStorage.setItem(this.getKey(key), JSON.stringify(data))
+      storageOptimizer.set(this.getKey(key), data)
     } catch (error) {
       console.error('Storage set error:', error)
     }
   }
 
   /**
-   * 获取存储项
+   * 获取存储项（从 StorageOptimizer 或 localStorage）
    */
   get<T = any>(key: string, defaultValue?: T): T | undefined {
     try {
-      const item = localStorage.getItem(this.getKey(key))
+      const data = storageOptimizer.get(this.getKey(key)) as StorageData<T> | null
 
-      if (!item) {
+      if (!data) {
         return defaultValue
       }
-
-      const data: StorageData<T> = JSON.parse(item)
 
       // 检查是否过期
       if (data.expire && data.expire < Date.now()) {
@@ -71,11 +71,11 @@ class Storage {
   }
 
   /**
-   * 移除存储项
+   * 移除存储项（使用 StorageOptimizer 批量删除）
    */
   remove(key: string): void {
     try {
-      localStorage.removeItem(this.getKey(key))
+      storageOptimizer.remove(this.getKey(key))
     } catch (error) {
       console.error('Storage remove error:', error)
     }
