@@ -35,8 +35,12 @@ export default {
     event: 'Events',
     concurrency: 'Concurrency',
     plugin: 'Plugins',
+    tabs: 'Tabs',
+    menu: 'Menu',
     demos: 'Feature Demos',
-    engineDemos: 'Engine Demos'
+    engineDemos: 'Engine Demos',
+    componentDemos: 'Components',
+    advancedComponents: 'Advanced'
   },
 
   // Home Page
@@ -837,6 +841,38 @@ export default {
     selectDate: 'Select Date',
     selectTime: 'Select Time',
     selectDateTime: 'Select Date Time'
+  },
+
+  // Menu Demo
+  menu: {
+    demo: {
+      title: 'Menu Component Demo',
+      description: 'Experience various features and configuration options of @ldesign/menu',
+      mode: 'Menu Mode',
+      'mode.horizontal': 'Horizontal',
+      'mode.vertical': 'Vertical',
+      theme: 'Theme',
+      'theme.light': 'Light',
+      'theme.dark': 'Dark',
+      collapsed: 'Collapsed Mode',
+      collapse: 'Collapse',
+      expand: 'Expand',
+      submenuTrigger: 'Submenu Trigger',
+      'trigger.popup': 'Popup',
+      'trigger.inline': 'Inline',
+      animation: 'Animation',
+      enabled: 'Enabled',
+      disabled: 'Disabled',
+      info: {
+        title: 'Info Panel',
+        selected: 'Selected Item',
+        config: 'Current Config',
+        events: 'Event Log'
+      },
+      code: {
+        title: 'Code Example'
+      }
+    }
   },
 
   // Theme Settings

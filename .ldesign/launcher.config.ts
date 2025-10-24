@@ -29,6 +29,8 @@ export default defineConfig({
       { find: '@ldesign/size/es/index.css', replacement: '../../packages/size/src/styles/index.css', stages: ['dev', 'build'] },
       { find: '@ldesign/color/es/exports/vue.css', replacement: '../../packages/color/es/exports/vue.css', stages: ['dev', 'build'] },
       { find: '@ldesign/color/es/index.css', replacement: '../../packages/color/src/styles/index.css', stages: ['dev', 'build'] },
+      { find: '@ldesign/tabs/es/styles/index.css', replacement: '../../packages/tabs/src/styles/index.css', stages: ['dev', 'build'] },
+      { find: '@ldesign/menu/es/index.css', replacement: '../../packages/menu/src/styles/index.css', stages: ['dev', 'build'] },
 
       // Color 包特殊导出
       { find: '@ldesign/color/plugin', replacement: '../../packages/color/src/plugin', stages: ['dev'] },
@@ -40,6 +42,14 @@ export default defineConfig({
 
       // I18n Vue 导出
       { find: '@ldesign/i18n/vue', replacement: '../../packages/i18n/src/vue', stages: ['dev'] },
+
+      // Tabs Vue 导出
+      { find: '@ldesign/tabs/vue', replacement: '../../packages/tabs/src/vue', stages: ['dev'] },
+
+      // Menu Vue 导出
+      { find: '@ldesign/menu/vue', replacement: '../../packages/menu/src/vue', stages: ['dev'] },
+      { find: '@ldesign/menu/react', replacement: '../../packages/menu/src/react', stages: ['dev'] },
+      { find: '@ldesign/menu', replacement: '../../packages/menu/src', stages: ['dev'] },
 
       // Packages - 核心基础包
       { find: '@ldesign/api', replacement: '../../packages/api/src', stages: ['dev'] },
@@ -53,6 +63,7 @@ export default defineConfig({
       { find: '@ldesign/shared', replacement: '../../packages/shared/src', stages: ['dev'] },
       { find: '@ldesign/size', replacement: '../../packages/size/src', stages: ['dev'] },
       { find: '@ldesign/store', replacement: '../../packages/store/src', stages: ['dev'] },
+      { find: '@ldesign/tabs', replacement: '../../packages/tabs/src', stages: ['dev'] },
       { find: '@ldesign/template', replacement: '../../packages/template/src', stages: ['dev'] },
 
       // Libraries - 组件库

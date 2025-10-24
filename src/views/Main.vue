@@ -13,6 +13,26 @@
         stats: appStats
       }" @device-change="handleDeviceChange" @template-change="handleTemplateSelect">
 
+        <!-- 添加标签页插槽 - 在 header 和内容之间 -->
+        <template #tabs>
+          <TabsContainer
+            :tabs="tabs"
+            :active-tab-id="activeTabId"
+            :enable-drag="true"
+            :show-icon="true"
+            :show-scroll-buttons="true"
+            @tab-click="handleTabClick"
+            @tab-close="handleTabClose"
+            @tab-pin="handleTabPin"
+            @tab-unpin="handleTabUnpin"
+            @tab-reorder="handleTabReorder"
+            @close-others="handleCloseOthers"
+            @close-right="handleCloseRight"
+            @close-left="handleCloseLeft"
+            @close-all="handleCloseAll"
+          />
+        </template>
+
         <!-- Logo 插槽 - 自定义品牌 -->
         <template #logo>
           <div class="nav-brand">
@@ -131,10 +151,35 @@ import LanguageSwitcher from '../components/LanguageSwitcher.vue'
 import { VueThemePicker, VueThemeModeSwitcher } from '@ldesign/color/vue'
 import { SizeSelector } from '@ldesign/size/vue'
 import { Rocket } from 'lucide-vue-next'
+import { TabsContainer, useTabs } from '@ldesign/tabs/vue'
+import '@ldesign/tabs/es/styles/index.css'
 
 const route = useRoute()
 const router = useRouter()
 const { t } = useI18n()
+
+// 初始化标签页系统
+const tabsInstance = useTabs({
+  maxTabs: 10,
+  persist: true,
+  persistKey: 'ldesign-app-tabs',
+  autoActivate: true,
+  router: {
+    autoSync: true,
+    getTabTitle: (route: any) => {
+      const titleKey = route.meta?.titleKey || route.meta?.title
+      return titleKey ? t(titleKey as string) : route.path.split('/').filter(Boolean).pop() || t('nav.home')
+    },
+    getTabIcon: (route: any) => route.meta?.icon,
+    shouldCreateTab: (route: any) => route.meta?.layout !== 'blank',
+    shouldPinTab: (route: any) => route.path === '/',
+  },
+  shortcuts: {
+    enabled: true,
+  },
+}, router)
+
+const { tabs, activeTabId, activateTab, removeTab, pinTab, unpinTab, reorderTabs, closeOtherTabs, closeAllTabs, closeTabsToRight, closeTabsToLeft } = tabsInstance
 
 // 模板选择器状态
 const currentDevice = ref<'desktop' | 'mobile' | 'tablet'>('desktop')
@@ -186,6 +231,44 @@ const handleDeviceChange = (device: string) => {
 const savedTemplate = localStorage.getItem('preferred-dashboard-template')
 if (savedTemplate) {
   currentTemplate.value = savedTemplate
+}
+
+// 标签页事件处理
+const handleTabClick = (tab: any) => {
+  activateTab(tab.id)
+  router.push(tab.path)
+}
+
+const handleTabClose = (tab: any) => {
+  removeTab(tab.id)
+}
+
+const handleTabPin = (tab: any) => {
+  pinTab(tab.id)
+}
+
+const handleTabUnpin = (tab: any) => {
+  unpinTab(tab.id)
+}
+
+const handleTabReorder = (fromIndex: number, toIndex: number) => {
+  reorderTabs(fromIndex, toIndex)
+}
+
+const handleCloseOthers = (tab: any) => {
+  closeOtherTabs(tab.id)
+}
+
+const handleCloseRight = (tab: any) => {
+  closeTabsToRight(tab.id)
+}
+
+const handleCloseLeft = (tab: any) => {
+  closeTabsToLeft(tab.id)
+}
+
+const handleCloseAll = () => {
+  closeAllTabs()
 }
 
 onMounted(() => {

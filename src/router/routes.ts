@@ -69,6 +69,14 @@ const PluginDemo = () => import(
   /* webpackChunkName: "demos-engine" */
   '../views/PluginDemo.vue'
 )
+const TabsDemo = () => import(
+  /* webpackChunkName: "demos-components" */
+  '../views/TabsDemo.vue'
+)
+const MenuDemo = () => import(
+  /* webpackChunkName: "demos-components" */
+  '../views/MenuDemo.vue'
+)
 
 /**
  * 公开路由
@@ -181,6 +189,26 @@ export const publicRoutes: RouteRecordRaw[] = [
         component: PluginDemo,
         meta: {
           titleKey: 'nav.plugin',
+          requiresAuth: false,
+          layout: 'default'
+        }
+      },
+      {
+        path: 'tabs',
+        name: 'TabsDemo',
+        component: TabsDemo,
+        meta: {
+          titleKey: 'nav.tabs',
+          requiresAuth: false,
+          layout: 'default'
+        }
+      },
+      {
+        path: 'menu',
+        name: 'MenuDemo',
+        component: MenuDemo,
+        meta: {
+          titleKey: 'nav.menu',
           requiresAuth: false,
           layout: 'default'
         }

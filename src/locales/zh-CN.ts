@@ -35,8 +35,12 @@ export default {
     event: '事件系统',
     concurrency: '并发控制',
     plugin: '插件系统',
+    tabs: 'Tabs 组件',
+    menu: 'Menu 菜单',
     demos: '功能演示',
-    engineDemos: 'Engine 演示'
+    engineDemos: 'Engine 演示',
+    componentDemos: '组件演示',
+    advancedComponents: '高级组件'
   },
 
   // 首页
@@ -841,6 +845,38 @@ export default {
       midnight: '午夜蓝',
       lavender: '薰衣草梦',
       coral: '珊瑚礁'
+    }
+  },
+
+  // 菜单演示
+  menu: {
+    demo: {
+      title: '菜单组件演示',
+      description: '体验 @ldesign/menu 的各种功能和配置选项',
+      mode: '菜单模式',
+      'mode.horizontal': '横向',
+      'mode.vertical': '纵向',
+      theme: '主题',
+      'theme.light': '浅色',
+      'theme.dark': '深色',
+      collapsed: '收起模式',
+      collapse: '收起',
+      expand: '展开',
+      submenuTrigger: '子菜单触发方式',
+      'trigger.popup': 'Popup',
+      'trigger.inline': '内联',
+      animation: '动画效果',
+      enabled: '启用',
+      disabled: '禁用',
+      info: {
+        title: '信息面板',
+        selected: '选中的菜单项',
+        config: '当前配置',
+        events: '事件记录'
+      },
+      code: {
+        title: '代码示例'
+      }
     }
   }
 };
