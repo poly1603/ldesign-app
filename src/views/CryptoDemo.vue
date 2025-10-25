@@ -478,26 +478,27 @@ const strengthLabel = computed(() => {
 
 <style scoped>
 .crypto-demo-container {
-  max-width: 1400px;
+  width: 100%;
   margin: 0 auto;
-  padding: 20px;
+  background-color: var(--color-bg-container);
+  border-radius: var(--size-radius-md);
+  overflow: hidden;
 }
 
 .crypto-header {
   text-align: center;
-  margin-bottom: 40px;
 }
 
 .crypto-title {
-  font-size: 36px;
-  color: var(--color-text-primary, #333);
-  margin: 0 0 10px 0;
+  font-size: var(--size-font-2xl);
+  color: var(--color-text-primary);
+  margin: var(--size-spacing-xl) 0 0 0;
 }
 
 .crypto-subtitle {
-  font-size: 18px;
-  color: var(--color-text-secondary, #666);
-  margin: 0;
+  font-size: var(--size-font-md);
+  color: var(--color-text-secondary);
+  margin: 0 0 var(--size-spacing-xl) 0;
 }
 
 .crypto-grid {
@@ -507,9 +508,6 @@ const strengthLabel = computed(() => {
 }
 
 .crypto-card {
-  background: var(--color-bg-container, #fff);
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   overflow: hidden;
 }
 
@@ -518,8 +516,6 @@ const strengthLabel = computed(() => {
   color: var(--color-text-primary, #333);
   margin: 0;
   padding: 20px;
-  background: var(--color-bg-container-secondary, #f5f5f5);
-  border-bottom: 1px solid var(--color-border, #e0e0e0);
   display: flex;
   align-items: center;
   gap: 8px;

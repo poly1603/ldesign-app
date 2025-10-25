@@ -7,61 +7,43 @@
 
     <!-- 默认布局 - 使用 TemplateRenderer 渲染 Dashboard 模板 -->
     <template v-else>
-      <div class="layout-wrapper">
-        <TemplateRenderer category="dashboard" :name="currentTemplate || undefined" :component-props="templateProps"
-          @device-change="handleDeviceChange" @template-change="handleTemplateSelect">
-          <!-- Logo 插槽 -->
-          <template #logo>
-            <HeaderLogo :title="t('app.name')" />
-          </template>
+      <TemplateRenderer category="dashboard" :name="currentTemplate || undefined" :component-props="templateProps"
+        @device-change="handleDeviceChange" @template-change="handleTemplateSelect">
+        <!-- Logo 插槽 -->
+        <template #logo>
+          <HeaderLogo :title="t('app.name')" />
+        </template>
 
-          <!-- Header 右侧功能区插槽 -->
-          <template #header-actions>
-            <HeaderActions :device="currentDevice" :current-template="currentTemplate" :is-logged-in="isLoggedIn"
-              :username="username" :login-text="t('nav.login')" :logout-text="t('nav.logout')"
-              @template-select="handleTemplateSelect" @login="goToLogin" @logout="handleLogout" />
-          </template>
+        <!-- Header 右侧功能区插槽 -->
+        <template #actions>
+          <HeaderActions :device="currentDevice" :current-template="currentTemplate" :is-logged-in="isLoggedIn"
+            :username="username" :login-text="t('nav.login')" :logout-text="t('nav.logout')"
+            @template-select="handleTemplateSelect" @login="goToLogin" @logout="handleLogout" />
+        </template>
 
-          <!-- 侧边栏导航插槽 -->
-          <template #sidebar>
-            <AppSidebar :is-logged-in="isLoggedIn" :t="t" :current-path="route.path" />
-          </template>
+        <!-- 侧边栏导航插槽 -->
+        <template #aside>
+          <AppSidebar :is-logged-in="isLoggedIn" :t="t" :current-path="route.path" />
+        </template>
 
-          <!-- 隐藏默认的统计卡片 -->
-          <template #stats>
-            <!-- 空的，不显示默认统计 -->
-          </template>
+        <!-- 隐藏默认的统计卡片 -->
+        <template #stats>
+          <!-- 空的，不显示默认统计 -->
+        </template>
 
-          <!-- 默认插槽 - 主要内容 -->
-          <template #default>
-            <!-- 标签页容器 - 在内容区域顶部 -->
-            <TabsContainer
-              v-if="tabs.length > 0"
-              :tabs="tabs"
-              :active-tab-id="activeTabId"
-              :enable-drag="true"
-              :show-icon="true"
-              :show-scroll-buttons="true"
-              @tab-click="handleTabClick"
-              @tab-close="handleTabClose"
-              @tab-pin="handleTabPin"
-              @tab-unpin="handleTabUnpin"
-              @tab-reorder="handleTabReorder"
-              @close-others="handleCloseOthers"
-              @close-right="handleCloseRight"
-              @close-left="handleCloseLeft"
-              @close-all="handleCloseAll"
-            />
+        <template #tabs>
+          <TabsContainer v-if="tabs.length > 0" :tabs="tabs" :active-tab-id="activeTabId" :enable-drag="true"
+            :show-icon="true" :show-scroll-buttons="true" @tab-click="handleTabClick" @tab-close="handleTabClose"
+            @tab-pin="handleTabPin" @tab-unpin="handleTabUnpin" @tab-reorder="handleTabReorder"
+            @close-others="handleCloseOthers" @close-right="handleCloseRight" @close-left="handleCloseLeft"
+            @close-all="handleCloseAll" />
+        </template>
 
-            <div class="page-content">
-              <RouterView :key="route.fullPath" transition="fade" />
-            </div>
-
-            <!-- 页脚 -->
-            <AppFooter :copyright-text="t('app.copyright')" />
-          </template>
-        </TemplateRenderer>
-      </div>
+        <!-- 默认插槽 - 主要内容 -->
+        <template #default>
+          <RouterView :key="route.fullPath" transition="fade" />
+        </template>
+      </TemplateRenderer>
     </template>
   </div>
 </template>
@@ -210,6 +192,7 @@ onMounted(() => {
 .app-container {
   min-height: 100vh;
   width: 100%;
+  height: 100%;
 }
 
 .layout-wrapper {

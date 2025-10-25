@@ -151,7 +151,6 @@ watch(() => props.currentPath, (newPath) => {
 
 .app-navigation-menu {
   height: 100%;
-  border-right: 1px solid var(--color-border);
 }
 
 /* 自定义菜单样式以匹配现有设计 */

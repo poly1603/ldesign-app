@@ -26,6 +26,10 @@ body {
   background: var(--color-bg-base);
 }
 
+#app {
+  height: 100%;
+}
+
 /* 移除默认的边距和填充 */
 h1,
 h2,
