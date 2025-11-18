@@ -1,5 +1,5 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:window_manager/window_manager.dart';
 
 class CustomTitleBar extends StatefulWidget {
@@ -17,13 +17,28 @@ class _CustomTitleBarState extends State<CustomTitleBar> with WindowListener {
   @override
   void initState() {
     super.initState();
-    windowManager.addListener(this);
-    _checkMaximized();
+    // 仅在桌面平台添加窗口事件监听（Windows/macOS/Linux）
+    final bool isDesktop = !kIsWeb && (
+      defaultTargetPlatform == TargetPlatform.windows ||
+      defaultTargetPlatform == TargetPlatform.macOS ||
+      defaultTargetPlatform == TargetPlatform.linux
+    );
+    if (isDesktop) {
+      windowManager.addListener(this);
+      _checkMaximized();
+    }
   }
 
   @override
   void dispose() {
-    windowManager.removeListener(this);
+    final bool isDesktop = !kIsWeb && (
+      defaultTargetPlatform == TargetPlatform.windows ||
+      defaultTargetPlatform == TargetPlatform.macOS ||
+      defaultTargetPlatform == TargetPlatform.linux
+    );
+    if (isDesktop) {
+      windowManager.removeListener(this);
+    }
     super.dispose();
   }
 
@@ -53,9 +68,15 @@ class _CustomTitleBarState extends State<CustomTitleBar> with WindowListener {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final bool isMacOS = defaultTargetPlatform == TargetPlatform.macOS;
+    final bool isDesktop = !kIsWeb && (
+      defaultTargetPlatform == TargetPlatform.windows ||
+      defaultTargetPlatform == TargetPlatform.macOS ||
+      defaultTargetPlatform == TargetPlatform.linux
+    );
 
     return Container(
-      height: Platform.isMacOS ? 28 : 40,
+      height: isMacOS ? 28 : 40,
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
@@ -82,7 +103,7 @@ class _CustomTitleBarState extends State<CustomTitleBar> with WindowListener {
       child: Row(
         children: [
           // macOS 左侧交通灯按钮占位
-          if (Platform.isMacOS) const SizedBox(width: 70),
+          if (isMacOS) const SizedBox(width: 70),
           
           // 应用名称 - 左侧对齐
           Padding(
@@ -95,13 +116,17 @@ class _CustomTitleBarState extends State<CustomTitleBar> with WindowListener {
             child: GestureDetector(
               behavior: HitTestBehavior.translucent,
               onPanStart: (_) {
-                windowManager.startDragging();
+                if (isDesktop) {
+                  windowManager.startDragging();
+                }
               },
               onDoubleTap: () async {
-                if (await windowManager.isMaximized()) {
-                  windowManager.unmaximize();
-                } else {
-                  windowManager.maximize();
+                if (isDesktop) {
+                  if (await windowManager.isMaximized()) {
+                    windowManager.unmaximize();
+                  } else {
+                    windowManager.maximize();
+                  }
                 }
               },
               child: const SizedBox.expand(),
@@ -109,28 +134,41 @@ class _CustomTitleBarState extends State<CustomTitleBar> with WindowListener {
           ),
           
           // Windows/Linux 窗口控制按钮 - 右侧
-          if (!Platform.isMacOS) ...[
+          if (!isMacOS) ...[
+            // 最小化按钮：自定义 Windows 11 风格，确保垂直居中
             _WindowButton(
-              icon: Icons.minimize,
+              iconBuilder: (color) => Win11MinimizeIcon(color: color),
               onPressed: () {
-                windowManager.minimize();
-              },
-            ),
-            _WindowButton(
-              icon: _isMaximized ? Icons.fullscreen_exit : Icons.crop_square,
-              onPressed: () async {
-                if (await windowManager.isMaximized()) {
-                  windowManager.unmaximize();
-                } else {
-                  windowManager.maximize();
+                if (isDesktop) {
+                  windowManager.minimize();
                 }
               },
             ),
+            const SizedBox(width: 2), // 窗口控制按钮间距，保持一致性
+            // 最大化/还原按钮：Windows 11 风格的重叠方形图标
+            _WindowButton(
+              iconBuilder: (color) => Win11MaximizeIcon(
+                isMaximized: _isMaximized,
+                color: color,
+              ),
+              onPressed: () async {
+                if (isDesktop) {
+                  if (await windowManager.isMaximized()) {
+                    windowManager.unmaximize();
+                  } else {
+                    windowManager.maximize();
+                  }
+                }
+              },
+            ),
+            const SizedBox(width: 2),
             _WindowButton(
               icon: Icons.close,
               isClose: true,
               onPressed: () {
-                windowManager.close();
+                if (isDesktop) {
+                  windowManager.close();
+                }
               },
             ),
           ],
@@ -141,14 +179,17 @@ class _CustomTitleBarState extends State<CustomTitleBar> with WindowListener {
 }
 
 class _WindowButton extends StatefulWidget {
-  final IconData icon;
+  final IconData? icon;
   final VoidCallback onPressed;
   final bool isClose;
+  // 自定义图标构建器，用于支持 Windows 风格的图标（可根据颜色自适应）
+  final Widget Function(Color color)? iconBuilder;
 
   const _WindowButton({
-    required this.icon,
+    this.icon,
     required this.onPressed,
     this.isClose = false,
+    this.iconBuilder,
   });
 
   @override
@@ -184,6 +225,10 @@ class _WindowButtonState extends State<_WindowButton> {
       if (widget.isClose && (_isHovering || _isPressed)) {
         return Colors.white;
       }
+      if (_isHovering || _isPressed) {
+        // 非关闭按钮在 hover/active 时提升对比度
+        return theme.colorScheme.onSurface;
+      }
       return theme.colorScheme.onSurface.withOpacity(0.8);
     }
     
@@ -206,13 +251,129 @@ class _WindowButtonState extends State<_WindowButton> {
           decoration: BoxDecoration(
             color: getBackgroundColor(),
           ),
-          child: Icon(
-            widget.icon,
-            size: 14,
-            color: getIconColor(),
+          // 使用居中布局确保图标在垂直与水平上完美居中
+          child: Center(
+            child: widget.iconBuilder != null
+                ? widget.iconBuilder!(getIconColor())
+                : Icon(
+                    widget.icon!,
+                    size: 14,
+                    color: getIconColor(),
+                  ),
           ),
         ),
       ),
     );
+  }
+}
+
+/// Windows 11 风格的最小化图标
+/// 使用自定义绘制确保在所有 DPI 下垂直居中显示
+class Win11MinimizeIcon extends StatelessWidget {
+  final Color color;
+  final double size;
+
+  const Win11MinimizeIcon({super.key, required this.color, this.size = 14});
+
+  @override
+  Widget build(BuildContext context) {
+    // 通过 CustomPaint 绘制一条居中的水平线，避免默认 Icon 偏移问题
+    return SizedBox(
+      width: size,
+      height: size,
+      child: CustomPaint(
+        painter: _MinimizeIconPainter(color: color),
+      ),
+    );
+  }
+}
+
+class _MinimizeIconPainter extends CustomPainter {
+  final Color color;
+  _MinimizeIconPainter({required this.color});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..style = PaintingStyle.stroke
+      // 选择适中的线宽以适配不同 DPI，Flutter 使用逻辑像素无需手动缩放
+      ..strokeWidth = 1.8
+      ..strokeCap = StrokeCap.square;
+
+    final double padding = 3; // 两端留白，符合 Windows 视觉规范
+    final double y = size.height / 2; // 垂直居中
+    canvas.drawLine(Offset(padding, y), Offset(size.width - padding, y), paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant _MinimizeIconPainter oldDelegate) {
+    return oldDelegate.color != color;
+  }
+}
+
+/// Windows 11 风格的最大化/还原图标
+/// 未最大化：单个方形；已最大化：两个重叠方形
+class Win11MaximizeIcon extends StatelessWidget {
+  final bool isMaximized;
+  final Color color;
+  final double size;
+
+  const Win11MaximizeIcon({
+    super.key,
+    required this.isMaximized,
+    required this.color,
+    this.size = 14,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: size,
+      height: size,
+      child: CustomPaint(
+        painter: _MaximizeIconPainter(isMaximized: isMaximized, color: color),
+      ),
+    );
+  }
+}
+
+class _MaximizeIconPainter extends CustomPainter {
+  final bool isMaximized;
+  final Color color;
+
+  _MaximizeIconPainter({required this.isMaximized, required this.color});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.6
+      ..strokeJoin = StrokeJoin.miter;
+
+    if (!isMaximized) {
+      // 单个方形（未最大化）
+      final double inset = 2.5;
+      final rect = Rect.fromLTWH(inset, inset, size.width - inset * 2, size.height - inset * 2);
+      canvas.drawRect(rect, paint);
+    } else {
+      // 两个重叠方形（已最大化 → 还原图标）
+      final double inset = 2.5;
+      final double overlap = 3.0; // 两个方形的偏移量
+
+      // 后方方形（顶部右侧）
+      final Rect back = Rect.fromLTWH(inset + overlap, inset, size.width - inset * 2 - overlap, size.height - inset * 2 - overlap);
+      // 前方方形（底部左侧）
+      final Rect front = Rect.fromLTWH(inset, inset + overlap, size.width - inset * 2 - overlap, size.height - inset * 2 - overlap);
+
+      canvas.drawRect(back, paint);
+      canvas.drawRect(front, paint);
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant _MaximizeIconPainter oldDelegate) {
+    return oldDelegate.isMaximized != isMaximized || oldDelegate.color != color;
   }
 }
