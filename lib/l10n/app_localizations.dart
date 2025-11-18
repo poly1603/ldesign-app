@@ -722,6 +722,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Error: {message}'**
   String errorWithMessage(String message);
+
+  /// No description provided for @back.
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get back;
+
+  /// No description provided for @projectPath.
+  ///
+  /// In en, this message translates to:
+  /// **'Project Path'**
+  String get projectPath;
+
+  /// No description provided for @timeInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Time Information'**
+  String get timeInfo;
+
+  /// No description provided for @addedAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Added At'**
+  String get addedAt;
+
+  /// No description provided for @tags.
+  ///
+  /// In en, this message translates to:
+  /// **'Tags'**
+  String get tags;
 }
 
 class _AppLocalizationsDelegate

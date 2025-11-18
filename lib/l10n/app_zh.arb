@@ -146,5 +146,10 @@
         "type": "String"
       }
     }
-  }
+  },
+  "back": "返回",
+  "projectPath": "项目路径",
+  "timeInfo": "时间信息",
+  "addedAt": "添加时间",
+  "tags": "标签"
 }

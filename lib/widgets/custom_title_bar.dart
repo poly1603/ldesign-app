@@ -55,19 +55,42 @@ class _CustomTitleBarState extends State<CustomTitleBar> with WindowListener {
     final theme = Theme.of(context);
 
     return Container(
-      height: Platform.isMacOS ? 28 : 32,
+      height: Platform.isMacOS ? 28 : 40,
       decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            theme.colorScheme.surface,
+            theme.colorScheme.surface.withOpacity(0.95),
+          ],
+        ),
         border: Border(
           bottom: BorderSide(
-            color: theme.dividerColor,
+            color: theme.dividerColor.withOpacity(0.3),
             width: 1,
           ),
         ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            offset: const Offset(0, 1),
+            blurRadius: 3,
+          ),
+        ],
       ),
       child: Row(
         children: [
+          // macOS 左侧交通灯按钮占位
           if (Platform.isMacOS) const SizedBox(width: 70),
+          
+          // 应用名称 - 左侧对齐
+          Padding(
+            padding: const EdgeInsets.only(left: 16),
+            child: widget.title ?? const SizedBox.shrink(),
+          ),
+          
+          // 可拖拽区域
           Expanded(
             child: GestureDetector(
               behavior: HitTestBehavior.translucent,
@@ -81,11 +104,11 @@ class _CustomTitleBarState extends State<CustomTitleBar> with WindowListener {
                   windowManager.maximize();
                 }
               },
-              child: Center(
-                child: widget.title ?? const SizedBox.shrink(),
-              ),
+              child: const SizedBox.expand(),
             ),
           ),
+          
+          // Windows/Linux 窗口控制按钮 - 右侧
           if (!Platform.isMacOS) ...[
             _WindowButton(
               icon: Icons.minimize,
@@ -94,7 +117,7 @@ class _CustomTitleBarState extends State<CustomTitleBar> with WindowListener {
               },
             ),
             _WindowButton(
-              icon: _isMaximized ? Icons.fullscreen_exit : Icons.fullscreen,
+              icon: _isMaximized ? Icons.fullscreen_exit : Icons.crop_square,
               onPressed: () async {
                 if (await windowManager.isMaximized()) {
                   windowManager.unmaximize();
@@ -134,28 +157,59 @@ class _WindowButton extends StatefulWidget {
 
 class _WindowButtonState extends State<_WindowButton> {
   bool _isHovering = false;
+  bool _isPressed = false;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     
+    // 定义悬停和按下状态的颜色
+    Color getBackgroundColor() {
+      if (_isPressed) {
+        if (widget.isClose) {
+          return const Color(0xFFE81123).withOpacity(0.9);
+        }
+        return theme.colorScheme.surfaceContainerHighest.withOpacity(0.8);
+      }
+      if (_isHovering) {
+        if (widget.isClose) {
+          return const Color(0xFFE81123);
+        }
+        return theme.colorScheme.surfaceContainerHighest.withOpacity(0.5);
+      }
+      return Colors.transparent;
+    }
+
+    Color getIconColor() {
+      if (widget.isClose && (_isHovering || _isPressed)) {
+        return Colors.white;
+      }
+      return theme.colorScheme.onSurface.withOpacity(0.8);
+    }
+    
     return MouseRegion(
       onEnter: (_) => setState(() => _isHovering = true),
-      onExit: (_) => setState(() => _isHovering = false),
+      onExit: (_) => setState(() {
+        _isHovering = false;
+        _isPressed = false;
+      }),
       child: GestureDetector(
+        onTapDown: (_) => setState(() => _isPressed = true),
+        onTapUp: (_) => setState(() => _isPressed = false),
+        onTapCancel: () => setState(() => _isPressed = false),
         onTap: widget.onPressed,
-        child: Container(
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 150),
+          curve: Curves.easeInOut,
           width: 46,
-          height: 32,
-          color: _isHovering
-              ? (widget.isClose ? Colors.red : theme.colorScheme.surfaceContainerHighest)
-              : Colors.transparent,
+          height: 40,
+          decoration: BoxDecoration(
+            color: getBackgroundColor(),
+          ),
           child: Icon(
             widget.icon,
-            size: 16,
-            color: _isHovering && widget.isClose
-                ? Colors.white
-                : theme.colorScheme.onSurface,
+            size: 14,
+            color: getIconColor(),
           ),
         ),
       ),

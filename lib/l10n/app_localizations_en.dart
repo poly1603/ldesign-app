@@ -333,4 +333,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String errorWithMessage(String message) {
     return 'Error: $message';
   }
+
+  @override
+  String get back => 'Back';
+
+  @override
+  String get projectPath => 'Project Path';
+
+  @override
+  String get timeInfo => 'Time Information';
+
+  @override
+  String get addedAt => 'Added At';
+
+  @override
+  String get tags => 'Tags';
 }

@@ -60,8 +60,11 @@ class _ImportProjectDialogState extends State<ImportProjectDialog> with SingleTi
           ),
           elevation: 24,
           child: Container(
-            width: 480,
-            constraints: const BoxConstraints(maxHeight: 580),
+            width: 680,
+            constraints: const BoxConstraints(
+              maxHeight: 720,
+              minHeight: 480,
+            ),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(24),
               gradient: LinearGradient(
@@ -137,7 +140,12 @@ class _ImportProjectDialogState extends State<ImportProjectDialog> with SingleTi
                           ),
                           child: IconButton(
                             icon: const Icon(Bootstrap.x, size: 20),
-                            onPressed: () => Navigator.pop(context),
+                            onPressed: () async {
+                              await _animationController.reverse();
+                              if (context.mounted) {
+                                Navigator.pop(context);
+                              }
+                            },
                             tooltip: '关闭',
                           ),
                         ),
@@ -272,145 +280,61 @@ class _ImportProjectDialogState extends State<ImportProjectDialog> with SingleTi
                   // Project info
                   if (_analyzedProject != null && !_isAnalyzing)
                     Flexible(
-                      child: SingleChildScrollView(
-                        padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // Duplicate warning
-                            if (_isDuplicate)
-                              Container(
-                                margin: const EdgeInsets.only(bottom: 16),
-                                padding: const EdgeInsets.all(12),
-                                decoration: BoxDecoration(
-                                  color: Colors.orange.withOpacity(0.1),
-                                  borderRadius: BorderRadius.circular(12),
-                                  border: Border.all(
-                                    color: Colors.orange.withOpacity(0.3),
-                                    width: 1.5,
-                                  ),
-                                ),
-                                child: Row(
-                                  children: [
-                                    Icon(
-                                      Bootstrap.exclamation_triangle,
-                                      color: Colors.orange.shade700,
-                                      size: 20,
-                                    ),
-                                    const SizedBox(width: 12),
-                                    Expanded(
-                                      child: Text(
-                                        '此项目已存在，导入将覆盖现有记录',
-                                        style: TextStyle(
-                                          color: Colors.orange.shade700,
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 13,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            _buildInfoCard(
-                              context,
-                              theme,
-                              l10n,
-                              _analyzedProject!,
-                            ),
-                            const SizedBox(height: 20),
-                            if (_isDuplicate)
-                              // Only show reselect button when duplicate
-                              SizedBox(
-                                width: double.infinity,
-                                child: OutlinedButton.icon(
-                                  onPressed: _selectDirectory,
-                                  icon: const Icon(Bootstrap.arrow_repeat, size: 18),
-                                  label: Text(
-                                    l10n.reselect,
-                                    style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
-                                  ),
-                                  style: OutlinedButton.styleFrom(
-                                    padding: const EdgeInsets.symmetric(vertical: 14),
-                                    side: BorderSide(
-                                      color: theme.colorScheme.primary.withOpacity(0.3),
-                                      width: 2,
-                                    ),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(14),
-                                    ),
-                                  ),
-                                ),
-                              )
-                            else
-                              // Show both buttons when not duplicate
-                              Row(
+                      child: Column(
+                        children: [
+                          Expanded(
+                            child: SingleChildScrollView(
+                              padding: const EdgeInsets.fromLTRB(24, 16, 24, 16),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Expanded(
-                                    child: OutlinedButton.icon(
-                                      onPressed: _selectDirectory,
-                                      icon: const Icon(Bootstrap.arrow_repeat, size: 18),
-                                      label: Text(
-                                        l10n.reselect,
-                                        style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
-                                      ),
-                                      style: OutlinedButton.styleFrom(
-                                        padding: const EdgeInsets.symmetric(vertical: 14),
-                                        side: BorderSide(
-                                          color: theme.colorScheme.primary.withOpacity(0.3),
-                                          width: 2,
-                                        ),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(14),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 16),
-                                  Expanded(
-                                    flex: 2,
-                                    child: Container(
+                                  // Duplicate warning
+                                  if (_isDuplicate)
+                                    Container(
+                                      margin: const EdgeInsets.only(bottom: 20),
+                                      padding: const EdgeInsets.all(14),
                                       decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(14),
-                                        gradient: LinearGradient(
-                                          colors: [
-                                            theme.colorScheme.primary,
-                                            theme.colorScheme.primary.withOpacity(0.85),
-                                          ],
+                                        color: Colors.orange.withOpacity(0.1),
+                                        borderRadius: BorderRadius.circular(12),
+                                        border: Border.all(
+                                          color: Colors.orange.withOpacity(0.3),
+                                          width: 1.5,
                                         ),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: theme.colorScheme.primary.withOpacity(0.4),
-                                            blurRadius: 12,
-                                            offset: const Offset(0, 6),
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          Icon(
+                                            Bootstrap.exclamation_triangle,
+                                            color: Colors.orange.shade700,
+                                            size: 20,
+                                          ),
+                                          const SizedBox(width: 12),
+                                          Expanded(
+                                            child: Text(
+                                              '此项目已存在，导入将覆盖现有记录',
+                                              style: TextStyle(
+                                                color: Colors.orange.shade700,
+                                                fontWeight: FontWeight.w600,
+                                                fontSize: 13,
+                                              ),
+                                            ),
                                           ),
                                         ],
                                       ),
-                                      child: ElevatedButton.icon(
-                                        onPressed: () => Navigator.pop(context, _analyzedProject),
-                                        icon: const Icon(Bootstrap.check_circle, size: 18),
-                                        label: Text(
-                                          l10n.confirmImport,
-                                          style: const TextStyle(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        style: ElevatedButton.styleFrom(
-                                          padding: const EdgeInsets.symmetric(vertical: 14),
-                                          backgroundColor: Colors.transparent,
-                                          foregroundColor: Colors.white,
-                                          shadowColor: Colors.transparent,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(14),
-                                          ),
-                                        ),
-                                      ),
                                     ),
+                                  _buildInfoCard(
+                                    context,
+                                    theme,
+                                    l10n,
+                                    _analyzedProject!,
                                   ),
                                 ],
                               ),
-                          ],
-                        ),
+                            ),
+                          ),
+                          // Fixed bottom action buttons
+                          _buildBottomActions(context, theme, l10n),
+                        ],
                       ),
                     ),
                 ],
@@ -444,109 +368,157 @@ class _ImportProjectDialogState extends State<ImportProjectDialog> with SingleTi
     final color = typeColors[project.type] ?? Colors.grey;
 
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            theme.colorScheme.surfaceContainerHighest,
-            theme.colorScheme.surfaceContainerHighest.withOpacity(0.7),
-          ],
-        ),
+        color: theme.colorScheme.surfaceContainerHighest.withOpacity(0.5),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: color.withOpacity(0.2),
-          width: 2,
+          color: theme.dividerColor.withOpacity(0.5),
+          width: 1,
         ),
-        boxShadow: [
-          BoxShadow(
-            color: color.withOpacity(0.1),
-            blurRadius: 16,
-            offset: const Offset(0, 4),
-          ),
-        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Project name header
           Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(6),
+                padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.15),
-                  borderRadius: BorderRadius.circular(8),
+                  gradient: LinearGradient(
+                    colors: [
+                      color,
+                      color.withOpacity(0.8),
+                    ],
+                  ),
+                  borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
-                  Bootstrap.info_circle,
-                  size: 18,
-                  color: color,
+                  Icons.folder_open,
+                  size: 24,
+                  color: Colors.white,
                 ),
               ),
-              const SizedBox(width: 10),
-              Text(
-                l10n.projectInfo,
-                style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: -0.3,
-                  fontSize: 16,
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      project.name,
+                      style: theme.textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      project.path,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSurface.withOpacity(0.6),
+                        fontSize: 12,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 16),
-          _buildInfoRow(
-            context,
-            l10n.projectName,
-            project.name,
-            Icons.title,
+          const SizedBox(height: 20),
+          // Info grid
+          Row(
+            children: [
+              Expanded(
+                child: _buildCompactInfoItem(
+                  context,
+                  theme,
+                  Icons.category,
+                  l10n.projectType,
+                  project.getTypeDisplayName(),
+                  color,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: _buildCompactInfoItem(
+                  context,
+                  theme,
+                  Icons.code,
+                  l10n.framework,
+                  project.getFrameworkDisplayName(),
+                  null,
+                ),
+              ),
+            ],
           ),
           const SizedBox(height: 12),
-          _buildInfoRow(
-            context,
-            l10n.projectType,
-            project.getTypeDisplayName(),
-            Icons.category,
-            valueColor: color,
+          Row(
+            children: [
+              if (project.language != null)
+                Expanded(
+                  child: _buildCompactInfoItem(
+                    context,
+                    theme,
+                    Icons.language,
+                    l10n.language,
+                    project.language!,
+                    null,
+                  ),
+                ),
+              if (project.language != null && project.version != null)
+                const SizedBox(width: 12),
+              if (project.version != null)
+                Expanded(
+                  child: _buildCompactInfoItem(
+                    context,
+                    theme,
+                    Icons.numbers,
+                    l10n.projectVersion,
+                    project.version!,
+                    null,
+                  ),
+                ),
+            ],
           ),
-          const SizedBox(height: 12),
-          _buildInfoRow(
-            context,
-            l10n.framework,
-            project.getFrameworkDisplayName(),
-            Icons.code,
-          ),
-          if (project.language != null) ...[
-            const SizedBox(height: 12),
-            _buildInfoRow(
-              context,
-              l10n.language,
-              project.language!,
-              Icons.language,
+          if (project.description != null) ...[
+            const SizedBox(height: 16),
+            Container(
+              padding: const EdgeInsets.all(14),
+              decoration: BoxDecoration(
+                color: theme.colorScheme.surface.withOpacity(0.5),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(
+                    Icons.description,
+                    size: 18,
+                    color: theme.colorScheme.onSurface.withOpacity(0.6),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      project.description!,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        height: 1.5,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
-          if (project.version != null) ...[
-            const SizedBox(height: 12),
-            _buildInfoRow(
-              context,
-              l10n.projectVersion,
-              project.version!,
-              Icons.numbers,
-            ),
-          ],
-          const SizedBox(height: 12),
-          _buildInfoRow(
-            context,
-            l10n.projectDescription,
-            project.description ?? l10n.noDescription,
-            Icons.description,
-          ),
           if (project.tags.isNotEmpty) ...[
             const SizedBox(height: 16),
             Wrap(
-              spacing: 10,
-              runSpacing: 10,
+              spacing: 8,
+              runSpacing: 8,
               children: project.tags.map((tag) {
                 return Container(
                   padding: const EdgeInsets.symmetric(
@@ -554,24 +526,12 @@ class _ImportProjectDialogState extends State<ImportProjectDialog> with SingleTi
                     vertical: 6,
                   ),
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        theme.colorScheme.primary.withOpacity(0.15),
-                        theme.colorScheme.primary.withOpacity(0.08),
-                      ],
-                    ),
+                    color: theme.colorScheme.primary.withOpacity(0.12),
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(
-                      color: theme.colorScheme.primary.withOpacity(0.25),
-                      width: 1.5,
+                      color: theme.colorScheme.primary.withOpacity(0.3),
+                      width: 1,
                     ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: theme.colorScheme.primary.withOpacity(0.1),
-                        blurRadius: 4,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
@@ -601,47 +561,163 @@ class _ImportProjectDialogState extends State<ImportProjectDialog> with SingleTi
     );
   }
 
-  Widget _buildInfoRow(
+  Widget _buildCompactInfoItem(
     BuildContext context,
+    ThemeData theme,
+    IconData icon,
     String label,
-    String value, 
-    IconData icon, {
-    Color? valueColor,
-  }) {
-    final theme = Theme.of(context);
-    
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Icon(
-          icon,
-          size: 18,
-          color: theme.colorScheme.onSurface.withOpacity(0.6),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+    String value,
+    Color? accentColor,
+  ) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surface.withOpacity(0.5),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
             children: [
+              Icon(
+                icon,
+                size: 16,
+                color: accentColor ?? theme.colorScheme.onSurface.withOpacity(0.6),
+              ),
+              const SizedBox(width: 6),
               Text(
                 label,
                 style: theme.textTheme.bodySmall?.copyWith(
                   color: theme.colorScheme.onSurface.withOpacity(0.6),
-                ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                value,
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: valueColor,
+                  fontSize: 11,
                 ),
               ),
             ],
           ),
-        ),
-      ],
+          const SizedBox(height: 6),
+          Text(
+            value,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              fontWeight: FontWeight.w600,
+              color: accentColor,
+            ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ],
+      ),
     );
+  }
+
+  Widget _buildBottomActions(BuildContext context, ThemeData theme, AppLocalizations l10n) {
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surface,
+        border: Border(
+          top: BorderSide(
+            color: theme.dividerColor.withOpacity(0.5),
+            width: 1,
+          ),
+        ),
+      ),
+      child: _isDuplicate
+          ? SizedBox(
+              width: double.infinity,
+              child: OutlinedButton.icon(
+                onPressed: _selectDirectory,
+                icon: const Icon(Bootstrap.arrow_repeat, size: 18),
+                label: Text(
+                  l10n.reselect,
+                  style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
+                ),
+                style: OutlinedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  side: BorderSide(
+                    color: theme.colorScheme.primary.withOpacity(0.3),
+                    width: 2,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                ),
+              ),
+            )
+          : Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: _selectDirectory,
+                    icon: const Icon(Bootstrap.arrow_repeat, size: 18),
+                    label: Text(
+                      l10n.reselect,
+                      style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
+                    ),
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      side: BorderSide(
+                        color: theme.colorScheme.primary.withOpacity(0.3),
+                        width: 2,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  flex: 2,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(14),
+                      gradient: LinearGradient(
+                        colors: [
+                          theme.colorScheme.primary,
+                          theme.colorScheme.primary.withOpacity(0.85),
+                        ],
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: theme.colorScheme.primary.withOpacity(0.4),
+                          blurRadius: 12,
+                          offset: const Offset(0, 6),
+                        ),
+                      ],
+                    ),
+                    child: ElevatedButton.icon(
+                      onPressed: () => _closeWithAnimation(context),
+                      icon: const Icon(Bootstrap.check_circle, size: 18),
+                      label: Text(
+                        l10n.confirmImport,
+                        style: const TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        backgroundColor: Colors.transparent,
+                        foregroundColor: Colors.white,
+                        shadowColor: Colors.transparent,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+    );
+  }
+
+  Future<void> _closeWithAnimation(BuildContext context) async {
+    await _animationController.reverse();
+    if (context.mounted) {
+      Navigator.pop(context, _analyzedProject);
+    }
   }
 
   Future<void> _selectDirectory() async {

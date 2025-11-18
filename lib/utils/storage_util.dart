@@ -225,17 +225,21 @@ class StorageUtil {
       final content = await file.readAsString(encoding: utf8);
       if (kDebugMode) {
         debugPrint('StorageUtil.getProjects: File content length: ${content.length}');
-        debugPrint('StorageUtil.getProjects: File content preview: ${content.length > 100 ? content.substring(0, 100) + "..." : content}');
+        debugPrint('StorageUtil.getProjects: File content: $content');
       }
       
-      if (content.trim().isEmpty) {
+      final trimmedContent = content.trim();
+      if (trimmedContent.isEmpty || trimmedContent == 'null') {
         if (kDebugMode) {
-          debugPrint('StorageUtil.getProjects: File is empty, returning empty list');
+          debugPrint('StorageUtil.getProjects: File is empty or null, resetting to []');
         }
+        // 重置文件为空数组
+        await file.writeAsString('[]', encoding: utf8);
         return [];
       }
       
-      final List<dynamic> decoded = jsonDecode(content);
+      // 尝试解析 JSON
+      final List<dynamic> decoded = jsonDecode(trimmedContent);
       final projects = decoded
           .map((json) => Project.fromJson(json as Map<String, dynamic>))
           .toList();
@@ -247,7 +251,8 @@ class StorageUtil {
       // 同步到 SharedPreferences 作为缓存
       try {
         final prefs = await SharedPreferences.getInstance();
-        await prefs.setString(_keyProjects, content);
+        final validJson = jsonEncode(decoded);
+        await prefs.setString(_keyProjects, validJson);
         if (kDebugMode) {
           debugPrint('StorageUtil.getProjects: Synced to SharedPreferences as cache');
         }
@@ -260,8 +265,21 @@ class StorageUtil {
       return projects;
     } catch (e, stackTrace) {
       if (kDebugMode) {
-        debugPrint('StorageUtil.getProjects: File read error: $e');
+        debugPrint('StorageUtil.getProjects: File read/parse error: $e');
         debugPrint('StorageUtil.getProjects: Stack trace: $stackTrace');
+      }
+      
+      // 如果文件损坏，尝试重置
+      try {
+        final file = await _projectsFile();
+        if (kDebugMode) {
+          debugPrint('StorageUtil.getProjects: Resetting corrupted file to []');
+        }
+        await file.writeAsString('[]', encoding: utf8);
+      } catch (resetError) {
+        if (kDebugMode) {
+          debugPrint('StorageUtil.getProjects: Failed to reset file: $resetError');
+        }
       }
     }
 
@@ -269,36 +287,48 @@ class StorageUtil {
     try {
       final prefs = await SharedPreferences.getInstance();
       final projectsJson = prefs.getString(_keyProjects);
-      if (projectsJson != null && projectsJson.isNotEmpty) {
+      if (projectsJson != null && projectsJson.trim().isNotEmpty && projectsJson.trim() != 'null') {
         if (kDebugMode) {
-          debugPrint('StorageUtil.getProjects: SharedPreferences content length: ${projectsJson.length}');
-          debugPrint('StorageUtil.getProjects: SharedPreferences content preview: ${projectsJson.length > 100 ? projectsJson.substring(0, 100) + "..." : projectsJson}');
+          debugPrint('StorageUtil.getProjects: SharedPreferences content: $projectsJson');
         }
         
-        final List<dynamic> decoded = jsonDecode(projectsJson);
+        final List<dynamic> decoded = jsonDecode(projectsJson.trim());
         final projects = decoded
             .map((json) => Project.fromJson(json as Map<String, dynamic>))
             .toList();
         if (kDebugMode) {
           debugPrint('StorageUtil.getProjects: Fallback loaded ${projects.length} projects from SharedPreferences');
         }
+        
+        // 恢复文件
+        try {
+          final file = await _projectsFile();
+          await file.writeAsString(projectsJson, encoding: utf8);
+          if (kDebugMode) {
+            debugPrint('StorageUtil.getProjects: Restored file from SharedPreferences');
+          }
+        } catch (_) {}
+        
         return projects;
       }
     } catch (e, stackTrace) {
       if (kDebugMode) {
-        debugPrint('StorageUtil.getProjects: SharedPreferences read error: $e');
+        debugPrint('StorageUtil.getProjects: SharedPreferences read/parse error: $e');
         debugPrint('StorageUtil.getProjects: SharedPreferences stack trace: $stackTrace');
-        // 清理损坏的 SharedPreferences 数据
-        try {
-          final prefs = await SharedPreferences.getInstance();
-          await prefs.remove(_keyProjects);
-          debugPrint('StorageUtil.getProjects: Cleared corrupted SharedPreferences data');
-        } catch (_) {}
       }
+      
+      // 清理损坏的 SharedPreferences 数据
+      try {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.remove(_keyProjects);
+        if (kDebugMode) {
+          debugPrint('StorageUtil.getProjects: Cleared corrupted SharedPreferences data');
+        }
+      } catch (_) {}
     }
 
     if (kDebugMode) {
-      debugPrint('StorageUtil.getProjects: No projects found, returning empty list');
+      debugPrint('StorageUtil.getProjects: No valid projects found, returning empty list');
     }
     return [];
   }
@@ -313,7 +343,7 @@ class StorageUtil {
     // 优先写入文件，确保数据持久化
     try {
       final file = await _projectsFile();
-      await file.writeAsString(projectsJson);
+      await file.writeAsString(projectsJson, encoding: utf8);
       if (kDebugMode) {
         debugPrint('StorageUtil.setProjects: Successfully wrote ${projects.length} projects to file: ${file.path}');
       }
@@ -334,6 +364,45 @@ class StorageUtil {
       if (kDebugMode) {
         debugPrint('StorageUtil.setProjects: SharedPreferences write error: $e');
       }
+    }
+  }
+
+  /// 清理所有 SharedPreferences 数据（保留文件数据）
+  static Future<void> clearAllPreferences() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.clear();
+      if (kDebugMode) {
+        debugPrint('StorageUtil.clearAllPreferences: Successfully cleared all SharedPreferences data');
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('StorageUtil.clearAllPreferences: Error: $e');
+      }
+      rethrow;
+    }
+  }
+
+  /// 重置所有偏好设置为默认值
+  static Future<void> resetAllPreferences() async {
+    try {
+      await clearAllPreferences();
+      
+      // 重新设置默认值
+      await setThemeMode(ThemeMode.light);
+      await setPrimaryColor(ThemeConfig.presetColors[0]);
+      await setAppSize(AppSize.standard);
+      await setLocale(const Locale('zh'));
+      await setSidebarCollapsed(false);
+      
+      if (kDebugMode) {
+        debugPrint('StorageUtil.resetAllPreferences: Successfully reset all preferences to defaults');
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('StorageUtil.resetAllPreferences: Error: $e');
+      }
+      rethrow;
     }
   }
 }

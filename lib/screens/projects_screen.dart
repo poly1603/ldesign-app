@@ -355,7 +355,7 @@ class ProjectsScreen extends StatelessWidget {
         color: Colors.transparent,
         child: InkWell(
           onTap: () {
-            // TODO: Open project details
+            appProvider.navigateToProjectDetail(project.id);
           },
           borderRadius: BorderRadius.circular(16),
           child: Padding(

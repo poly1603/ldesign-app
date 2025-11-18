@@ -331,6 +331,21 @@ class AppLocalizationsZh extends AppLocalizations {
   String errorWithMessage(String message) {
     return '错误：$message';
   }
+
+  @override
+  String get back => '返回';
+
+  @override
+  String get projectPath => '项目路径';
+
+  @override
+  String get timeInfo => '时间信息';
+
+  @override
+  String get addedAt => '添加时间';
+
+  @override
+  String get tags => '标签';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hant`).
@@ -660,4 +675,19 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
   String errorWithMessage(String message) {
     return '錯誤：$message';
   }
+
+  @override
+  String get back => '返回';
+
+  @override
+  String get projectPath => '項目路徑';
+
+  @override
+  String get timeInfo => '時間信息';
+
+  @override
+  String get addedAt => '添加時間';
+
+  @override
+  String get tags => '標籤';
 }

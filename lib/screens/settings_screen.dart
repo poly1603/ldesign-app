@@ -5,6 +5,8 @@ import 'package:provider/provider.dart';
 import '../l10n/app_localizations.dart';
 import '../providers/app_provider.dart';
 import '../config/theme_config.dart';
+import '../widgets/debug_storage_dialog.dart';
+import '../utils/storage_util.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -196,6 +198,47 @@ class SettingsScreen extends StatelessWidget {
               ),
             ],
           ),
+          const SizedBox(height: 16),
+          
+          // Debug Settings Card (only in debug mode)
+          if (const bool.fromEnvironment('dart.vm.product') == false)
+            _buildSettingsCard(
+              theme: theme,
+              title: '调试工具',
+              icon: Bootstrap.bug,
+              children: [
+                _buildSettingItem(
+                  theme: theme,
+                  title: '存储调试信息',
+                  icon: Bootstrap.database,
+                  trailing: ElevatedButton.icon(
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) => const DebugStorageDialog(),
+                      );
+                    },
+                    icon: const Icon(Bootstrap.bug, size: 14),
+                    label: const Text('查看'),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                _buildSettingItem(
+                  theme: theme,
+                  title: '清理损坏数据',
+                  icon: Bootstrap.trash,
+                  trailing: ElevatedButton.icon(
+                    onPressed: () => _showClearDataDialog(context),
+                    icon: const Icon(Bootstrap.trash, size: 14),
+                    label: const Text('清理'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: theme.colorScheme.error,
+                      foregroundColor: theme.colorScheme.onError,
+                    ),
+                  ),
+                ),
+              ],
+            ),
         ],
       ),
     );
@@ -303,5 +346,110 @@ class SettingsScreen extends StatelessWidget {
         trailing,
       ],
     );
+  }
+
+  void _showClearDataDialog(BuildContext context) {
+    final theme = Theme.of(context);
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Row(
+          children: [
+            Icon(Bootstrap.exclamation_triangle, color: theme.colorScheme.error),
+            const SizedBox(width: 12),
+            const Text('确认清理'),
+          ],
+        ),
+        content: const Text(
+          '此操作将清理所有 SharedPreferences 中的损坏数据，并重置所有设置为默认值。\n\n'
+          '项目数据不会受影响（保存在文件中）。\n\n'
+          '是否继续？',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('取消'),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              Navigator.pop(context);
+              await _clearCorruptedData(context);
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: theme.colorScheme.error,
+              foregroundColor: theme.colorScheme.onError,
+            ),
+            child: const Text('清理'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _clearCorruptedData(BuildContext context) async {
+    final theme = Theme.of(context);
+    final messenger = ScaffoldMessenger.of(context);
+    
+    try {
+      // 显示加载提示
+      messenger.showSnackBar(
+        SnackBar(
+          content: Row(
+            children: [
+              SizedBox(
+                width: 16,
+                height: 16,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  color: theme.colorScheme.onInverseSurface,
+                ),
+              ),
+              const SizedBox(width: 12),
+              const Text('正在清理数据...'),
+            ],
+          ),
+          duration: const Duration(seconds: 2),
+        ),
+      );
+
+      // 执行清理
+      await StorageUtil.resetAllPreferences();
+
+      // 重新加载设置
+      if (context.mounted) {
+        await context.read<AppProvider>().initialize();
+      }
+
+      // 显示成功消息
+      messenger.clearSnackBars();
+      messenger.showSnackBar(
+        SnackBar(
+          content: Row(
+            children: [
+              Icon(Bootstrap.check_circle, color: theme.colorScheme.onPrimary, size: 18),
+              const SizedBox(width: 12),
+              const Text('清理成功！设置已重置为默认值'),
+            ],
+          ),
+          backgroundColor: theme.colorScheme.primary,
+          duration: const Duration(seconds: 3),
+        ),
+      );
+    } catch (e) {
+      messenger.clearSnackBars();
+      messenger.showSnackBar(
+        SnackBar(
+          content: Row(
+            children: [
+              Icon(Bootstrap.exclamation_circle, color: theme.colorScheme.onError, size: 18),
+              const SizedBox(width: 12),
+              Text('清理失败: $e'),
+            ],
+          ),
+          backgroundColor: theme.colorScheme.error,
+          duration: const Duration(seconds: 4),
+        ),
+      );
+    }
   }
 }

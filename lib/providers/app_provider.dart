@@ -11,6 +11,7 @@ class AppProvider extends ChangeNotifier {
   Locale _locale = const Locale('zh');
   bool _sidebarCollapsed = false;
   String _currentRoute = '/';
+  Map<String, dynamic> _routeParams = {};
   List<Project> _projects = [];
   String _projectsPath = '';
   String _searchQuery = '';
@@ -24,6 +25,7 @@ class AppProvider extends ChangeNotifier {
   Locale get locale => _locale;
   bool get sidebarCollapsed => _sidebarCollapsed;
   String get currentRoute => _currentRoute;
+  Map<String, dynamic> get routeParams => _routeParams;
   List<Project> get projects => _getFilteredProjects();
   List<Project> get allProjects => _projects;
   String get projectsPath => _projectsPath;
@@ -42,15 +44,81 @@ class AppProvider extends ChangeNotifier {
 
   Future<void> _loadPreferences() async {
     try {
-      _themeMode = await StorageUtil.getThemeMode();
-      _primaryColor = await StorageUtil.getPrimaryColor();
-      _appSize = await StorageUtil.getAppSize();
-      _locale = await StorageUtil.getLocale();
-      _sidebarCollapsed = await StorageUtil.getSidebarCollapsed();
-      _projectsPath = await StorageUtil.getProjectsPath();
-      _projects = await StorageUtil.getProjects();
       if (kDebugMode) {
-        debugPrint('AppProvider._loadPreferences: Successfully loaded ${_projects.length} projects');
+        debugPrint('AppProvider._loadPreferences: Starting to load preferences');
+      }
+      
+      try {
+        _themeMode = await StorageUtil.getThemeMode();
+      } catch (e) {
+        if (kDebugMode) {
+          debugPrint('AppProvider._loadPreferences: Error loading theme mode: $e');
+        }
+        _themeMode = ThemeMode.light;
+      }
+      
+      try {
+        _primaryColor = await StorageUtil.getPrimaryColor();
+      } catch (e) {
+        if (kDebugMode) {
+          debugPrint('AppProvider._loadPreferences: Error loading primary color: $e');
+        }
+        _primaryColor = ThemeConfig.presetColors[0];
+      }
+      
+      try {
+        _appSize = await StorageUtil.getAppSize();
+      } catch (e) {
+        if (kDebugMode) {
+          debugPrint('AppProvider._loadPreferences: Error loading app size: $e');
+        }
+        _appSize = AppSize.standard;
+      }
+      
+      try {
+        _locale = await StorageUtil.getLocale();
+      } catch (e) {
+        if (kDebugMode) {
+          debugPrint('AppProvider._loadPreferences: Error loading locale: $e');
+        }
+        _locale = const Locale('zh');
+      }
+      
+      try {
+        _sidebarCollapsed = await StorageUtil.getSidebarCollapsed();
+      } catch (e) {
+        if (kDebugMode) {
+          debugPrint('AppProvider._loadPreferences: Error loading sidebar state: $e');
+        }
+        _sidebarCollapsed = false;
+      }
+      
+      try {
+        _projectsPath = await StorageUtil.getProjectsPath();
+      } catch (e) {
+        if (kDebugMode) {
+          debugPrint('AppProvider._loadPreferences: Error loading projects path: $e');
+        }
+      }
+      
+      if (kDebugMode) {
+        debugPrint('AppProvider._loadPreferences: Projects file path: $_projectsPath');
+      }
+      
+      try {
+        _projects = await StorageUtil.getProjects();
+        
+        if (kDebugMode) {
+          debugPrint('AppProvider._loadPreferences: Successfully loaded ${_projects.length} projects');
+          if (_projects.isNotEmpty) {
+            debugPrint('AppProvider._loadPreferences: First project: ${_projects[0].name}');
+          }
+        }
+      } catch (e) {
+        if (kDebugMode) {
+          debugPrint('AppProvider._loadPreferences: Error loading projects: $e');
+        }
+        _projects = [];
       }
     } catch (e, stackTrace) {
       if (kDebugMode) {
@@ -105,9 +173,14 @@ class AppProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setCurrentRoute(String route) {
+  void setCurrentRoute(String route, {Map<String, dynamic>? params}) {
     _currentRoute = route;
+    _routeParams = params ?? {};
     notifyListeners();
+  }
+
+  void navigateToProjectDetail(String projectId) {
+    setCurrentRoute('/project-detail', params: {'projectId': projectId});
   }
 
   ThemeData getLightTheme() {
@@ -121,9 +194,25 @@ class AppProvider extends ChangeNotifier {
   // Project management
   Future<void> addProject(Project project) async {
     _projects.add(project);
+    
+    if (kDebugMode) {
+      debugPrint('AppProvider.addProject: Adding project: ${project.name}');
+      debugPrint('AppProvider.addProject: Total projects count: ${_projects.length}');
+    }
+    
     // 先通知 UI，确保列表即时刷新；再异步持久化
     notifyListeners();
-    await StorageUtil.setProjects(_projects);
+    
+    try {
+      await StorageUtil.setProjects(_projects);
+      if (kDebugMode) {
+        debugPrint('AppProvider.addProject: Successfully saved ${_projects.length} projects to storage');
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('AppProvider.addProject: Error saving projects: $e');
+      }
+    }
   }
 
   Future<void> setProjectsPath(String path) async {

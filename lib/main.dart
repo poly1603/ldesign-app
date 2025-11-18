@@ -8,6 +8,7 @@ import 'providers/app_provider.dart';
 import 'widgets/main_layout.dart';
 import 'screens/home_screen.dart';
 import 'screens/projects_screen.dart';
+import 'screens/project_detail_screen.dart';
 import 'screens/settings_screen.dart';
 
 void main() async {
@@ -143,6 +144,7 @@ class AppNavigator extends StatelessWidget {
   Widget build(BuildContext context) {
     final appProvider = context.watch<AppProvider>();
     final currentRoute = appProvider.currentRoute;
+    final routeParams = appProvider.routeParams;
 
     Widget screen;
     switch (currentRoute) {
@@ -151,6 +153,18 @@ class AppNavigator extends StatelessWidget {
         break;
       case '/projects':
         screen = const ProjectsScreen();
+        break;
+      case '/project-detail':
+        final projectId = routeParams['projectId'] as String?;
+        if (projectId != null) {
+          screen = ProjectDetailScreen(projectId: projectId);
+        } else {
+          // 如果没有 projectId，回到项目列表
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            appProvider.setCurrentRoute('/projects');
+          });
+          screen = const ProjectsScreen();
+        }
         break;
       case '/settings':
         screen = const SettingsScreen();

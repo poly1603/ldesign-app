@@ -146,5 +146,10 @@
         "type": "String"
       }
     }
-  }
+  },
+  "back": "Back",
+  "projectPath": "Project Path",
+  "timeInfo": "Time Information",
+  "addedAt": "Added At",
+  "tags": "Tags"
 }
