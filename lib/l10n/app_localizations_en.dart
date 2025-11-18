@@ -293,4 +293,44 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get cordova => 'Cordova';
+
+  @override
+  String get todayLabel => 'Today';
+
+  @override
+  String get yesterdayLabel => 'Yesterday';
+
+  @override
+  String xDaysAgo(int count) {
+    return '$count days ago';
+  }
+
+  @override
+  String xWeeksAgo(int count) {
+    return '$count weeks ago';
+  }
+
+  @override
+  String projectImportedSuccess(String name) {
+    return 'Project \'$name\' imported successfully';
+  }
+
+  @override
+  String confirmRemoveFromList(String name) {
+    return 'Remove project \'$name\' from the list?';
+  }
+
+  @override
+  String projectRemoved(String name) {
+    return 'Project \'$name\' removed';
+  }
+
+  @override
+  String get failedToAnalyzeProjectDirectory =>
+      'Failed to analyze project directory';
+
+  @override
+  String errorWithMessage(String message) {
+    return 'Error: $message';
+  }
 }

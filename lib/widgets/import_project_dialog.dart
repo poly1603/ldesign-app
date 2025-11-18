@@ -676,8 +676,8 @@ class _ImportProjectDialogState extends State<ImportProjectDialog> with SingleTi
           if (project == null) {
             if (mounted) {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Failed to analyze project directory'),
+                SnackBar(
+                  content: Text(AppLocalizations.of(context)!.failedToAnalyzeProjectDirectory),
                   backgroundColor: Colors.red,
                 ),
               );
@@ -692,7 +692,7 @@ class _ImportProjectDialogState extends State<ImportProjectDialog> with SingleTi
         });
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Error: $e'),
+            content: Text(AppLocalizations.of(context)!.errorWithMessage('$e')),
             backgroundColor: Colors.red,
           ),
         );

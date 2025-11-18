@@ -668,6 +668,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Cordova'**
   String get cordova;
+
+  /// No description provided for @todayLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get todayLabel;
+
+  /// No description provided for @yesterdayLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Yesterday'**
+  String get yesterdayLabel;
+
+  /// No description provided for @xDaysAgo.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} days ago'**
+  String xDaysAgo(int count);
+
+  /// No description provided for @xWeeksAgo.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} weeks ago'**
+  String xWeeksAgo(int count);
+
+  /// No description provided for @projectImportedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Project \'{name}\' imported successfully'**
+  String projectImportedSuccess(String name);
+
+  /// No description provided for @confirmRemoveFromList.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove project \'{name}\' from the list?'**
+  String confirmRemoveFromList(String name);
+
+  /// No description provided for @projectRemoved.
+  ///
+  /// In en, this message translates to:
+  /// **'Project \'{name}\' removed'**
+  String projectRemoved(String name);
+
+  /// No description provided for @failedToAnalyzeProjectDirectory.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to analyze project directory'**
+  String get failedToAnalyzeProjectDirectory;
+
+  /// No description provided for @errorWithMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Error: {message}'**
+  String errorWithMessage(String message);
 }
 
 class _AppLocalizationsDelegate

@@ -95,5 +95,56 @@
   "react_native": "React Native",
   "ionic": "Ionic",
   "capacitor": "Capacitor",
-  "cordova": "Cordova"
+  "cordova": "Cordova",
+  "todayLabel": "今天",
+  "yesterdayLabel": "昨天",
+  "xDaysAgo": "{count}天前",
+  "@xDaysAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "xWeeksAgo": "{count}周前",
+  "@xWeeksAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "projectImportedSuccess": "项目'{name}'导入成功",
+  "@projectImportedSuccess": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "confirmRemoveFromList": "确认从列表中移除项目'{name}'？",
+  "@confirmRemoveFromList": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "projectRemoved": "项目'{name}'已移除",
+  "@projectRemoved": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "failedToAnalyzeProjectDirectory": "分析项目目录失败",
+  "errorWithMessage": "错误：{message}",
+  "@errorWithMessage": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  }
 }

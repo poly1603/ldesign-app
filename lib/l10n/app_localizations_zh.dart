@@ -292,6 +292,45 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get cordova => 'Cordova';
+
+  @override
+  String get todayLabel => '今天';
+
+  @override
+  String get yesterdayLabel => '昨天';
+
+  @override
+  String xDaysAgo(int count) {
+    return '$count天前';
+  }
+
+  @override
+  String xWeeksAgo(int count) {
+    return '$count周前';
+  }
+
+  @override
+  String projectImportedSuccess(String name) {
+    return '项目\'$name\'导入成功';
+  }
+
+  @override
+  String confirmRemoveFromList(String name) {
+    return '确认从列表中移除项目\'$name\'？';
+  }
+
+  @override
+  String projectRemoved(String name) {
+    return '项目\'$name\'已移除';
+  }
+
+  @override
+  String get failedToAnalyzeProjectDirectory => '分析项目目录失败';
+
+  @override
+  String errorWithMessage(String message) {
+    return '错误：$message';
+  }
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hant`).
@@ -582,4 +621,43 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get cordova => 'Cordova';
+
+  @override
+  String get todayLabel => '今天';
+
+  @override
+  String get yesterdayLabel => '昨天';
+
+  @override
+  String xDaysAgo(int count) {
+    return '$count天前';
+  }
+
+  @override
+  String xWeeksAgo(int count) {
+    return '$count週前';
+  }
+
+  @override
+  String projectImportedSuccess(String name) {
+    return '項目\'$name\'導入成功';
+  }
+
+  @override
+  String confirmRemoveFromList(String name) {
+    return '確認從列表中移除項目\'$name\'？';
+  }
+
+  @override
+  String projectRemoved(String name) {
+    return '項目\'$name\'已移除';
+  }
+
+  @override
+  String get failedToAnalyzeProjectDirectory => '分析項目目錄失敗';
+
+  @override
+  String errorWithMessage(String message) {
+    return '錯誤：$message';
+  }
 }

@@ -103,22 +103,25 @@ class AppProvider extends ChangeNotifier {
   // Project management
   Future<void> addProject(Project project) async {
     _projects.add(project);
-    await StorageUtil.setProjects(_projects);
+    // 先通知 UI，确保列表即时刷新；再异步持久化
     notifyListeners();
+    await StorageUtil.setProjects(_projects);
   }
 
   Future<void> removeProject(String projectId) async {
     _projects.removeWhere((p) => p.id == projectId);
-    await StorageUtil.setProjects(_projects);
+    // 先通知 UI，确保列表即时刷新；再异步持久化
     notifyListeners();
+    await StorageUtil.setProjects(_projects);
   }
 
   Future<void> updateProject(Project project) async {
     final index = _projects.indexWhere((p) => p.id == project.id);
     if (index != -1) {
       _projects[index] = project;
-      await StorageUtil.setProjects(_projects);
+      // 先通知 UI，确保列表即时刷新；再异步持久化
       notifyListeners();
+      await StorageUtil.setProjects(_projects);
     }
   }
 

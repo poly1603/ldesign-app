@@ -95,5 +95,56 @@
   "react_native": "React Native",
   "ionic": "Ionic",
   "capacitor": "Capacitor",
-  "cordova": "Cordova"
+  "cordova": "Cordova",
+  "todayLabel": "Today",
+  "yesterdayLabel": "Yesterday",
+  "xDaysAgo": "{count} days ago",
+  "@xDaysAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "xWeeksAgo": "{count} weeks ago",
+  "@xWeeksAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "projectImportedSuccess": "Project '{name}' imported successfully",
+  "@projectImportedSuccess": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "confirmRemoveFromList": "Remove project '{name}' from the list?",
+  "@confirmRemoveFromList": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "projectRemoved": "Project '{name}' removed",
+  "@projectRemoved": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "failedToAnalyzeProjectDirectory": "Failed to analyze project directory",
+  "errorWithMessage": "Error: {message}",
+  "@errorWithMessage": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  }
 }

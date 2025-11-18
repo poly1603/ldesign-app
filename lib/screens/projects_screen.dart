@@ -433,7 +433,7 @@ class ProjectsScreen extends StatelessWidget {
                     ),
                     const SizedBox(width: 4),
                     Text(
-                      _formatDate(project.lastModified),
+                      _formatDate(context, project.lastModified),
                       style: theme.textTheme.bodySmall?.copyWith(
                         color: theme.colorScheme.onSurface.withOpacity(0.5),
                       ),
@@ -448,24 +448,29 @@ class ProjectsScreen extends StatelessWidget {
     );
   }
 
-  String _formatDate(DateTime date) {
+  String _formatDate(BuildContext context, DateTime date) {
     final now = DateTime.now();
     final difference = now.difference(date);
 
+    final l10n = AppLocalizations.of(context)!;
     if (difference.inDays == 0) {
-      return 'Today';
+      return l10n.todayLabel;
     } else if (difference.inDays == 1) {
-      return 'Yesterday';
+      return l10n.yesterdayLabel;
     } else if (difference.inDays < 7) {
-      return '${difference.inDays} days ago';
+      return l10n.xDaysAgo(difference.inDays);
     } else if (difference.inDays < 30) {
-      return '${(difference.inDays / 7).floor()} weeks ago';
+      return l10n.xWeeksAgo((difference.inDays / 7).floor());
     } else {
       return '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
     }
   }
 
   Future<void> _importProject(BuildContext context, AppProvider appProvider) async {
+    // 确保新导入的项目不会被现有筛选/搜索隐藏
+    appProvider.setFilterType(null);
+    appProvider.setSearchQuery('');
+
     final project = await showDialog<Project?>(
       context: context,
       builder: (context) => const ImportProjectDialog(),
@@ -473,14 +478,17 @@ class ProjectsScreen extends StatelessWidget {
 
     if (project != null) {
       if (!context.mounted) return;
-      
-      // Add the project (duplicate check is done in dialog)
+
+      // 添加项目（重复校验已在弹窗内处理）
       await appProvider.addProject(project);
-      
+
+      // 可选：切换按名称排序以稳定展示
+      // appProvider.setSortBy('name');
+
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('项目 "${project.name}" 导入成功'),
+            content: Text(AppLocalizations.of(context)!.projectImportedSuccess(project.name)),
             backgroundColor: Colors.green,
             duration: const Duration(seconds: 2),
           ),
@@ -498,7 +506,7 @@ class ProjectsScreen extends StatelessWidget {
       context: context,
       builder: (context) => AlertDialog(
         title: Text(AppLocalizations.of(context)!.delete),
-        content: Text('Are you sure you want to remove "${project.name}" from the list?'),
+        content: Text(AppLocalizations.of(context)!.confirmRemoveFromList(project.name)),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
@@ -520,7 +528,7 @@ class ProjectsScreen extends StatelessWidget {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Project "${project.name}" removed'),
+            content: Text(AppLocalizations.of(context)!.projectRemoved(project.name)),
           ),
         );
       }
