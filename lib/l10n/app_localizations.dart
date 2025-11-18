@@ -332,6 +332,342 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Recent Activity'**
   String get recentActivity;
+
+  /// No description provided for @importProject.
+  ///
+  /// In en, this message translates to:
+  /// **'Import Project'**
+  String get importProject;
+
+  /// No description provided for @selectDirectory.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Directory'**
+  String get selectDirectory;
+
+  /// No description provided for @search.
+  ///
+  /// In en, this message translates to:
+  /// **'Search'**
+  String get search;
+
+  /// No description provided for @searchProjects.
+  ///
+  /// In en, this message translates to:
+  /// **'Search projects...'**
+  String get searchProjects;
+
+  /// No description provided for @sortBy.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort By'**
+  String get sortBy;
+
+  /// No description provided for @filterBy.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter'**
+  String get filterBy;
+
+  /// No description provided for @all.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get all;
+
+  /// No description provided for @webApp.
+  ///
+  /// In en, this message translates to:
+  /// **'Web App'**
+  String get webApp;
+
+  /// No description provided for @mobileApp.
+  ///
+  /// In en, this message translates to:
+  /// **'Mobile App'**
+  String get mobileApp;
+
+  /// No description provided for @desktopApp.
+  ///
+  /// In en, this message translates to:
+  /// **'Desktop App'**
+  String get desktopApp;
+
+  /// No description provided for @backendApp.
+  ///
+  /// In en, this message translates to:
+  /// **'Backend'**
+  String get backendApp;
+
+  /// No description provided for @componentLibrary.
+  ///
+  /// In en, this message translates to:
+  /// **'Component Library'**
+  String get componentLibrary;
+
+  /// No description provided for @utilityLibrary.
+  ///
+  /// In en, this message translates to:
+  /// **'Utility Library'**
+  String get utilityLibrary;
+
+  /// No description provided for @nodeLibrary.
+  ///
+  /// In en, this message translates to:
+  /// **'Node Library'**
+  String get nodeLibrary;
+
+  /// No description provided for @cliTool.
+  ///
+  /// In en, this message translates to:
+  /// **'CLI Tool'**
+  String get cliTool;
+
+  /// No description provided for @monorepo.
+  ///
+  /// In en, this message translates to:
+  /// **'Monorepo'**
+  String get monorepo;
+
+  /// No description provided for @sortByName.
+  ///
+  /// In en, this message translates to:
+  /// **'By Name'**
+  String get sortByName;
+
+  /// No description provided for @sortByDate.
+  ///
+  /// In en, this message translates to:
+  /// **'By Date'**
+  String get sortByDate;
+
+  /// No description provided for @sortByType.
+  ///
+  /// In en, this message translates to:
+  /// **'By Type'**
+  String get sortByType;
+
+  /// No description provided for @ascending.
+  ///
+  /// In en, this message translates to:
+  /// **'Ascending'**
+  String get ascending;
+
+  /// No description provided for @descending.
+  ///
+  /// In en, this message translates to:
+  /// **'Descending'**
+  String get descending;
+
+  /// No description provided for @noProjects.
+  ///
+  /// In en, this message translates to:
+  /// **'No Projects'**
+  String get noProjects;
+
+  /// No description provided for @importFirstProject.
+  ///
+  /// In en, this message translates to:
+  /// **'Click the button above to import your first project'**
+  String get importFirstProject;
+
+  /// No description provided for @projectType.
+  ///
+  /// In en, this message translates to:
+  /// **'Type'**
+  String get projectType;
+
+  /// No description provided for @framework.
+  ///
+  /// In en, this message translates to:
+  /// **'Framework'**
+  String get framework;
+
+  /// No description provided for @lastModified.
+  ///
+  /// In en, this message translates to:
+  /// **'Last Modified'**
+  String get lastModified;
+
+  /// No description provided for @delete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get delete;
+
+  /// No description provided for @openFolder.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Folder'**
+  String get openFolder;
+
+  /// No description provided for @projectDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Project Details'**
+  String get projectDetails;
+
+  /// No description provided for @importProjectDialog.
+  ///
+  /// In en, this message translates to:
+  /// **'Import Project'**
+  String get importProjectDialog;
+
+  /// No description provided for @selectProjectDirectory.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Project Directory'**
+  String get selectProjectDirectory;
+
+  /// No description provided for @analyzingProject.
+  ///
+  /// In en, this message translates to:
+  /// **'Analyzing project...'**
+  String get analyzingProject;
+
+  /// No description provided for @projectInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Project Information'**
+  String get projectInfo;
+
+  /// No description provided for @projectName.
+  ///
+  /// In en, this message translates to:
+  /// **'Project Name'**
+  String get projectName;
+
+  /// No description provided for @projectVersion.
+  ///
+  /// In en, this message translates to:
+  /// **'Version'**
+  String get projectVersion;
+
+  /// No description provided for @projectDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Description'**
+  String get projectDescription;
+
+  /// No description provided for @noDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'No description'**
+  String get noDescription;
+
+  /// No description provided for @confirmImport.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Import'**
+  String get confirmImport;
+
+  /// No description provided for @reselect.
+  ///
+  /// In en, this message translates to:
+  /// **'Reselect'**
+  String get reselect;
+
+  /// No description provided for @analyzing.
+  ///
+  /// In en, this message translates to:
+  /// **'Analyzing'**
+  String get analyzing;
+
+  /// No description provided for @unknown.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown'**
+  String get unknown;
+
+  /// No description provided for @vite.
+  ///
+  /// In en, this message translates to:
+  /// **'Vite'**
+  String get vite;
+
+  /// No description provided for @webpack.
+  ///
+  /// In en, this message translates to:
+  /// **'Webpack'**
+  String get webpack;
+
+  /// No description provided for @parcel.
+  ///
+  /// In en, this message translates to:
+  /// **'Parcel'**
+  String get parcel;
+
+  /// No description provided for @rollup.
+  ///
+  /// In en, this message translates to:
+  /// **'Rollup'**
+  String get rollup;
+
+  /// No description provided for @svelte.
+  ///
+  /// In en, this message translates to:
+  /// **'Svelte'**
+  String get svelte;
+
+  /// No description provided for @solidjs.
+  ///
+  /// In en, this message translates to:
+  /// **'Solid.js'**
+  String get solidjs;
+
+  /// No description provided for @preact.
+  ///
+  /// In en, this message translates to:
+  /// **'Preact'**
+  String get preact;
+
+  /// No description provided for @gatsby.
+  ///
+  /// In en, this message translates to:
+  /// **'Gatsby'**
+  String get gatsby;
+
+  /// No description provided for @remix.
+  ///
+  /// In en, this message translates to:
+  /// **'Remix'**
+  String get remix;
+
+  /// No description provided for @astro.
+  ///
+  /// In en, this message translates to:
+  /// **'Astro'**
+  String get astro;
+
+  /// No description provided for @qwik.
+  ///
+  /// In en, this message translates to:
+  /// **'Qwik'**
+  String get qwik;
+
+  /// No description provided for @react_native.
+  ///
+  /// In en, this message translates to:
+  /// **'React Native'**
+  String get react_native;
+
+  /// No description provided for @ionic.
+  ///
+  /// In en, this message translates to:
+  /// **'Ionic'**
+  String get ionic;
+
+  /// No description provided for @capacitor.
+  ///
+  /// In en, this message translates to:
+  /// **'Capacitor'**
+  String get capacitor;
+
+  /// No description provided for @cordova.
+  ///
+  /// In en, this message translates to:
+  /// **'Cordova'**
+  String get cordova;
 }
 
 class _AppLocalizationsDelegate

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 enum AppSize {
   compact,
@@ -143,83 +142,82 @@ class ThemeConfig {
 
   static TextTheme _getTextTheme(AppSize size, Brightness brightness) {
     final baseSize = _getBaseFontSize(size);
-    final baseStyle = GoogleFonts.interTextTheme();
     
     return TextTheme(
-      displayLarge: baseStyle.displayLarge?.copyWith(
+      displayLarge: TextStyle(
         fontSize: baseSize + 22,
         fontWeight: FontWeight.w700,
         letterSpacing: -0.5,
       ),
-      displayMedium: baseStyle.displayMedium?.copyWith(
+      displayMedium: TextStyle(
         fontSize: baseSize + 18,
         fontWeight: FontWeight.w700,
         letterSpacing: -0.5,
       ),
-      displaySmall: baseStyle.displaySmall?.copyWith(
+      displaySmall: TextStyle(
         fontSize: baseSize + 14,
         fontWeight: FontWeight.w600,
         letterSpacing: -0.5,
       ),
-      headlineLarge: baseStyle.headlineLarge?.copyWith(
+      headlineLarge: TextStyle(
         fontSize: baseSize + 10,
         fontWeight: FontWeight.w600,
         letterSpacing: -0.25,
       ),
-      headlineMedium: baseStyle.headlineMedium?.copyWith(
+      headlineMedium: TextStyle(
         fontSize: baseSize + 8,
         fontWeight: FontWeight.w600,
         letterSpacing: -0.25,
       ),
-      headlineSmall: baseStyle.headlineSmall?.copyWith(
+      headlineSmall: TextStyle(
         fontSize: baseSize + 6,
         fontWeight: FontWeight.w600,
         letterSpacing: 0,
       ),
-      titleLarge: baseStyle.titleLarge?.copyWith(
+      titleLarge: TextStyle(
         fontSize: baseSize + 4,
         fontWeight: FontWeight.w600,
         letterSpacing: 0,
       ),
-      titleMedium: baseStyle.titleMedium?.copyWith(
+      titleMedium: TextStyle(
         fontSize: baseSize + 2,
         fontWeight: FontWeight.w500,
         letterSpacing: 0.15,
       ),
-      titleSmall: baseStyle.titleSmall?.copyWith(
+      titleSmall: TextStyle(
         fontSize: baseSize,
         fontWeight: FontWeight.w500,
         letterSpacing: 0.1,
       ),
-      bodyLarge: baseStyle.bodyLarge?.copyWith(
+      bodyLarge: TextStyle(
         fontSize: baseSize,
         fontWeight: FontWeight.w400,
         letterSpacing: 0.5,
         height: 1.5,
       ),
-      bodyMedium: baseStyle.bodyMedium?.copyWith(
+      bodyMedium: TextStyle(
         fontSize: baseSize - 1,
         fontWeight: FontWeight.w400,
         letterSpacing: 0.25,
         height: 1.43,
       ),
-      bodySmall: baseStyle.bodySmall?.copyWith(
+      bodySmall: TextStyle(
         fontSize: baseSize - 2,
         fontWeight: FontWeight.w400,
         letterSpacing: 0.4,
         height: 1.33,
       ),
-      labelLarge: baseStyle.labelLarge?.copyWith(
+      labelLarge: TextStyle(
         fontSize: baseSize,
         fontWeight: FontWeight.w500,
         letterSpacing: 0.1,
       ),
-      labelMedium: baseStyle.labelMedium?.copyWith(
+      labelMedium: TextStyle(
         fontSize: baseSize - 1,
         fontWeight: FontWeight.w500,
         letterSpacing: 0.5,
       ),
-      labelSmall: baseStyle.labelSmall?.copyWith(
+      labelSmall: TextStyle(
         fontSize: baseSize - 2,
         fontWeight: FontWeight.w500,
         letterSpacing: 0.5,

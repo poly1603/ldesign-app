@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../config/theme_config.dart';
 import '../utils/storage_util.dart';
+import '../models/project.dart';
 
 class AppProvider extends ChangeNotifier {
   ThemeMode _themeMode = ThemeMode.light;
@@ -9,6 +10,11 @@ class AppProvider extends ChangeNotifier {
   Locale _locale = const Locale('zh');
   bool _sidebarCollapsed = false;
   String _currentRoute = '/';
+  List<Project> _projects = [];
+  String _searchQuery = '';
+  ProjectType? _filterType;
+  String _sortBy = 'name'; // name, date, type
+  bool _sortAscending = true;
 
   ThemeMode get themeMode => _themeMode;
   Color get primaryColor => _primaryColor;
@@ -16,6 +22,12 @@ class AppProvider extends ChangeNotifier {
   Locale get locale => _locale;
   bool get sidebarCollapsed => _sidebarCollapsed;
   String get currentRoute => _currentRoute;
+  List<Project> get projects => _getFilteredProjects();
+  List<Project> get allProjects => _projects;
+  String get searchQuery => _searchQuery;
+  ProjectType? get filterType => _filterType;
+  String get sortBy => _sortBy;
+  bool get sortAscending => _sortAscending;
 
   bool get isDarkMode => _themeMode == ThemeMode.dark;
 
@@ -29,6 +41,7 @@ class AppProvider extends ChangeNotifier {
     _appSize = await StorageUtil.getAppSize();
     _locale = await StorageUtil.getLocale();
     _sidebarCollapsed = await StorageUtil.getSidebarCollapsed();
+    _projects = await StorageUtil.getProjects();
     notifyListeners();
   }
 
@@ -85,5 +98,87 @@ class AppProvider extends ChangeNotifier {
 
   ThemeData getDarkTheme() {
     return ThemeConfig.getDarkTheme(_primaryColor, _appSize);
+  }
+
+  // Project management
+  Future<void> addProject(Project project) async {
+    _projects.add(project);
+    await StorageUtil.setProjects(_projects);
+    notifyListeners();
+  }
+
+  Future<void> removeProject(String projectId) async {
+    _projects.removeWhere((p) => p.id == projectId);
+    await StorageUtil.setProjects(_projects);
+    notifyListeners();
+  }
+
+  Future<void> updateProject(Project project) async {
+    final index = _projects.indexWhere((p) => p.id == project.id);
+    if (index != -1) {
+      _projects[index] = project;
+      await StorageUtil.setProjects(_projects);
+      notifyListeners();
+    }
+  }
+
+  void setSearchQuery(String query) {
+    _searchQuery = query;
+    notifyListeners();
+  }
+
+  void setFilterType(ProjectType? type) {
+    _filterType = type;
+    notifyListeners();
+  }
+
+  void setSortBy(String sortBy) {
+    _sortBy = sortBy;
+    notifyListeners();
+  }
+
+  void toggleSortOrder() {
+    _sortAscending = !_sortAscending;
+    notifyListeners();
+  }
+
+  List<Project> _getFilteredProjects() {
+    var filtered = _projects.where((project) {
+      // Filter by search query
+      if (_searchQuery.isNotEmpty) {
+        final query = _searchQuery.toLowerCase();
+        if (!project.name.toLowerCase().contains(query) &&
+            !(project.description?.toLowerCase().contains(query) ?? false) &&
+            !project.getFrameworkDisplayName().toLowerCase().contains(query)) {
+          return false;
+        }
+      }
+
+      // Filter by type
+      if (_filterType != null && project.type != _filterType) {
+        return false;
+      }
+
+      return true;
+    }).toList();
+
+    // Sort
+    filtered.sort((a, b) {
+      int comparison;
+      switch (_sortBy) {
+        case 'date':
+          comparison = a.lastModified.compareTo(b.lastModified);
+          break;
+        case 'type':
+          comparison = a.type.index.compareTo(b.type.index);
+          break;
+        case 'name':
+        default:
+          comparison = a.name.toLowerCase().compareTo(b.name.toLowerCase());
+      }
+      return _sortAscending ? comparison : -comparison;
+    });
+
+    return filtered;
   }
 }

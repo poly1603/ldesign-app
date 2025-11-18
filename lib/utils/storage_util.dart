@@ -1,6 +1,8 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../config/theme_config.dart';
+import '../models/project.dart';
 
 class StorageUtil {
   static const String _keyThemeMode = 'theme_mode';
@@ -8,6 +10,7 @@ class StorageUtil {
   static const String _keyAppSize = 'app_size';
   static const String _keyLocale = 'locale';
   static const String _keySidebarCollapsed = 'sidebar_collapsed';
+  static const String _keyProjects = 'projects';
 
   static Future<ThemeMode> getThemeMode() async {
     final prefs = await SharedPreferences.getInstance();
@@ -107,5 +110,25 @@ class StorageUtil {
   static Future<void> setSidebarCollapsed(bool collapsed) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool(_keySidebarCollapsed, collapsed);
+  }
+
+  static Future<List<Project>> getProjects() async {
+    final prefs = await SharedPreferences.getInstance();
+    final projectsJson = prefs.getString(_keyProjects);
+    if (projectsJson == null) {
+      return [];
+    }
+    try {
+      final List<dynamic> decoded = jsonDecode(projectsJson);
+      return decoded.map((json) => Project.fromJson(json as Map<String, dynamic>)).toList();
+    } catch (e) {
+      return [];
+    }
+  }
+
+  static Future<void> setProjects(List<Project> projects) async {
+    final prefs = await SharedPreferences.getInstance();
+    final projectsJson = jsonEncode(projects.map((p) => p.toJson()).toList());
+    await prefs.setString(_keyProjects, projectsJson);
   }
 }

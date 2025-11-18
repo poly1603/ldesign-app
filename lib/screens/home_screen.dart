@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:icons_plus/icons_plus.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import '../l10n/app_localizations.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -60,7 +60,7 @@ class HomeScreen extends StatelessWidget {
               children: [
                 Text(
                   l10n.welcome,
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontSize: 32,
                     fontWeight: FontWeight.w800,
                     color: Colors.white,
@@ -70,7 +70,7 @@ class HomeScreen extends StatelessWidget {
                 const SizedBox(height: 8),
                 Text(
                   l10n.welcomeMessage,
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w400,
                     color: Colors.white.withOpacity(0.9),
@@ -103,7 +103,7 @@ class HomeScreen extends StatelessWidget {
       children: [
         Text(
           l10n.quickStats,
-          style: GoogleFonts.inter(
+          style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.w700,
             color: theme.colorScheme.onSurface,
@@ -195,7 +195,7 @@ class HomeScreen extends StatelessWidget {
           const SizedBox(height: 16),
           Text(
             value,
-            style: GoogleFonts.inter(
+            style: TextStyle(
               fontSize: 32,
               fontWeight: FontWeight.w800,
               color: theme.colorScheme.onSurface,
@@ -205,7 +205,7 @@ class HomeScreen extends StatelessWidget {
           const SizedBox(height: 4),
           Text(
             title,
-            style: GoogleFonts.inter(
+            style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w500,
               color: theme.colorScheme.onSurface.withOpacity(0.6),
@@ -223,7 +223,7 @@ class HomeScreen extends StatelessWidget {
       children: [
         Text(
           l10n.recentActivity,
-          style: GoogleFonts.inter(
+          style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.w700,
             color: theme.colorScheme.onSurface,
@@ -311,7 +311,7 @@ class HomeScreen extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
                     color: theme.colorScheme.onSurface,
@@ -321,7 +321,7 @@ class HomeScreen extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   subtitle,
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w400,
                     color: theme.colorScheme.onSurface.withOpacity(0.6),
@@ -332,7 +332,7 @@ class HomeScreen extends StatelessWidget {
           ),
           Text(
             time,
-            style: GoogleFonts.inter(
+            style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w400,
               color: theme.colorScheme.onSurface.withOpacity(0.5),

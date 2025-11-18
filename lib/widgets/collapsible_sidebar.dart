@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:icons_plus/icons_plus.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import '../providers/app_provider.dart';
 import '../config/theme_config.dart';
 import '../l10n/app_localizations.dart';
@@ -124,7 +124,7 @@ class _CollapsibleSidebarState extends State<CollapsibleSidebar> {
                   Expanded(
                     child: Text(
                       l10n.appTitle,
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w700,
                         color: theme.colorScheme.onSurface,
@@ -183,7 +183,7 @@ class _CollapsibleSidebarState extends State<CollapsibleSidebar> {
                       if (!collapsed)
                         Text(
                           l10n.collapse,
-                          style: GoogleFonts.inter(
+                          style: TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.w500,
                             color: theme.colorScheme.onSurface.withOpacity(0.7),
@@ -293,7 +293,7 @@ class _CollapsibleSidebarState extends State<CollapsibleSidebar> {
                       Expanded(
                         child: Text(
                           title,
-                          style: GoogleFonts.inter(
+                          style: TextStyle(
                             fontSize: 14,
                             fontWeight: isActive ? FontWeight.w600 : FontWeight.w500,
                             color: isActive

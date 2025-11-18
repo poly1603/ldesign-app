@@ -124,6 +124,174 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get recentActivity => '最近活动';
+
+  @override
+  String get importProject => '导入项目';
+
+  @override
+  String get selectDirectory => '选择目录';
+
+  @override
+  String get search => '搜索';
+
+  @override
+  String get searchProjects => '搜索项目...';
+
+  @override
+  String get sortBy => '排序方式';
+
+  @override
+  String get filterBy => '筛选';
+
+  @override
+  String get all => '全部';
+
+  @override
+  String get webApp => 'Web应用';
+
+  @override
+  String get mobileApp => '移动应用';
+
+  @override
+  String get desktopApp => '桌面应用';
+
+  @override
+  String get backendApp => '后端应用';
+
+  @override
+  String get componentLibrary => '组件库';
+
+  @override
+  String get utilityLibrary => '工具库';
+
+  @override
+  String get nodeLibrary => 'Node库';
+
+  @override
+  String get cliTool => '命令行工具';
+
+  @override
+  String get monorepo => 'Monorepo';
+
+  @override
+  String get sortByName => '按名称';
+
+  @override
+  String get sortByDate => '按日期';
+
+  @override
+  String get sortByType => '按类型';
+
+  @override
+  String get ascending => '升序';
+
+  @override
+  String get descending => '降序';
+
+  @override
+  String get noProjects => '暂无项目';
+
+  @override
+  String get importFirstProject => '点击上方按钮导入您的第一个项目';
+
+  @override
+  String get projectType => '项目类型';
+
+  @override
+  String get framework => '框架';
+
+  @override
+  String get lastModified => '最后修改';
+
+  @override
+  String get delete => '删除';
+
+  @override
+  String get openFolder => '打开文件夹';
+
+  @override
+  String get projectDetails => '项目详情';
+
+  @override
+  String get importProjectDialog => '导入项目';
+
+  @override
+  String get selectProjectDirectory => '选择项目目录';
+
+  @override
+  String get analyzingProject => '正在分析项目...';
+
+  @override
+  String get projectInfo => '项目信息';
+
+  @override
+  String get projectName => '项目名称';
+
+  @override
+  String get projectVersion => '版本号';
+
+  @override
+  String get projectDescription => '项目描述';
+
+  @override
+  String get noDescription => '无描述';
+
+  @override
+  String get confirmImport => '确认导入';
+
+  @override
+  String get reselect => '重新选择';
+
+  @override
+  String get analyzing => '分析中';
+
+  @override
+  String get unknown => '未知';
+
+  @override
+  String get vite => 'Vite';
+
+  @override
+  String get webpack => 'Webpack';
+
+  @override
+  String get parcel => 'Parcel';
+
+  @override
+  String get rollup => 'Rollup';
+
+  @override
+  String get svelte => 'Svelte';
+
+  @override
+  String get solidjs => 'Solid.js';
+
+  @override
+  String get preact => 'Preact';
+
+  @override
+  String get gatsby => 'Gatsby';
+
+  @override
+  String get remix => 'Remix';
+
+  @override
+  String get astro => 'Astro';
+
+  @override
+  String get qwik => 'Qwik';
+
+  @override
+  String get react_native => 'React Native';
+
+  @override
+  String get ionic => 'Ionic';
+
+  @override
+  String get capacitor => 'Capacitor';
+
+  @override
+  String get cordova => 'Cordova';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hant`).
@@ -246,4 +414,172 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get recentActivity => '最近活動';
+
+  @override
+  String get importProject => '導入項目';
+
+  @override
+  String get selectDirectory => '選擇目錄';
+
+  @override
+  String get search => '搜索';
+
+  @override
+  String get searchProjects => '搜索項目...';
+
+  @override
+  String get sortBy => '排序方式';
+
+  @override
+  String get filterBy => '篩選';
+
+  @override
+  String get all => '全部';
+
+  @override
+  String get webApp => 'Web應用';
+
+  @override
+  String get mobileApp => '移動應用';
+
+  @override
+  String get desktopApp => '桌面應用';
+
+  @override
+  String get backendApp => '後端應用';
+
+  @override
+  String get componentLibrary => '組件庫';
+
+  @override
+  String get utilityLibrary => '工具庫';
+
+  @override
+  String get nodeLibrary => 'Node庫';
+
+  @override
+  String get cliTool => '命令行工具';
+
+  @override
+  String get monorepo => 'Monorepo';
+
+  @override
+  String get sortByName => '按名稱';
+
+  @override
+  String get sortByDate => '按日期';
+
+  @override
+  String get sortByType => '按類型';
+
+  @override
+  String get ascending => '升序';
+
+  @override
+  String get descending => '降序';
+
+  @override
+  String get noProjects => '暫無項目';
+
+  @override
+  String get importFirstProject => '點擊上方按鈕導入您的第一個項目';
+
+  @override
+  String get projectType => '項目類型';
+
+  @override
+  String get framework => '框架';
+
+  @override
+  String get lastModified => '最後修改';
+
+  @override
+  String get delete => '刪除';
+
+  @override
+  String get openFolder => '打開文件夾';
+
+  @override
+  String get projectDetails => '項目詳情';
+
+  @override
+  String get importProjectDialog => '導入項目';
+
+  @override
+  String get selectProjectDirectory => '選擇項目目錄';
+
+  @override
+  String get analyzingProject => '正在分析項目...';
+
+  @override
+  String get projectInfo => '項目信息';
+
+  @override
+  String get projectName => '項目名稱';
+
+  @override
+  String get projectVersion => '版本號';
+
+  @override
+  String get projectDescription => '項目描述';
+
+  @override
+  String get noDescription => '無描述';
+
+  @override
+  String get confirmImport => '確認導入';
+
+  @override
+  String get reselect => '重新選擇';
+
+  @override
+  String get analyzing => '分析中';
+
+  @override
+  String get unknown => '未知';
+
+  @override
+  String get vite => 'Vite';
+
+  @override
+  String get webpack => 'Webpack';
+
+  @override
+  String get parcel => 'Parcel';
+
+  @override
+  String get rollup => 'Rollup';
+
+  @override
+  String get svelte => 'Svelte';
+
+  @override
+  String get solidjs => 'Solid.js';
+
+  @override
+  String get preact => 'Preact';
+
+  @override
+  String get gatsby => 'Gatsby';
+
+  @override
+  String get remix => 'Remix';
+
+  @override
+  String get astro => 'Astro';
+
+  @override
+  String get qwik => 'Qwik';
+
+  @override
+  String get react_native => 'React Native';
+
+  @override
+  String get ionic => 'Ionic';
+
+  @override
+  String get capacitor => 'Capacitor';
+
+  @override
+  String get cordova => 'Cordova';
 }

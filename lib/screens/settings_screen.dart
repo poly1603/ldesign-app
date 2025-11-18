@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:icons_plus/icons_plus.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import 'package:provider/provider.dart';
 import '../l10n/app_localizations.dart';
 import '../providers/app_provider.dart';
@@ -23,7 +23,7 @@ class SettingsScreen extends StatelessWidget {
           // Header
           Text(
             l10n.settings,
-            style: GoogleFonts.inter(
+            style: TextStyle(
               fontSize: 28,
               fontWeight: FontWeight.w800,
               color: theme.colorScheme.onSurface,
@@ -48,7 +48,7 @@ class SettingsScreen extends StatelessWidget {
                       value: ThemeMode.light,
                       label: Text(
                         l10n.lightMode,
-                        style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w500),
+                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
                       ),
                       icon: const Icon(Bootstrap.sun, size: 14),
                     ),
@@ -56,7 +56,7 @@ class SettingsScreen extends StatelessWidget {
                       value: ThemeMode.dark,
                       label: Text(
                         l10n.darkMode,
-                        style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w500),
+                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
                       ),
                       icon: const Icon(Bootstrap.moon, size: 14),
                     ),
@@ -131,7 +131,7 @@ class SettingsScreen extends StatelessWidget {
                       value: locale,
                       child: Text(
                         label,
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                         ),
@@ -165,21 +165,21 @@ class SettingsScreen extends StatelessWidget {
                       value: AppSize.compact,
                       label: Text(
                         l10n.compact,
-                        style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w500),
+                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
                       ),
                     ),
                     ButtonSegment(
                       value: AppSize.standard,
                       label: Text(
                         l10n.standard,
-                        style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w500),
+                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
                       ),
                     ),
                     ButtonSegment(
                       value: AppSize.comfortable,
                       label: Text(
                         l10n.comfortable,
-                        style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w500),
+                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
                       ),
                     ),
                   ],
@@ -255,7 +255,7 @@ class SettingsScreen extends StatelessWidget {
                 const SizedBox(width: 12),
                 Text(
                   title,
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w700,
                     color: theme.colorScheme.onSurface,
@@ -291,7 +291,7 @@ class SettingsScreen extends StatelessWidget {
             const SizedBox(width: 12),
             Text(
               title,
-              style: GoogleFonts.inter(
+              style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
                 color: theme.colorScheme.onSurface.withOpacity(0.8),
