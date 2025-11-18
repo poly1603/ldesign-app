@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../config/theme_config.dart';
 import '../utils/storage_util.dart';
@@ -11,6 +12,7 @@ class AppProvider extends ChangeNotifier {
   bool _sidebarCollapsed = false;
   String _currentRoute = '/';
   List<Project> _projects = [];
+  String _projectsPath = '';
   String _searchQuery = '';
   ProjectType? _filterType;
   String _sortBy = 'name'; // name, date, type
@@ -24,6 +26,7 @@ class AppProvider extends ChangeNotifier {
   String get currentRoute => _currentRoute;
   List<Project> get projects => _getFilteredProjects();
   List<Project> get allProjects => _projects;
+  String get projectsPath => _projectsPath;
   String get searchQuery => _searchQuery;
   ProjectType? get filterType => _filterType;
   String get sortBy => _sortBy;
@@ -31,17 +34,32 @@ class AppProvider extends ChangeNotifier {
 
   bool get isDarkMode => _themeMode == ThemeMode.dark;
 
-  AppProvider() {
-    _loadPreferences();
+  AppProvider();
+
+  Future<void> initialize() async {
+    await _loadPreferences();
   }
 
   Future<void> _loadPreferences() async {
-    _themeMode = await StorageUtil.getThemeMode();
-    _primaryColor = await StorageUtil.getPrimaryColor();
-    _appSize = await StorageUtil.getAppSize();
-    _locale = await StorageUtil.getLocale();
-    _sidebarCollapsed = await StorageUtil.getSidebarCollapsed();
-    _projects = await StorageUtil.getProjects();
+    try {
+      _themeMode = await StorageUtil.getThemeMode();
+      _primaryColor = await StorageUtil.getPrimaryColor();
+      _appSize = await StorageUtil.getAppSize();
+      _locale = await StorageUtil.getLocale();
+      _sidebarCollapsed = await StorageUtil.getSidebarCollapsed();
+      _projectsPath = await StorageUtil.getProjectsPath();
+      _projects = await StorageUtil.getProjects();
+      if (kDebugMode) {
+        debugPrint('AppProvider._loadPreferences: Successfully loaded ${_projects.length} projects');
+      }
+    } catch (e, stackTrace) {
+      if (kDebugMode) {
+        debugPrint('AppProvider._loadPreferences: Error loading preferences: $e');
+        debugPrint('AppProvider._loadPreferences: Stack trace: $stackTrace');
+      }
+      // 确保有默认值，避免应用崩溃
+      _projects = [];
+    }
     notifyListeners();
   }
 
@@ -106,6 +124,14 @@ class AppProvider extends ChangeNotifier {
     // 先通知 UI，确保列表即时刷新；再异步持久化
     notifyListeners();
     await StorageUtil.setProjects(_projects);
+  }
+
+  Future<void> setProjectsPath(String path) async {
+    _projectsPath = path;
+    await StorageUtil.setProjectsPath(path);
+    // 立刻把当前内存数据写入新位置
+    await StorageUtil.setProjects(_projects);
+    notifyListeners();
   }
 
   Future<void> removeProject(String projectId) async {

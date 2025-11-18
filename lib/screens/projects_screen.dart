@@ -86,98 +86,151 @@ class ProjectsScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 16),
-                  // Filter
+                  // Filter (styled)
                   PopupMenuButton<ProjectType?>(
                     tooltip: l10n.filterBy,
                     onSelected: (type) => appProvider.setFilterType(type),
+                    offset: const Offset(0, 8),
+                    elevation: 8,
+                    color: theme.colorScheme.surface,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                     itemBuilder: (context) => [
-                      PopupMenuItem(
-                        value: null,
-                        child: Text(l10n.all),
+                      PopupMenuItem<ProjectType?>(
+                        enabled: false,
+                        child: Text(
+                          l10n.filterBy,
+                          style: theme.textTheme.labelMedium?.copyWith(
+                            color: theme.colorScheme.onSurface.withOpacity(0.6),
+                          ),
+                        ),
                       ),
                       const PopupMenuDivider(),
-                      PopupMenuItem(
+                      CheckedPopupMenuItem<ProjectType?> (
+                        value: null,
+                        checked: appProvider.filterType == null,
+                        child: Row(
+                          children: [
+                            const Icon(Bootstrap.funnel, size: 16),
+                            const SizedBox(width: 8),
+                            Text(l10n.all),
+                          ],
+                        ),
+                      ),
+                      const PopupMenuDivider(),
+                      CheckedPopupMenuItem<ProjectType?>(
                         value: ProjectType.webApp,
-                        child: Text(l10n.webApp),
+                        checked: appProvider.filterType == ProjectType.webApp,
+                        child: Row(children: [const Icon(Bootstrap.globe, size: 16), const SizedBox(width: 8), Text(l10n.webApp)])
                       ),
-                      PopupMenuItem(
+                      CheckedPopupMenuItem<ProjectType?>(
                         value: ProjectType.mobileApp,
-                        child: Text(l10n.mobileApp),
+                        checked: appProvider.filterType == ProjectType.mobileApp,
+                        child: Row(children: [const Icon(Bootstrap.phone, size: 16), const SizedBox(width: 8), Text(l10n.mobileApp)])
                       ),
-                      PopupMenuItem(
+                      CheckedPopupMenuItem<ProjectType?>(
                         value: ProjectType.desktopApp,
-                        child: Text(l10n.desktopApp),
+                        checked: appProvider.filterType == ProjectType.desktopApp,
+                        child: Row(children: [const Icon(Bootstrap.laptop, size: 16), const SizedBox(width: 8), Text(l10n.desktopApp)])
                       ),
-                      PopupMenuItem(
+                      CheckedPopupMenuItem<ProjectType?>(
                         value: ProjectType.backendApp,
-                        child: Text(l10n.backendApp),
+                        checked: appProvider.filterType == ProjectType.backendApp,
+                        child: Row(children: [const Icon(Bootstrap.server, size: 16), const SizedBox(width: 8), Text(l10n.backendApp)])
                       ),
-                      PopupMenuItem(
+                      CheckedPopupMenuItem<ProjectType?>(
                         value: ProjectType.componentLibrary,
-                        child: Text(l10n.componentLibrary),
+                        checked: appProvider.filterType == ProjectType.componentLibrary,
+                        child: Row(children: [const Icon(Bootstrap.box, size: 16), const SizedBox(width: 8), Text(l10n.componentLibrary)])
                       ),
-                      PopupMenuItem(
+                      CheckedPopupMenuItem<ProjectType?>(
                         value: ProjectType.utilityLibrary,
-                        child: Text(l10n.utilityLibrary),
+                        checked: appProvider.filterType == ProjectType.utilityLibrary,
+                        child: Row(children: [const Icon(Bootstrap.tools, size: 16), const SizedBox(width: 8), Text(l10n.utilityLibrary)])
                       ),
-                      PopupMenuItem(
+                      CheckedPopupMenuItem<ProjectType?>(
                         value: ProjectType.nodeLibrary,
-                        child: Text(l10n.nodeLibrary),
+                        checked: appProvider.filterType == ProjectType.nodeLibrary,
+                        child: Row(children: [const Icon(Bootstrap.braces, size: 16), const SizedBox(width: 8), Text(l10n.nodeLibrary)])
                       ),
-                      PopupMenuItem(
+                      CheckedPopupMenuItem<ProjectType?>(
                         value: ProjectType.cliTool,
-                        child: Text(l10n.cliTool),
+                        checked: appProvider.filterType == ProjectType.cliTool,
+                        child: Row(children: [const Icon(Bootstrap.terminal, size: 16), const SizedBox(width: 8), Text(l10n.cliTool)])
                       ),
-                      PopupMenuItem(
+                      CheckedPopupMenuItem<ProjectType?>(
                         value: ProjectType.monorepo,
-                        child: Text(l10n.monorepo),
+                        checked: appProvider.filterType == ProjectType.monorepo,
+                        child: Row(children: [const Icon(Bootstrap.folder, size: 16), const SizedBox(width: 8), Text(l10n.monorepo)])
                       ),
                     ],
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                       decoration: BoxDecoration(
+                        color: theme.colorScheme.surfaceContainerHighest,
+                        borderRadius: BorderRadius.circular(999),
                         border: Border.all(color: theme.dividerColor),
-                        borderRadius: BorderRadius.circular(12),
                       ),
                       child: Row(
                         children: [
-                          const Icon(Bootstrap.funnel, size: 18),
+                          const Icon(Bootstrap.funnel, size: 16),
                           const SizedBox(width: 8),
-                          Text(l10n.filterBy),
+                          Text(_typeLabel(appProvider.filterType, l10n)),
+                          const SizedBox(width: 6),
+                          const Icon(Bootstrap.chevron_down, size: 14),
                         ],
                       ),
                     ),
                   ),
                   const SizedBox(width: 8),
-                  // Sort
+                  // Sort (styled)
                   PopupMenuButton<String>(
                     tooltip: l10n.sortBy,
                     onSelected: (sortBy) => appProvider.setSortBy(sortBy),
+                    offset: const Offset(0, 8),
+                    elevation: 8,
+                    color: theme.colorScheme.surface,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                     itemBuilder: (context) => [
-                      PopupMenuItem(
+                      PopupMenuItem<String>(
+                        enabled: false,
+                        child: Text(
+                          l10n.sortBy,
+                          style: theme.textTheme.labelMedium?.copyWith(
+                            color: theme.colorScheme.onSurface.withOpacity(0.6),
+                          ),
+                        ),
+                      ),
+                      const PopupMenuDivider(),
+                      CheckedPopupMenuItem<String>(
                         value: 'name',
-                        child: Text(l10n.sortByName),
+                        checked: appProvider.sortBy == 'name',
+                        child: Row(children: [const Icon(Bootstrap.sort_alpha_down, size: 16), const SizedBox(width: 8), Text(l10n.sortByName)])
                       ),
-                      PopupMenuItem(
+                      CheckedPopupMenuItem<String>(
                         value: 'date',
-                        child: Text(l10n.sortByDate),
+                        checked: appProvider.sortBy == 'date',
+                        child: Row(children: [const Icon(Bootstrap.calendar_event, size: 16), const SizedBox(width: 8), Text(l10n.sortByDate)])
                       ),
-                      PopupMenuItem(
+                      CheckedPopupMenuItem<String>(
                         value: 'type',
-                        child: Text(l10n.sortByType),
+                        checked: appProvider.sortBy == 'type',
+                        child: Row(children: [const Icon(Bootstrap.list_ul, size: 16), const SizedBox(width: 8), Text(l10n.sortByType)])
                       ),
                     ],
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                       decoration: BoxDecoration(
+                        color: theme.colorScheme.surfaceContainerHighest,
+                        borderRadius: BorderRadius.circular(999),
                         border: Border.all(color: theme.dividerColor),
-                        borderRadius: BorderRadius.circular(12),
                       ),
                       child: Row(
                         children: [
-                          const Icon(Bootstrap.sort_down, size: 18),
+                          const Icon(Bootstrap.sort_down, size: 16),
                           const SizedBox(width: 8),
-                          Text(l10n.sortBy),
+                          Text(_sortLabel(appProvider.sortBy, l10n)),
+                          const SizedBox(width: 6),
+                          const Icon(Bootstrap.chevron_down, size: 14),
                         ],
                       ),
                     ),
@@ -532,6 +585,46 @@ class ProjectsScreen extends StatelessWidget {
           ),
         );
       }
+    }
+  }
+
+  String _typeLabel(ProjectType? type, AppLocalizations l10n) {
+    switch (type) {
+      case null:
+        return l10n.all;
+      case ProjectType.webApp:
+        return l10n.webApp;
+      case ProjectType.mobileApp:
+        return l10n.mobileApp;
+      case ProjectType.desktopApp:
+        return l10n.desktopApp;
+      case ProjectType.backendApp:
+        return l10n.backendApp;
+      case ProjectType.componentLibrary:
+        return l10n.componentLibrary;
+      case ProjectType.utilityLibrary:
+        return l10n.utilityLibrary;
+      case ProjectType.nodeLibrary:
+        return l10n.nodeLibrary;
+      case ProjectType.cliTool:
+        return l10n.cliTool;
+      case ProjectType.monorepo:
+        return l10n.monorepo;
+      case ProjectType.unknown:
+        return l10n.unknown;
+    }
+  }
+
+  String _sortLabel(String sortBy, AppLocalizations l10n) {
+    switch (sortBy) {
+      case 'name':
+        return l10n.sortByName;
+      case 'date':
+        return l10n.sortByDate;
+      case 'type':
+        return l10n.sortByType;
+      default:
+        return l10n.sortBy;
     }
   }
 }
