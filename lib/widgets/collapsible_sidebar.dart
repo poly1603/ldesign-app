@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:icons_plus/icons_plus.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../providers/app_provider.dart';
 import '../config/theme_config.dart';
 import '../l10n/app_localizations.dart';
@@ -9,14 +11,12 @@ class MenuItem {
   final String titleKey;
   final IconData icon;
   final String? route;
-  final List<MenuItem>? children;
 
   MenuItem({
     required this.id,
     required this.titleKey,
     required this.icon,
     this.route,
-    this.children,
   });
 }
 
@@ -35,17 +35,7 @@ class CollapsibleSidebar extends StatefulWidget {
 }
 
 class _CollapsibleSidebarState extends State<CollapsibleSidebar> {
-  final Set<String> _expandedItems = {};
-
-  void _toggleExpanded(String id) {
-    setState(() {
-      if (_expandedItems.contains(id)) {
-        _expandedItems.remove(id);
-      } else {
-        _expandedItems.add(id);
-      }
-    });
-  }
+  String? _hoveredItemId;
 
   @override
   Widget build(BuildContext context) {
@@ -60,46 +50,128 @@ class _CollapsibleSidebarState extends State<CollapsibleSidebar> {
         : ThemeConfig.getSidebarExpandedWidth(size);
 
     return AnimatedContainer(
-      duration: const Duration(milliseconds: 200),
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
       width: width,
       decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
-        border: Border(
-          right: BorderSide(
-            color: theme.dividerColor,
-            width: 1,
-          ),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: theme.brightness == Brightness.dark
+              ? [
+                  theme.colorScheme.surface,
+                  theme.colorScheme.surface.withOpacity(0.95),
+                ]
+              : [
+                  Colors.white,
+                  Colors.grey.shade50,
+                ],
         ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.08),
+            blurRadius: 12,
+            offset: const Offset(2, 0),
+          ),
+        ],
       ),
       child: Column(
         children: [
+          // Logo/Brand Section
+          Container(
+            padding: EdgeInsets.symmetric(
+              horizontal: ThemeConfig.getSpacing(size),
+              vertical: ThemeConfig.getSpacing(size) * 1.5,
+            ),
+            decoration: BoxDecoration(
+              border: Border(
+                bottom: BorderSide(
+                  color: theme.dividerColor.withOpacity(0.3),
+                  width: 1,
+                ),
+              ),
+            ),
+            child: Row(
+              mainAxisAlignment:
+                  collapsed ? MainAxisAlignment.center : MainAxisAlignment.start,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        theme.colorScheme.primary,
+                        theme.colorScheme.primary.withOpacity(0.8),
+                      ],
+                    ),
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: [
+                      BoxShadow(
+                        color: theme.colorScheme.primary.withOpacity(0.3),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Icon(
+                    Bootstrap.grid_3x3_gap,
+                    color: Colors.white,
+                    size: 20,
+                  ),
+                ),
+                if (!collapsed) ...[
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      l10n.appTitle,
+                      style: GoogleFonts.inter(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                        color: theme.colorScheme.onSurface,
+                        letterSpacing: -0.5,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+          
+          // Menu Items
           Expanded(
             child: ListView(
               padding: EdgeInsets.symmetric(
-                vertical: ThemeConfig.getSpacing(size),
+                vertical: ThemeConfig.getSpacing(size) * 1.5,
+                horizontal: collapsed ? 8 : ThemeConfig.getSpacing(size),
               ),
               children: widget.menuItems.map((item) {
                 return _buildMenuItem(item, collapsed, size, l10n, theme);
               }).toList(),
             ),
           ),
+          
+          // Collapse/Expand Button
           Container(
+            margin: EdgeInsets.all(collapsed ? 8 : ThemeConfig.getSpacing(size)),
             decoration: BoxDecoration(
-              border: Border(
-                top: BorderSide(
-                  color: theme.dividerColor,
-                  width: 1,
-                ),
+              border: Border.all(
+                color: theme.dividerColor.withOpacity(0.3),
+                width: 1,
               ),
+              borderRadius: BorderRadius.circular(12),
+              color: theme.colorScheme.surface.withOpacity(0.5),
             ),
             child: Material(
               color: Colors.transparent,
+              borderRadius: BorderRadius.circular(12),
               child: InkWell(
                 onTap: () {
                   appProvider.toggleSidebar();
                 },
+                borderRadius: BorderRadius.circular(12),
                 child: Container(
-                  height: 48,
+                  height: 44,
                   padding: EdgeInsets.symmetric(
                     horizontal: ThemeConfig.getSpacing(size),
                   ),
@@ -111,13 +183,18 @@ class _CollapsibleSidebarState extends State<CollapsibleSidebar> {
                       if (!collapsed)
                         Text(
                           l10n.collapse,
-                          style: theme.textTheme.bodyMedium,
+                          style: GoogleFonts.inter(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w500,
+                            color: theme.colorScheme.onSurface.withOpacity(0.7),
+                          ),
                         ),
                       Icon(
                         collapsed
-                            ? Icons.keyboard_arrow_right
-                            : Icons.keyboard_arrow_left,
-                        size: ThemeConfig.getIconSize(size),
+                            ? Bootstrap.chevron_right
+                            : Bootstrap.chevron_left,
+                        size: 16,
+                        color: theme.colorScheme.onSurface.withOpacity(0.7),
                       ),
                     ],
                   ),
@@ -138,146 +215,100 @@ class _CollapsibleSidebarState extends State<CollapsibleSidebar> {
     ThemeData theme,
   ) {
     final appProvider = context.watch<AppProvider>();
-    final hasChildren = item.children != null && item.children!.isNotEmpty;
-    final isExpanded = _expandedItems.contains(item.id);
     final isActive = appProvider.currentRoute == item.route;
+    final isHovered = _hoveredItemId == item.id;
 
     final title = _getLocalizedTitle(l10n, item.titleKey);
 
-    if (hasChildren) {
-      return Column(
-        children: [
-          Material(
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 4),
+      child: MouseRegion(
+        onEnter: (_) => setState(() => _hoveredItemId = item.id),
+        onExit: (_) => setState(() => _hoveredItemId = null),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          decoration: BoxDecoration(
+            gradient: isActive
+                ? LinearGradient(
+                    colors: [
+                      theme.colorScheme.primary,
+                      theme.colorScheme.primary.withOpacity(0.85),
+                    ],
+                  )
+                : isHovered
+                    ? LinearGradient(
+                        colors: [
+                          theme.colorScheme.primary.withOpacity(0.12),
+                          theme.colorScheme.primary.withOpacity(0.08),
+                        ],
+                      )
+                    : null,
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: isActive
+                ? [
+                    BoxShadow(
+                      color: theme.colorScheme.primary.withOpacity(0.3),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    ),
+                  ]
+                : null,
+          ),
+          child: Material(
             color: Colors.transparent,
+            borderRadius: BorderRadius.circular(12),
             child: InkWell(
               onTap: () {
-                if (collapsed) {
-                  appProvider.toggleSidebar();
-                } else {
-                  _toggleExpanded(item.id);
+                if (item.route != null) {
+                  widget.onItemTap(item.route!);
                 }
               },
+              borderRadius: BorderRadius.circular(12),
               child: Container(
                 padding: EdgeInsets.symmetric(
-                  horizontal: ThemeConfig.getSpacing(size),
-                  vertical: ThemeConfig.getSpacing(size) / 2,
+                  horizontal: collapsed ? 0 : ThemeConfig.getSpacing(size),
+                  vertical: 12,
                 ),
                 child: Row(
+                  mainAxisAlignment:
+                      collapsed ? MainAxisAlignment.center : MainAxisAlignment.start,
                   children: [
-                    Icon(
-                      item.icon,
-                      size: ThemeConfig.getIconSize(size),
-                    ),
-                    if (!collapsed) ...[
-                      SizedBox(width: ThemeConfig.getSpacing(size)),
+                    if (collapsed)
+                      Icon(
+                        item.icon,
+                        size: 20,
+                        color: isActive
+                            ? Colors.white
+                            : theme.colorScheme.onSurface.withOpacity(0.7),
+                      )
+                    else ...[
+                      Icon(
+                        item.icon,
+                        size: 20,
+                        color: isActive
+                            ? Colors.white
+                            : theme.colorScheme.onSurface.withOpacity(0.7),
+                      ),
+                      const SizedBox(width: 12),
                       Expanded(
                         child: Text(
                           title,
-                          style: theme.textTheme.bodyMedium,
+                          style: GoogleFonts.inter(
+                            fontSize: 14,
+                            fontWeight: isActive ? FontWeight.w600 : FontWeight.w500,
+                            color: isActive
+                                ? Colors.white
+                                : theme.colorScheme.onSurface.withOpacity(0.85),
+                            letterSpacing: -0.2,
+                          ),
+                          overflow: TextOverflow.ellipsis,
                         ),
-                      ),
-                      Icon(
-                        isExpanded
-                            ? Icons.keyboard_arrow_down
-                            : Icons.keyboard_arrow_right,
-                        size: ThemeConfig.getIconSize(size) - 4,
                       ),
                     ],
                   ],
                 ),
               ),
             ),
-          ),
-          if (isExpanded && !collapsed)
-            ...item.children!.map((child) {
-              final childActive = appProvider.currentRoute == child.route;
-              final childTitle = _getLocalizedTitle(l10n, child.titleKey);
-              
-              return Material(
-                color: childActive
-                    ? theme.colorScheme.primaryContainer.withOpacity(0.3)
-                    : Colors.transparent,
-                child: InkWell(
-                  onTap: () {
-                    if (child.route != null) {
-                      widget.onItemTap(child.route!);
-                    }
-                  },
-                  child: Container(
-                    padding: EdgeInsets.only(
-                      left: ThemeConfig.getSpacing(size) * 3,
-                      right: ThemeConfig.getSpacing(size),
-                      top: ThemeConfig.getSpacing(size) / 2,
-                      bottom: ThemeConfig.getSpacing(size) / 2,
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(
-                          child.icon,
-                          size: ThemeConfig.getIconSize(size) - 2,
-                          color: childActive
-                              ? theme.colorScheme.primary
-                              : theme.colorScheme.onSurface,
-                        ),
-                        SizedBox(width: ThemeConfig.getSpacing(size)),
-                        Expanded(
-                          child: Text(
-                            childTitle,
-                            style: theme.textTheme.bodyMedium?.copyWith(
-                              color: childActive
-                                  ? theme.colorScheme.primary
-                                  : theme.colorScheme.onSurface,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              );
-            }),
-        ],
-      );
-    }
-
-    return Material(
-      color: isActive
-          ? theme.colorScheme.primaryContainer.withOpacity(0.3)
-          : Colors.transparent,
-      child: InkWell(
-        onTap: () {
-          if (item.route != null) {
-            widget.onItemTap(item.route!);
-          }
-        },
-        child: Container(
-          padding: EdgeInsets.symmetric(
-            horizontal: ThemeConfig.getSpacing(size),
-            vertical: ThemeConfig.getSpacing(size) / 2,
-          ),
-          child: Row(
-            children: [
-              Icon(
-                item.icon,
-                size: ThemeConfig.getIconSize(size),
-                color: isActive
-                    ? theme.colorScheme.primary
-                    : theme.colorScheme.onSurface,
-              ),
-              if (!collapsed) ...[
-                SizedBox(width: ThemeConfig.getSpacing(size)),
-                Expanded(
-                  child: Text(
-                    title,
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: isActive
-                          ? theme.colorScheme.primary
-                          : theme.colorScheme.onSurface,
-                    ),
-                  ),
-                ),
-              ],
-            ],
           ),
         ),
       ),
@@ -288,14 +319,8 @@ class _CollapsibleSidebarState extends State<CollapsibleSidebar> {
     switch (key) {
       case 'home':
         return l10n.home;
-      case 'dashboard':
-        return l10n.dashboard;
-      case 'system':
-        return l10n.system;
-      case 'users':
-        return l10n.users;
-      case 'roles':
-        return l10n.roles;
+      case 'projects':
+        return l10n.projects;
       case 'settings':
         return l10n.settings;
       default:

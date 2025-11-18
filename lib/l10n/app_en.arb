@@ -3,9 +3,9 @@
   "appTitle": "Admin System",
   "home": "Home",
   "dashboard": "Dashboard",
-  "system": "System",
-  "users": "Users",
-  "roles": "Roles",
+  "projects": "Projects",
+  "projectList": "Project List",
+  "createProject": "Create Project",
   "settings": "Settings",
   "theme": "Theme",
   "language": "Language",
@@ -32,8 +32,11 @@
   "save": "Save",
   "cancel": "Cancel",
   "confirm": "Confirm",
-  "welcome": "Welcome",
-  "userManagement": "User Management",
-  "roleManagement": "Role Management",
-  "settingsPage": "Settings Page"
+  "welcome": "Welcome Back",
+  "welcomeMessage": "Start managing your projects",
+  "quickStats": "Quick Stats",
+  "totalProjects": "Total Projects",
+  "activeProjects": "Active",
+  "completedProjects": "Completed",
+  "recentActivity": "Recent Activity"
 }

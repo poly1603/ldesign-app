@@ -3,9 +3,9 @@
   "appTitle": "後臺管理系統",
   "home": "首頁",
   "dashboard": "儀表盤",
-  "system": "系統管理",
-  "users": "用戶管理",
-  "roles": "角色管理",
+  "projects": "項目管理",
+  "projectList": "項目列表",
+  "createProject": "創建項目",
   "settings": "設置",
   "theme": "主題",
   "language": "語言",
@@ -32,8 +32,11 @@
   "save": "保存",
   "cancel": "取消",
   "confirm": "確認",
-  "welcome": "歡迎",
-  "userManagement": "用戶管理頁面",
-  "roleManagement": "角色管理頁面",
-  "settingsPage": "設置頁面"
+  "welcome": "歡迎回來",
+  "welcomeMessage": "開始管理您的項目",
+  "quickStats": "快速統計",
+  "totalProjects": "項目總數",
+  "activeProjects": "進行中",
+  "completedProjects": "已完成",
+  "recentActivity": "最近活動"
 }

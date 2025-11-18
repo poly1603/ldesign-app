@@ -18,13 +18,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get dashboard => '仪表盘';
 
   @override
-  String get system => '系统管理';
+  String get projects => '项目管理';
 
   @override
-  String get users => '用户管理';
+  String get projectList => '项目列表';
 
   @override
-  String get roles => '角色管理';
+  String get createProject => '创建项目';
 
   @override
   String get settings => '设置';
@@ -105,16 +105,25 @@ class AppLocalizationsZh extends AppLocalizations {
   String get confirm => '确认';
 
   @override
-  String get welcome => '欢迎';
+  String get welcome => '欢迎回来';
 
   @override
-  String get userManagement => '用户管理页面';
+  String get welcomeMessage => '开始管理您的项目';
 
   @override
-  String get roleManagement => '角色管理页面';
+  String get quickStats => '快速统计';
 
   @override
-  String get settingsPage => '设置页面';
+  String get totalProjects => '项目总数';
+
+  @override
+  String get activeProjects => '进行中';
+
+  @override
+  String get completedProjects => '已完成';
+
+  @override
+  String get recentActivity => '最近活动';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hant`).
@@ -131,13 +140,13 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
   String get dashboard => '儀表盤';
 
   @override
-  String get system => '系統管理';
+  String get projects => '項目管理';
 
   @override
-  String get users => '用戶管理';
+  String get projectList => '項目列表';
 
   @override
-  String get roles => '角色管理';
+  String get createProject => '創建項目';
 
   @override
   String get settings => '設置';
@@ -218,14 +227,23 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
   String get confirm => '確認';
 
   @override
-  String get welcome => '歡迎';
+  String get welcome => '歡迎回來';
 
   @override
-  String get userManagement => '用戶管理頁面';
+  String get welcomeMessage => '開始管理您的項目';
 
   @override
-  String get roleManagement => '角色管理頁面';
+  String get quickStats => '快速統計';
 
   @override
-  String get settingsPage => '設置頁面';
+  String get totalProjects => '項目總數';
+
+  @override
+  String get activeProjects => '進行中';
+
+  @override
+  String get completedProjects => '已完成';
+
+  @override
+  String get recentActivity => '最近活動';
 }

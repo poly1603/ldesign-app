@@ -117,23 +117,23 @@ abstract class AppLocalizations {
   /// **'Dashboard'**
   String get dashboard;
 
-  /// No description provided for @system.
+  /// No description provided for @projects.
   ///
   /// In en, this message translates to:
-  /// **'System'**
-  String get system;
+  /// **'Projects'**
+  String get projects;
 
-  /// No description provided for @users.
+  /// No description provided for @projectList.
   ///
   /// In en, this message translates to:
-  /// **'Users'**
-  String get users;
+  /// **'Project List'**
+  String get projectList;
 
-  /// No description provided for @roles.
+  /// No description provided for @createProject.
   ///
   /// In en, this message translates to:
-  /// **'Roles'**
-  String get roles;
+  /// **'Create Project'**
+  String get createProject;
 
   /// No description provided for @settings.
   ///
@@ -294,26 +294,44 @@ abstract class AppLocalizations {
   /// No description provided for @welcome.
   ///
   /// In en, this message translates to:
-  /// **'Welcome'**
+  /// **'Welcome Back'**
   String get welcome;
 
-  /// No description provided for @userManagement.
+  /// No description provided for @welcomeMessage.
   ///
   /// In en, this message translates to:
-  /// **'User Management'**
-  String get userManagement;
+  /// **'Start managing your projects'**
+  String get welcomeMessage;
 
-  /// No description provided for @roleManagement.
+  /// No description provided for @quickStats.
   ///
   /// In en, this message translates to:
-  /// **'Role Management'**
-  String get roleManagement;
+  /// **'Quick Stats'**
+  String get quickStats;
 
-  /// No description provided for @settingsPage.
+  /// No description provided for @totalProjects.
   ///
   /// In en, this message translates to:
-  /// **'Settings Page'**
-  String get settingsPage;
+  /// **'Total Projects'**
+  String get totalProjects;
+
+  /// No description provided for @activeProjects.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get activeProjects;
+
+  /// No description provided for @completedProjects.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get completedProjects;
+
+  /// No description provided for @recentActivity.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent Activity'**
+  String get recentActivity;
 }
 
 class _AppLocalizationsDelegate

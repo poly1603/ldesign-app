@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 enum AppSize {
   compact,
@@ -8,73 +9,133 @@ enum AppSize {
 
 class ThemeConfig {
   static const List<Color> presetColors = [
-    Color(0xFF1976D2),
-    Color(0xFF7B1FA2),
-    Color(0xFF388E3C),
-    Color(0xFFE64A19),
-    Color(0xFFC2185B),
-    Color(0xFF0288D1),
-    Color(0xFF5D4037),
-    Color(0xFF00796B),
+    Color(0xFF6366F1),
+    Color(0xFF8B5CF6),
+    Color(0xFF06B6D4),
+    Color(0xFF10B981),
+    Color(0xFFF59E0B),
+    Color(0xFFEF4444),
+    Color(0xFFEC4899),
+    Color(0xFF3B82F6),
   ];
 
   static ThemeData getLightTheme(Color primaryColor, AppSize size) {
+    final colorScheme = ColorScheme.fromSeed(
+      seedColor: primaryColor,
+      brightness: Brightness.light,
+    );
+
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.light,
-      colorScheme: ColorScheme.fromSeed(
-        seedColor: primaryColor,
-        brightness: Brightness.light,
-      ),
+      colorScheme: colorScheme,
       textTheme: _getTextTheme(size, Brightness.light),
+      scaffoldBackgroundColor: const Color(0xFFF8FAFC),
       cardTheme: CardThemeData(
-        elevation: 1,
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+          side: BorderSide(
+            color: Colors.grey.shade200,
+            width: 1,
+          ),
+        ),
+        color: Colors.white,
         margin: EdgeInsets.all(_getSpacing(size)),
       ),
       appBarTheme: AppBarTheme(
         elevation: 0,
         centerTitle: false,
+        backgroundColor: Colors.white,
+        surfaceTintColor: Colors.transparent,
         toolbarHeight: _getToolbarHeight(size),
       ),
       drawerTheme: DrawerThemeData(
-        elevation: 1,
+        elevation: 0,
+        backgroundColor: Colors.white,
         width: _getSidebarWidth(size, false),
       ),
       listTileTheme: ListTileThemeData(
         contentPadding: EdgeInsets.symmetric(
-          horizontal: _getSpacing(size),
-          vertical: _getSpacing(size) / 2,
+          horizontal: _getSpacing(size) * 1.5,
+          vertical: _getSpacing(size) * 0.5,
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+      ),
+      dividerColor: Colors.grey.shade200,
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          elevation: 0,
+          padding: EdgeInsets.symmetric(
+            horizontal: _getSpacing(size) * 2,
+            vertical: _getSpacing(size) * 1.5,
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
         ),
       ),
     );
   }
 
   static ThemeData getDarkTheme(Color primaryColor, AppSize size) {
+    final colorScheme = ColorScheme.fromSeed(
+      seedColor: primaryColor,
+      brightness: Brightness.dark,
+    );
+
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.dark,
-      colorScheme: ColorScheme.fromSeed(
-        seedColor: primaryColor,
-        brightness: Brightness.dark,
-      ),
+      colorScheme: colorScheme,
       textTheme: _getTextTheme(size, Brightness.dark),
+      scaffoldBackgroundColor: const Color(0xFF0F172A),
       cardTheme: CardThemeData(
-        elevation: 1,
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+          side: BorderSide(
+            color: Colors.grey.shade800,
+            width: 1,
+          ),
+        ),
+        color: const Color(0xFF1E293B),
         margin: EdgeInsets.all(_getSpacing(size)),
       ),
       appBarTheme: AppBarTheme(
         elevation: 0,
         centerTitle: false,
+        backgroundColor: const Color(0xFF1E293B),
+        surfaceTintColor: Colors.transparent,
         toolbarHeight: _getToolbarHeight(size),
       ),
       drawerTheme: DrawerThemeData(
-        elevation: 1,
+        elevation: 0,
+        backgroundColor: const Color(0xFF1E293B),
         width: _getSidebarWidth(size, false),
       ),
       listTileTheme: ListTileThemeData(
         contentPadding: EdgeInsets.symmetric(
-          horizontal: _getSpacing(size),
-          vertical: _getSpacing(size) / 2,
+          horizontal: _getSpacing(size) * 1.5,
+          vertical: _getSpacing(size) * 0.5,
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+      ),
+      dividerColor: Colors.grey.shade800,
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          elevation: 0,
+          padding: EdgeInsets.symmetric(
+            horizontal: _getSpacing(size) * 2,
+            vertical: _getSpacing(size) * 1.5,
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
         ),
       ),
     );
@@ -82,33 +143,98 @@ class ThemeConfig {
 
   static TextTheme _getTextTheme(AppSize size, Brightness brightness) {
     final baseSize = _getBaseFontSize(size);
+    final baseStyle = GoogleFonts.interTextTheme();
+    
     return TextTheme(
-      displayLarge: TextStyle(fontSize: baseSize + 20),
-      displayMedium: TextStyle(fontSize: baseSize + 16),
-      displaySmall: TextStyle(fontSize: baseSize + 12),
-      headlineLarge: TextStyle(fontSize: baseSize + 10),
-      headlineMedium: TextStyle(fontSize: baseSize + 8),
-      headlineSmall: TextStyle(fontSize: baseSize + 6),
-      titleLarge: TextStyle(fontSize: baseSize + 4),
-      titleMedium: TextStyle(fontSize: baseSize + 2),
-      titleSmall: TextStyle(fontSize: baseSize),
-      bodyLarge: TextStyle(fontSize: baseSize),
-      bodyMedium: TextStyle(fontSize: baseSize - 1),
-      bodySmall: TextStyle(fontSize: baseSize - 2),
-      labelLarge: TextStyle(fontSize: baseSize),
-      labelMedium: TextStyle(fontSize: baseSize - 1),
-      labelSmall: TextStyle(fontSize: baseSize - 2),
+      displayLarge: baseStyle.displayLarge?.copyWith(
+        fontSize: baseSize + 22,
+        fontWeight: FontWeight.w700,
+        letterSpacing: -0.5,
+      ),
+      displayMedium: baseStyle.displayMedium?.copyWith(
+        fontSize: baseSize + 18,
+        fontWeight: FontWeight.w700,
+        letterSpacing: -0.5,
+      ),
+      displaySmall: baseStyle.displaySmall?.copyWith(
+        fontSize: baseSize + 14,
+        fontWeight: FontWeight.w600,
+        letterSpacing: -0.5,
+      ),
+      headlineLarge: baseStyle.headlineLarge?.copyWith(
+        fontSize: baseSize + 10,
+        fontWeight: FontWeight.w600,
+        letterSpacing: -0.25,
+      ),
+      headlineMedium: baseStyle.headlineMedium?.copyWith(
+        fontSize: baseSize + 8,
+        fontWeight: FontWeight.w600,
+        letterSpacing: -0.25,
+      ),
+      headlineSmall: baseStyle.headlineSmall?.copyWith(
+        fontSize: baseSize + 6,
+        fontWeight: FontWeight.w600,
+        letterSpacing: 0,
+      ),
+      titleLarge: baseStyle.titleLarge?.copyWith(
+        fontSize: baseSize + 4,
+        fontWeight: FontWeight.w600,
+        letterSpacing: 0,
+      ),
+      titleMedium: baseStyle.titleMedium?.copyWith(
+        fontSize: baseSize + 2,
+        fontWeight: FontWeight.w500,
+        letterSpacing: 0.15,
+      ),
+      titleSmall: baseStyle.titleSmall?.copyWith(
+        fontSize: baseSize,
+        fontWeight: FontWeight.w500,
+        letterSpacing: 0.1,
+      ),
+      bodyLarge: baseStyle.bodyLarge?.copyWith(
+        fontSize: baseSize,
+        fontWeight: FontWeight.w400,
+        letterSpacing: 0.5,
+        height: 1.5,
+      ),
+      bodyMedium: baseStyle.bodyMedium?.copyWith(
+        fontSize: baseSize - 1,
+        fontWeight: FontWeight.w400,
+        letterSpacing: 0.25,
+        height: 1.43,
+      ),
+      bodySmall: baseStyle.bodySmall?.copyWith(
+        fontSize: baseSize - 2,
+        fontWeight: FontWeight.w400,
+        letterSpacing: 0.4,
+        height: 1.33,
+      ),
+      labelLarge: baseStyle.labelLarge?.copyWith(
+        fontSize: baseSize,
+        fontWeight: FontWeight.w500,
+        letterSpacing: 0.1,
+      ),
+      labelMedium: baseStyle.labelMedium?.copyWith(
+        fontSize: baseSize - 1,
+        fontWeight: FontWeight.w500,
+        letterSpacing: 0.5,
+      ),
+      labelSmall: baseStyle.labelSmall?.copyWith(
+        fontSize: baseSize - 2,
+        fontWeight: FontWeight.w500,
+        letterSpacing: 0.5,
+      ),
     );
   }
 
   static double _getBaseFontSize(AppSize size) {
     switch (size) {
       case AppSize.compact:
-        return 12.0;
+        return 13.0;
       case AppSize.standard:
         return 14.0;
       case AppSize.comfortable:
-        return 16.0;
+        return 15.0;
     }
   }
 
@@ -126,23 +252,23 @@ class ThemeConfig {
   static double _getToolbarHeight(AppSize size) {
     switch (size) {
       case AppSize.compact:
-        return 48.0;
-      case AppSize.standard:
         return 56.0;
-      case AppSize.comfortable:
+      case AppSize.standard:
         return 64.0;
+      case AppSize.comfortable:
+        return 72.0;
     }
   }
 
   static double _getSidebarWidth(AppSize size, bool collapsed) {
-    if (collapsed) return 64.0;
+    if (collapsed) return 72.0;
     switch (size) {
       case AppSize.compact:
-        return 220.0;
-      case AppSize.standard:
         return 240.0;
-      case AppSize.comfortable:
+      case AppSize.standard:
         return 260.0;
+      case AppSize.comfortable:
+        return 280.0;
     }
   }
 
@@ -163,9 +289,9 @@ class ThemeConfig {
       case AppSize.compact:
         return 20.0;
       case AppSize.standard:
-        return 24.0;
+        return 22.0;
       case AppSize.comfortable:
-        return 28.0;
+        return 24.0;
     }
   }
 }

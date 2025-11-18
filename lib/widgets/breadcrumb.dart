@@ -90,13 +90,9 @@ class Breadcrumb extends StatelessWidget {
       IconData? icon;
 
       switch (segment) {
-        case 'users':
-          label = l10n.users;
-          icon = Icons.people;
-          break;
-        case 'roles':
-          label = l10n.roles;
-          icon = Icons.admin_panel_settings;
+        case 'projects':
+          label = l10n.projects;
+          icon = Icons.folder;
           break;
         case 'settings':
           label = l10n.settings;

@@ -7,8 +7,7 @@ import 'l10n/app_localizations.dart';
 import 'providers/app_provider.dart';
 import 'widgets/main_layout.dart';
 import 'screens/home_screen.dart';
-import 'screens/users_screen.dart';
-import 'screens/roles_screen.dart';
+import 'screens/projects_screen.dart';
 import 'screens/settings_screen.dart';
 
 void main() async {
@@ -48,13 +47,13 @@ class MyApp extends StatelessWidget {
     final appProvider = context.watch<AppProvider>();
 
     return MaterialApp(
-      title: 'Admin System',
+      onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
       debugShowCheckedModeBanner: false,
       theme: appProvider.getLightTheme(),
       darkTheme: appProvider.getDarkTheme(),
       themeMode: appProvider.themeMode,
       locale: appProvider.locale,
-      localizationsDelegates: const [
+      localizationsDelegates: [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
@@ -83,11 +82,8 @@ class AppNavigator extends StatelessWidget {
       case '/':
         screen = const HomeScreen();
         break;
-      case '/users':
-        screen = const UsersScreen();
-        break;
-      case '/roles':
-        screen = const RolesScreen();
+      case '/projects':
+        screen = const ProjectsScreen();
         break;
       case '/settings':
         screen = const SettingsScreen();

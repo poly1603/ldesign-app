@@ -3,9 +3,9 @@
   "appTitle": "后台管理系统",
   "home": "首页",
   "dashboard": "仪表盘",
-  "system": "系统管理",
-  "users": "用户管理",
-  "roles": "角色管理",
+  "projects": "项目管理",
+  "projectList": "项目列表",
+  "createProject": "创建项目",
   "settings": "设置",
   "theme": "主题",
   "language": "语言",
@@ -32,8 +32,11 @@
   "save": "保存",
   "cancel": "取消",
   "confirm": "确认",
-  "welcome": "欢迎",
-  "userManagement": "用户管理页面",
-  "roleManagement": "角色管理页面",
-  "settingsPage": "设置页面"
+  "welcome": "欢迎回来",
+  "welcomeMessage": "开始管理您的项目",
+  "quickStats": "快速统计",
+  "totalProjects": "项目总数",
+  "activeProjects": "进行中",
+  "completedProjects": "已完成",
+  "recentActivity": "最近活动"
 }

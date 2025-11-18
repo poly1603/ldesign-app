@@ -18,13 +18,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dashboard => 'Dashboard';
 
   @override
-  String get system => 'System';
+  String get projects => 'Projects';
 
   @override
-  String get users => 'Users';
+  String get projectList => 'Project List';
 
   @override
-  String get roles => 'Roles';
+  String get createProject => 'Create Project';
 
   @override
   String get settings => 'Settings';
@@ -105,14 +105,23 @@ class AppLocalizationsEn extends AppLocalizations {
   String get confirm => 'Confirm';
 
   @override
-  String get welcome => 'Welcome';
+  String get welcome => 'Welcome Back';
 
   @override
-  String get userManagement => 'User Management';
+  String get welcomeMessage => 'Start managing your projects';
 
   @override
-  String get roleManagement => 'Role Management';
+  String get quickStats => 'Quick Stats';
 
   @override
-  String get settingsPage => 'Settings Page';
+  String get totalProjects => 'Total Projects';
+
+  @override
+  String get activeProjects => 'Active';
+
+  @override
+  String get completedProjects => 'Completed';
+
+  @override
+  String get recentActivity => 'Recent Activity';
 }

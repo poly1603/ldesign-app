@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:icons_plus/icons_plus.dart';
 import '../providers/app_provider.dart';
 import 'custom_title_bar.dart';
 import 'collapsible_sidebar.dart';
@@ -21,32 +22,19 @@ class _MainLayoutState extends State<MainLayout> {
     MenuItem(
       id: 'home',
       titleKey: 'home',
-      icon: Icons.home,
+      icon: Bootstrap.house,
       route: '/',
     ),
     MenuItem(
-      id: 'system',
-      titleKey: 'system',
-      icon: Icons.admin_panel_settings,
-      children: [
-        MenuItem(
-          id: 'users',
-          titleKey: 'users',
-          icon: Icons.people,
-          route: '/users',
-        ),
-        MenuItem(
-          id: 'roles',
-          titleKey: 'roles',
-          icon: Icons.security,
-          route: '/roles',
-        ),
-      ],
+      id: 'projects',
+      titleKey: 'projects',
+      icon: Bootstrap.folder,
+      route: '/projects',
     ),
     MenuItem(
       id: 'settings',
       titleKey: 'settings',
-      icon: Icons.settings,
+      icon: Bootstrap.gear,
       route: '/settings',
     ),
   ];
