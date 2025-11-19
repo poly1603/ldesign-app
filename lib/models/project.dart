@@ -7,6 +7,7 @@ enum ProjectType {
   backendApp,       // 后端应用
   componentLibrary, // 组件库
   utilityLibrary,   // 工具库
+  frameworkLibrary, // 框架/引擎库
   nodeLibrary,      // Node库
   cliTool,          // 命令行工具
   monorepo,         // Monorepo
@@ -14,35 +15,54 @@ enum ProjectType {
 }
 
 enum ProjectFramework {
-  flutter,
+  // Frontend Frameworks
   react,
   vue,
   angular,
-  nextjs,
-  nuxt,
   svelte,
   solidjs,
   preact,
+  lit,
+  stencil,
+  alpine,
+  htmx,
+  
+  // Meta Frameworks
+  nextjs,
+  nuxt,
   gatsby,
   remix,
   astro,
   qwik,
-  vite,
-  webpack,
-  express,
-  nestjs,
-  koa,
-  fastify,
-  django,
-  fastapi,
-  flask,
-  spring,
-  electron,
-  tauri,
+  
+  // Mobile Frameworks
+  flutter,
   reactNative,
   ionic,
   capacitor,
   cordova,
+  flutter_web,
+  
+  // Backend Frameworks
+  express,
+  nestjs,
+  koa,
+  fastify,
+  hapi,
+  django,
+  fastapi,
+  flask,
+  spring,
+  laravel,
+  rails,
+  
+  // Desktop Frameworks
+  electron,
+  tauri,
+  
+  // Build Tools (not frameworks)
+  // vite, webpack, rollup, parcel, turbopack should not be frameworks
+  
   unknown,
 }
 
@@ -55,6 +75,10 @@ class Project {
   final ProjectFramework framework;
   final String? language;
   final String? version;
+  final String? author;
+  final String? license;
+  final String? nodeVersion;
+  final String? buildTool;
   final DateTime lastModified;
   final DateTime addedAt;
   final List<String> tags;
@@ -68,6 +92,10 @@ class Project {
     required this.framework,
     this.language,
     this.version,
+    this.author,
+    this.license,
+    this.nodeVersion,
+    this.buildTool,
     required this.lastModified,
     required this.addedAt,
     this.tags = const [],
@@ -89,6 +117,10 @@ class Project {
       ),
       language: json['language'] as String?,
       version: json['version'] as String?,
+      author: json['author'] as String?,
+      license: json['license'] as String?,
+      nodeVersion: json['nodeVersion'] as String?,
+      buildTool: json['buildTool'] as String?,
       lastModified: DateTime.parse(json['lastModified'] as String),
       addedAt: DateTime.parse(json['addedAt'] as String),
       tags: (json['tags'] as List<dynamic>?)?.cast<String>() ?? [],
@@ -105,6 +137,10 @@ class Project {
       'framework': framework.name,
       'language': language,
       'version': version,
+      'author': author,
+      'license': license,
+      'nodeVersion': nodeVersion,
+      'buildTool': buildTool,
       'lastModified': lastModified.toIso8601String(),
       'addedAt': addedAt.toIso8601String(),
       'tags': tags,
@@ -158,6 +194,8 @@ class Project {
         return 'Component Library';
       case ProjectType.utilityLibrary:
         return 'Utility Library';
+      case ProjectType.frameworkLibrary:
+        return 'Framework Library';
       case ProjectType.nodeLibrary:
         return 'Node Library';
       case ProjectType.cliTool:
@@ -197,10 +235,14 @@ class Project {
         return 'Astro';
       case ProjectFramework.qwik:
         return 'Qwik';
-      case ProjectFramework.vite:
-        return 'Vite';
-      case ProjectFramework.webpack:
-        return 'Webpack';
+      case ProjectFramework.lit:
+        return 'Lit';
+      case ProjectFramework.stencil:
+        return 'Stencil';
+      case ProjectFramework.alpine:
+        return 'Alpine.js';
+      case ProjectFramework.htmx:
+        return 'HTMX';
       case ProjectFramework.express:
         return 'Express';
       case ProjectFramework.nestjs:
@@ -209,6 +251,8 @@ class Project {
         return 'Koa';
       case ProjectFramework.fastify:
         return 'Fastify';
+      case ProjectFramework.hapi:
+        return 'Hapi';
       case ProjectFramework.django:
         return 'Django';
       case ProjectFramework.fastapi:
@@ -217,6 +261,10 @@ class Project {
         return 'Flask';
       case ProjectFramework.spring:
         return 'Spring';
+      case ProjectFramework.laravel:
+        return 'Laravel';
+      case ProjectFramework.rails:
+        return 'Rails';
       case ProjectFramework.electron:
         return 'Electron';
       case ProjectFramework.tauri:
@@ -229,6 +277,8 @@ class Project {
         return 'Capacitor';
       case ProjectFramework.cordova:
         return 'Cordova';
+      case ProjectFramework.flutter_web:
+        return 'Flutter Web';
       case ProjectFramework.unknown:
         return 'Unknown';
     }

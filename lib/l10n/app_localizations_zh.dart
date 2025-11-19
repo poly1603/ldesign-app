@@ -165,6 +165,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get utilityLibrary => '工具库';
 
   @override
+  String get frameworkLibrary => '框架库';
+
+  @override
   String get nodeLibrary => 'Node库';
 
   @override
@@ -172,6 +175,27 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get monorepo => 'Monorepo';
+
+  @override
+  String get projectActions => '项目操作';
+
+  @override
+  String get startProject => '启动';
+
+  @override
+  String get buildProject => '构建';
+
+  @override
+  String get previewProject => '预览';
+
+  @override
+  String get deployProject => '部署';
+
+  @override
+  String get publishProject => '发布';
+
+  @override
+  String get testProject => '测试';
 
   @override
   String get sortByName => '按名称';
@@ -349,6 +373,33 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get failedToOpenFolder => '无法打开文件夹';
+
+  @override
+  String get pageTransition => '页面切换动画';
+
+  @override
+  String get disabled => '禁用';
+
+  @override
+  String get fadeTransition => '淡入淡出';
+
+  @override
+  String get slideLeftTransition => '向左滑动';
+
+  @override
+  String get slideRightTransition => '向右滑动';
+
+  @override
+  String get slideUpTransition => '向上滑动';
+
+  @override
+  String get slideDownTransition => '向下滑动';
+
+  @override
+  String get scaleTransition => '缩放';
+
+  @override
+  String get rotationTransition => '旋转';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hant`).
@@ -512,6 +563,9 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
   String get utilityLibrary => '工具庫';
 
   @override
+  String get frameworkLibrary => '框架庫';
+
+  @override
   String get nodeLibrary => 'Node庫';
 
   @override
@@ -519,6 +573,27 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get monorepo => 'Monorepo';
+
+  @override
+  String get projectActions => '專案操作';
+
+  @override
+  String get startProject => '啟動';
+
+  @override
+  String get buildProject => '構建';
+
+  @override
+  String get previewProject => '預覽';
+
+  @override
+  String get deployProject => '部署';
+
+  @override
+  String get publishProject => '發布';
+
+  @override
+  String get testProject => '測試';
 
   @override
   String get sortByName => '按名稱';
@@ -696,4 +771,31 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get failedToOpenFolder => '無法打開文件夾';
+
+  @override
+  String get pageTransition => '頁面切換動畫';
+
+  @override
+  String get disabled => '禁用';
+
+  @override
+  String get fadeTransition => '淡入淡出';
+
+  @override
+  String get slideLeftTransition => '向左滑動';
+
+  @override
+  String get slideRightTransition => '向右滑動';
+
+  @override
+  String get slideUpTransition => '向上滑動';
+
+  @override
+  String get slideDownTransition => '向下滑動';
+
+  @override
+  String get scaleTransition => '縮放';
+
+  @override
+  String get rotationTransition => '旋轉';
 }

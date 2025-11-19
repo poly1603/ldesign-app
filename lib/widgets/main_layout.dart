@@ -6,6 +6,7 @@ import 'custom_title_bar.dart';
 import 'collapsible_sidebar.dart';
 import 'top_bar.dart';
 import 'breadcrumb.dart';
+import 'page_transition.dart';
 import '../l10n/app_localizations.dart';
 
 class MainLayout extends StatefulWidget {
@@ -93,12 +94,28 @@ class _MainLayoutState extends State<MainLayout> {
             ),
           ),
           Expanded(
-            child: Row(
-              children: [
-                CollapsibleSidebar(
-                  menuItems: _menuItems,
-                  onItemTap: _handleNavigation,
-                ),
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                // 当窗口宽度小于1000px时自动收起侧边栏
+                final shouldAutoCollapse = constraints.maxWidth < 1000;
+                final appProvider = context.read<AppProvider>();
+                
+                // 如果需要自动收起且当前是展开状态，则自动收起
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  if (shouldAutoCollapse && !appProvider.sidebarCollapsed) {
+                    appProvider.setSidebarCollapsed(true);
+                  } else if (!shouldAutoCollapse && appProvider.sidebarCollapsed && constraints.maxWidth > 1100) {
+                    // 当窗口足够大时（1100px以上）可以考虑自动展开，但这里我们保持用户的选择
+                    // appProvider.setSidebarCollapsed(false);
+                  }
+                });
+
+                return Row(
+                  children: [
+                    CollapsibleSidebar(
+                      menuItems: _menuItems,
+                      onItemTap: _handleNavigation,
+                    ),
                 Expanded(
                   child: Column(
                     children: [
@@ -109,13 +126,101 @@ class _MainLayoutState extends State<MainLayout> {
                       Expanded(
                         child: Container(
                           color: theme.colorScheme.surfaceContainerLowest,
-                          child: widget.child,
+                          child: Consumer<AppProvider>(
+                            builder: (context, appProvider, _) {
+                              return AnimatedSwitcher(
+                                duration: Duration(milliseconds: appProvider.pageTransitionEnabled ? 300 : 0),
+                                switchInCurve: Curves.easeInOut,
+                                switchOutCurve: Curves.easeInOut,
+                                transitionBuilder: (Widget child, Animation<double> animation) {
+                                  if (!appProvider.pageTransitionEnabled) {
+                                    return child;
+                                  }
+                                  
+                                  final curvedAnimation = CurvedAnimation(
+                                    parent: animation,
+                                    curve: Curves.easeInOut,
+                                  );
+                                  
+                                  switch (appProvider.pageTransitionType) {
+                                    case PageTransitionType.fade:
+                                      return FadeTransition(
+                                        opacity: curvedAnimation,
+                                        child: child,
+                                      );
+                                    case PageTransitionType.slideLeft:
+                                      return SlideTransition(
+                                        position: Tween<Offset>(
+                                          begin: const Offset(1.0, 0.0),
+                                          end: Offset.zero,
+                                        ).animate(curvedAnimation),
+                                        child: child,
+                                      );
+                                    case PageTransitionType.slideRight:
+                                      return SlideTransition(
+                                        position: Tween<Offset>(
+                                          begin: const Offset(-1.0, 0.0),
+                                          end: Offset.zero,
+                                        ).animate(curvedAnimation),
+                                        child: child,
+                                      );
+                                    case PageTransitionType.slideUp:
+                                      return SlideTransition(
+                                        position: Tween<Offset>(
+                                          begin: const Offset(0.0, 1.0),
+                                          end: Offset.zero,
+                                        ).animate(curvedAnimation),
+                                        child: child,
+                                      );
+                                    case PageTransitionType.slideDown:
+                                      return SlideTransition(
+                                        position: Tween<Offset>(
+                                          begin: const Offset(0.0, -1.0),
+                                          end: Offset.zero,
+                                        ).animate(curvedAnimation),
+                                        child: child,
+                                      );
+                                    case PageTransitionType.scale:
+                                      return ScaleTransition(
+                                        scale: Tween<double>(
+                                          begin: 0.8,
+                                          end: 1.0,
+                                        ).animate(curvedAnimation),
+                                        child: FadeTransition(
+                                          opacity: curvedAnimation,
+                                          child: child,
+                                        ),
+                                      );
+                                    case PageTransitionType.rotation:
+                                      return RotationTransition(
+                                        turns: Tween<double>(
+                                          begin: 0.1,
+                                          end: 0.0,
+                                        ).animate(curvedAnimation),
+                                        child: FadeTransition(
+                                          opacity: curvedAnimation,
+                                          child: child,
+                                        ),
+                                      );
+                                  }
+                                },
+                                child: Container(
+                                  key: ValueKey(appProvider.currentRoute),
+                                  width: double.infinity,
+                                  height: double.infinity,
+                                  child: widget.child,
+                                ),
+                              );
+                            },
+                          ),
                         ),
                       ),
                     ],
                   ),
                 ),
-              ],
+                  ],
+                );
+              },
             ),
           ),
         ],

@@ -6,6 +6,7 @@ import '../l10n/app_localizations.dart';
 import '../providers/app_provider.dart';
 import '../config/theme_config.dart';
 import '../widgets/debug_storage_dialog.dart';
+import '../widgets/page_transition.dart';
 import '../utils/storage_util.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -194,6 +195,59 @@ class SettingsScreen extends StatelessWidget {
                       const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                     ),
                   ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              _buildSettingItem(
+                theme: theme,
+                title: l10n.pageTransition,
+                icon: Bootstrap.arrow_left_right,
+                trailing: DropdownButton<PageTransitionType?>(
+                  value: appProvider.pageTransitionEnabled ? appProvider.pageTransitionType : null,
+                  onChanged: (PageTransitionType? value) {
+                    if (value != null) {
+                      appProvider.setPageTransitionEnabled(true);
+                      appProvider.setPageTransitionType(value);
+                    } else {
+                      appProvider.setPageTransitionEnabled(false);
+                    }
+                  },
+                  items: [
+                    DropdownMenuItem<PageTransitionType?>(
+                      value: null,
+                      child: Text(l10n.disabled),
+                    ),
+                    DropdownMenuItem<PageTransitionType?>(
+                      value: PageTransitionType.fade,
+                      child: Text(l10n.fadeTransition),
+                    ),
+                    DropdownMenuItem<PageTransitionType?>(
+                      value: PageTransitionType.slideLeft,
+                      child: Text(l10n.slideLeftTransition),
+                    ),
+                    DropdownMenuItem<PageTransitionType?>(
+                      value: PageTransitionType.slideRight,
+                      child: Text(l10n.slideRightTransition),
+                    ),
+                    DropdownMenuItem<PageTransitionType?>(
+                      value: PageTransitionType.slideUp,
+                      child: Text(l10n.slideUpTransition),
+                    ),
+                    DropdownMenuItem<PageTransitionType?>(
+                      value: PageTransitionType.slideDown,
+                      child: Text(l10n.slideDownTransition),
+                    ),
+                    DropdownMenuItem<PageTransitionType?>(
+                      value: PageTransitionType.scale,
+                      child: Text(l10n.scaleTransition),
+                    ),
+                    DropdownMenuItem<PageTransitionType?>(
+                      value: PageTransitionType.rotation,
+                      child: Text(l10n.rotationTransition),
+                    ),
+                  ],
+                  underline: Container(),
+                  style: theme.textTheme.bodyMedium,
                 ),
               ),
             ],

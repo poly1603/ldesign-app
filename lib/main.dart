@@ -9,6 +9,7 @@ import 'widgets/main_layout.dart';
 import 'screens/home_screen.dart';
 import 'screens/projects_screen.dart';
 import 'screens/project_detail_screen.dart';
+import 'screens/project_action_screen.dart';
 import 'screens/settings_screen.dart';
 
 void main() async {
@@ -170,7 +171,19 @@ class AppNavigator extends StatelessWidget {
         screen = const SettingsScreen();
         break;
       default:
-        screen = const HomeScreen();
+        // 检查是否是项目操作路由
+        if (currentRoute.startsWith('/project/') && currentRoute.contains('/')) {
+          final parts = currentRoute.split('/');
+          if (parts.length >= 4) {
+            final projectId = parts[2];
+            final action = parts[3];
+            screen = ProjectActionScreen(projectId: projectId, action: action);
+          } else {
+            screen = const HomeScreen();
+          }
+        } else {
+          screen = const HomeScreen();
+        }
     }
 
     return MainLayout(child: screen);

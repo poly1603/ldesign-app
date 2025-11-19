@@ -165,6 +165,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get utilityLibrary => 'Utility Library';
 
   @override
+  String get frameworkLibrary => 'Framework Library';
+
+  @override
   String get nodeLibrary => 'Node Library';
 
   @override
@@ -172,6 +175,27 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get monorepo => 'Monorepo';
+
+  @override
+  String get projectActions => 'Project Actions';
+
+  @override
+  String get startProject => 'Start';
+
+  @override
+  String get buildProject => 'Build';
+
+  @override
+  String get previewProject => 'Preview';
+
+  @override
+  String get deployProject => 'Deploy';
+
+  @override
+  String get publishProject => 'Publish';
+
+  @override
+  String get testProject => 'Test';
 
   @override
   String get sortByName => 'By Name';
@@ -351,4 +375,31 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get failedToOpenFolder => 'Failed to open folder';
+
+  @override
+  String get pageTransition => 'Page Transition Animation';
+
+  @override
+  String get disabled => 'Disabled';
+
+  @override
+  String get fadeTransition => 'Fade';
+
+  @override
+  String get slideLeftTransition => 'Slide Left';
+
+  @override
+  String get slideRightTransition => 'Slide Right';
+
+  @override
+  String get slideUpTransition => 'Slide Up';
+
+  @override
+  String get slideDownTransition => 'Slide Down';
+
+  @override
+  String get scaleTransition => 'Scale';
+
+  @override
+  String get rotationTransition => 'Rotation';
 }

@@ -25,6 +25,10 @@ class ProjectAnalyzer {
         framework: analysis['framework'] ?? ProjectFramework.unknown,
         language: analysis['language'],
         version: analysis['version'],
+        author: analysis['author'],
+        license: analysis['license'],
+        nodeVersion: analysis['nodeVersion'],
+        buildTool: analysis['buildTool'],
         lastModified: lastModified,
         addedAt: DateTime.now(),
         tags: analysis['tags'] ?? [],
@@ -47,7 +51,7 @@ class ProjectAnalyzer {
 
     final requirementsTxt = File(path.join(directoryPath, 'requirements.txt'));
     if (await requirementsTxt.exists()) {
-      return _analyzePythonProject();
+      return await _analyzePythonProject(directoryPath);
     }
 
     final pomXml = File(path.join(directoryPath, 'pom.xml'));
@@ -67,6 +71,10 @@ class ProjectAnalyzer {
       final name = json['name'] as String?;
       final description = json['description'] as String?;
       final version = json['version'] as String?;
+      final author = _parseAuthor(json['author']);
+      final license = json['license'] as String?;
+      final engines = json['engines'] as Map<String, dynamic>?;
+      final nodeVersion = engines?['node'] as String?;
       final dependencies = json['dependencies'] as Map<String, dynamic>?;
       final devDependencies = json['devDependencies'] as Map<String, dynamic>?;
       
@@ -90,6 +98,7 @@ class ProjectAnalyzer {
       
       ProjectFramework framework = ProjectFramework.unknown;
       ProjectType type = ProjectType.unknown;
+      String? buildTool;
       final tags = <String>['JavaScript'];
       
       // Analyze project type based on package.json structure
@@ -123,41 +132,69 @@ class ProjectAnalyzer {
           framework = ProjectFramework.nextjs;
           tags.add('Next.js');
           if (hasAppDir) tags.add('App Router');
+          if (allDeps.containsKey('typescript')) tags.add('TypeScript');
         } else if (allDeps.containsKey('gatsby')) {
           framework = ProjectFramework.gatsby;
           tags.add('Gatsby');
+          tags.add('Static Site');
         } else if (allDeps.containsKey('remix') || allDeps.containsKey('@remix-run/react')) {
           framework = ProjectFramework.remix;
           tags.add('Remix');
+          tags.add('Full-stack');
         } else if (allDeps.containsKey('nuxt') || hasNuxtConfig) {
           framework = ProjectFramework.nuxt;
           tags.add('Nuxt');
+          tags.add('Vue Framework');
         } else if (allDeps.containsKey('astro') || hasAstroConfig) {
           framework = ProjectFramework.astro;
           tags.add('Astro');
+          tags.add('Static Site');
         } else if (allDeps.containsKey('@builder.io/qwik')) {
           framework = ProjectFramework.qwik;
           tags.add('Qwik');
-        } else if (allDeps.containsKey('svelte')) {
+          tags.add('Resumable');
+        } else if (allDeps.containsKey('svelte') || allDeps.containsKey('@sveltejs/kit')) {
           framework = ProjectFramework.svelte;
           tags.add('Svelte');
+          if (allDeps.containsKey('@sveltejs/kit')) tags.add('SvelteKit');
         } else if (allDeps.containsKey('solid-js')) {
           framework = ProjectFramework.solidjs;
           tags.add('Solid.js');
+          tags.add('Fine-grained');
         } else if (allDeps.containsKey('preact')) {
           framework = ProjectFramework.preact;
           tags.add('Preact');
+          tags.add('Lightweight');
         } else if (allDeps.containsKey('react')) {
           framework = ProjectFramework.react;
           tags.add('React');
           if (hasViteConfig) tags.add('Vite');
+          if (allDeps.containsKey('react-router-dom')) tags.add('Router');
         } else if (allDeps.containsKey('vue')) {
           framework = ProjectFramework.vue;
           tags.add('Vue');
           if (hasViteConfig) tags.add('Vite');
+          if (allDeps.containsKey('vue-router')) tags.add('Router');
         } else if (allDeps.containsKey('@angular/core')) {
           framework = ProjectFramework.angular;
           tags.add('Angular');
+          if (allDeps.containsKey('@angular/router')) tags.add('Router');
+        } else if (allDeps.containsKey('lit') || allDeps.containsKey('lit-element')) {
+          framework = ProjectFramework.lit;
+          tags.add('Lit');
+          tags.add('Web Components');
+        } else if (allDeps.containsKey('stencil') || allDeps.containsKey('@stencil/core')) {
+          framework = ProjectFramework.stencil;
+          tags.add('Stencil');
+          tags.add('Web Components');
+        } else if (allDeps.containsKey('alpinejs') || allDeps.containsKey('@alpinejs/core')) {
+          framework = ProjectFramework.alpine;
+          tags.add('Alpine.js');
+          tags.add('Lightweight');
+        } else if (allDeps.containsKey('htmx')) {
+          framework = ProjectFramework.htmx;
+          tags.add('HTMX');
+          tags.add('Hypermedia');
         }
         
         // Mobile frameworks
@@ -205,15 +242,22 @@ class ProjectAnalyzer {
           tags.add('Electron');
         }
         
-        // Build tools (if no framework detected)
-        if (framework == ProjectFramework.unknown) {
-          if (allDeps.containsKey('vite')) {
-            framework = ProjectFramework.vite;
-            tags.add('Vite');
-          } else if (allDeps.containsKey('webpack')) {
-            framework = ProjectFramework.webpack;
-            tags.add('Webpack');
-          }
+        // Determine build tool (separate from framework)
+        if (hasViteConfig || allDeps.containsKey('vite')) {
+          buildTool = 'Vite';
+          tags.add('Vite');
+        } else if (hasWebpackConfig || allDeps.containsKey('webpack')) {
+          buildTool = 'Webpack';
+          tags.add('Webpack');
+        } else if (allDeps.containsKey('rollup')) {
+          buildTool = 'Rollup';
+          tags.add('Rollup');
+        } else if (allDeps.containsKey('parcel')) {
+          buildTool = 'Parcel';
+          tags.add('Parcel');
+        } else if (allDeps.containsKey('turbopack')) {
+          buildTool = 'Turbopack';
+          tags.add('Turbopack');
         }
         
         // TypeScript detection
@@ -224,55 +268,131 @@ class ProjectAnalyzer {
         
         // Determine if it's a library or application based on type not set yet
         if (type == ProjectType.unknown) {
-          // Check for UI component library indicators
+          // Enhanced project type detection
           final hasUIFramework = allDeps.containsKey('react') || 
                                  allDeps.containsKey('vue') || 
                                  allDeps.containsKey('@angular/core') ||
                                  allDeps.containsKey('svelte') ||
-                                 allDeps.containsKey('solid-js');
+                                 allDeps.containsKey('solid-js') ||
+                                 allDeps.containsKey('preact');
           
-          // Application indicators
+          // Enhanced application indicators
           final hasAppIndicators = hasPublicDir || hasPagesDir || hasApiDir || 
                                    scripts?.containsKey('dev') == true ||
-                                   scripts?.containsKey('start') == true;
+                                   scripts?.containsKey('start') == true ||
+                                   scripts?.containsKey('serve') == true ||
+                                   scripts?.containsKey('preview') == true;
           
-          if (hasLibraryIndicators && !hasAppIndicators) {
-            // It's a library
-            if (hasComponentsDir && hasUIFramework && (name?.contains('component') == true || 
-                                   name?.contains('ui') == true ||
-                                   description?.toLowerCase().contains('component') == true ||
-                                   description?.toLowerCase().contains('ui library') == true)) {
+          // Library indicators - more comprehensive
+          final hasStrongLibraryIndicators = hasMain || hasModule || hasExports || 
+                                             (isPublished && !isPrivate) ||
+                                             scripts?.containsKey('build:lib') == true ||
+                                             scripts?.containsKey('prepublishOnly') == true;
+          
+          // Component library specific indicators
+          final hasComponentLibraryIndicators = hasComponentsDir || 
+                                               name?.toLowerCase().contains('component') == true ||
+                                               name?.toLowerCase().contains('ui') == true ||
+                                               name?.toLowerCase().contains('design-system') == true ||
+                                               description?.toLowerCase().contains('component') == true ||
+                                               description?.toLowerCase().contains('ui library') == true ||
+                                               description?.toLowerCase().contains('design system') == true ||
+                                               allDeps.containsKey('storybook') ||
+                                               allDeps.containsKey('@storybook/react') ||
+                                               allDeps.containsKey('@storybook/vue') ||
+                                               allDeps.containsKey('@storybook/angular');
+          
+          // Framework/Engine library indicators
+          final hasFrameworkLibraryIndicators = name?.toLowerCase().contains('engine') == true ||
+                                                name?.toLowerCase().contains('core') == true ||
+                                                name?.toLowerCase().contains('framework') == true ||
+                                                description?.toLowerCase().contains('framework') == true ||
+                                                description?.toLowerCase().contains('engine') == true ||
+                                                description?.toLowerCase().contains('plugin system') == true ||
+                                                description?.toLowerCase().contains('middleware') == true ||
+                                                description?.toLowerCase().contains('lifecycle') == true;
+          
+          // Utility library indicators
+          final hasUtilityLibraryIndicators = name?.toLowerCase().contains('util') == true ||
+                                              name?.toLowerCase().contains('helper') == true ||
+                                              name?.toLowerCase().contains('tool') == true ||
+                                              name?.toLowerCase().contains('lib') == true ||
+                                              description?.toLowerCase().contains('utility') == true ||
+                                              description?.toLowerCase().contains('helper') == true ||
+                                              description?.toLowerCase().contains('tool') == true;
+          
+          // Node library indicators
+          final hasNodeLibraryIndicators = allDeps.containsKey('@types/node') && 
+                                           !hasUIFramework &&
+                                           !hasAppIndicators;
+          
+          if (hasStrongLibraryIndicators || (!hasAppIndicators && (hasMain || hasModule || hasExports))) {
+            // It's definitely a library
+            if (hasFrameworkLibraryIndicators) {
+              type = ProjectType.frameworkLibrary;
+              tags.add('Framework');
+              if (name?.toLowerCase().contains('engine') == true) {
+                tags.add('Engine');
+              }
+              if (description?.toLowerCase().contains('plugin') == true) {
+                tags.add('Plugin System');
+              }
+            } else if (hasComponentLibraryIndicators && hasUIFramework) {
               type = ProjectType.componentLibrary;
               tags.add('Components');
-            } else if (allDeps.isEmpty || allDeps.length < 3) {
-              // Utility library with few dependencies
+              if (allDeps.containsKey('storybook') || allDeps.containsKey('@storybook/react')) {
+                tags.add('Storybook');
+              }
+            } else if (hasUtilityLibraryIndicators || (allDeps.length < 5 && !hasUIFramework)) {
               type = ProjectType.utilityLibrary;
               tags.add('Utilities');
-            } else if (allDeps.containsKey('@types/node') && !hasUIFramework) {
+            } else if (hasNodeLibraryIndicators) {
               type = ProjectType.nodeLibrary;
               tags.add('Node');
-            } else if (hasUIFramework) {
+            } else if (hasUIFramework && !hasAppIndicators) {
               // UI library but not specifically component library
               type = ProjectType.componentLibrary;
+              tags.add('UI Library');
             } else {
+              // Default to utility library for published packages
               type = ProjectType.utilityLibrary;
+              tags.add('Library');
             }
-          } else if (hasUIFramework || hasAppIndicators) {
-            // It's a web application
+          } else if (hasUIFramework && hasAppIndicators) {
+            // It's a web application with UI framework
             type = ProjectType.webApp;
             tags.add('Application');
             if (hasSrcDir) tags.add('Structured');
-          } else if (allDeps.containsKey('@types/node') || hasApiDir) {
-            // Node application or API
-            if (hasApiDir) {
-              type = ProjectType.backendApp;
-              tags.add('API');
+          } else if (hasApiDir || (allDeps.containsKey('express') || allDeps.containsKey('koa') || allDeps.containsKey('fastify'))) {
+            // Backend application
+            type = ProjectType.backendApp;
+            tags.add('API');
+          } else if (hasNodeLibraryIndicators) {
+            // Node library
+            type = ProjectType.nodeLibrary;
+            tags.add('Node');
+          } else if (hasUIFramework) {
+            // Has UI framework but unclear if app or lib - check more indicators
+            if (hasPublicDir || hasPagesDir || scripts?.containsKey('dev') == true) {
+              type = ProjectType.webApp;
+              tags.add('Application');
             } else {
-              type = ProjectType.nodeLibrary;
-              tags.add('Node');
+              // Likely a component library or UI library
+              type = ProjectType.componentLibrary;
+              tags.add('UI Library');
             }
           } else {
-            type = ProjectType.webApp;
+            // Default case - try to infer from structure
+            if (hasAppIndicators) {
+              type = ProjectType.webApp;
+              tags.add('Application');
+            } else if (hasMain || hasModule) {
+              type = ProjectType.utilityLibrary;
+              tags.add('Library');
+            } else {
+              // Last resort - assume web app if has any modern build setup
+              type = ProjectType.webApp;
+            }
           }
         }
         
@@ -294,6 +414,10 @@ class ProjectAnalyzer {
         'name': name,
         'description': description,
         'version': version,
+        'author': author,
+        'license': license,
+        'nodeVersion': nodeVersion,
+        'buildTool': buildTool,
         'type': type,
         'framework': framework,
         'language': tags.contains('TypeScript') ? 'TypeScript' : 'JavaScript',
@@ -323,8 +447,16 @@ class ProjectAnalyzer {
       }
       
       ProjectType type = ProjectType.mobileApp;
+      ProjectFramework framework = ProjectFramework.flutter;
+      final tags = <String>['Flutter', 'Dart'];
+      
       if (content.contains('window_manager') || content.contains('desktop')) {
         type = ProjectType.desktopApp;
+        tags.add('Desktop');
+      } else if (content.contains('flutter_web')) {
+        framework = ProjectFramework.flutter_web;
+        type = ProjectType.webApp;
+        tags.add('Web');
       }
       
       return {
@@ -332,21 +464,58 @@ class ProjectAnalyzer {
         'description': description,
         'version': version,
         'type': type,
-        'framework': ProjectFramework.flutter,
+        'framework': framework,
         'language': 'Dart',
-        'tags': ['Flutter', 'Dart'],
+        'tags': tags,
       };
     } catch (e) {
       return {};
     }
   }
 
-  static Map<String, dynamic> _analyzePythonProject() {
+  static Future<Map<String, dynamic>> _analyzePythonProject(String directoryPath) async {
+    final tags = <String>['Python'];
+    var type = ProjectType.backendApp;
+    var framework = ProjectFramework.unknown;
+    
+    // Check for common Python web frameworks
+    final requirementsTxt = File(path.join(directoryPath, 'requirements.txt'));
+    if (await requirementsTxt.exists()) {
+      final content = await requirementsTxt.readAsString();
+      final lines = content.split('\n');
+      
+      for (final line in lines) {
+        final dep = line.trim().toLowerCase();
+        if (dep.startsWith('django')) {
+          framework = ProjectFramework.django;
+          tags.add('Django');
+          break;
+        } else if (dep.startsWith('fastapi')) {
+          framework = ProjectFramework.fastapi;
+          tags.add('FastAPI');
+          break;
+        } else if (dep.startsWith('flask')) {
+          framework = ProjectFramework.flask;
+          tags.add('Flask');
+          break;
+        }
+      }
+    }
+    
+    // Check for setup.py or pyproject.toml (indicates it's a library)
+    final setupPy = File(path.join(directoryPath, 'setup.py'));
+    final pyprojectToml = File(path.join(directoryPath, 'pyproject.toml'));
+    
+    if (await setupPy.exists() || await pyprojectToml.exists()) {
+      type = ProjectType.utilityLibrary;
+      tags.add('Library');
+    }
+    
     return {
-      'type': ProjectType.backendApp,
-      'framework': ProjectFramework.unknown,
+      'type': type,
+      'framework': framework,
       'language': 'Python',
-      'tags': ['Python'],
+      'tags': tags,
     };
   }
 
@@ -404,5 +573,23 @@ class ProjectAnalyzer {
       }
     }
     return false;
+  }
+
+  static String? _parseAuthor(dynamic author) {
+    if (author == null) return null;
+    
+    if (author is String) {
+      return author;
+    } else if (author is Map<String, dynamic>) {
+      final name = author['name'] as String?;
+      final email = author['email'] as String?;
+      if (name != null && email != null) {
+        return '$name <$email>';
+      } else if (name != null) {
+        return name;
+      }
+    }
+    
+    return null;
   }
 }

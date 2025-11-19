@@ -7,6 +7,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
 import '../config/theme_config.dart';
 import '../models/project.dart';
+import '../widgets/page_transition.dart';
 
 class StorageUtil {
   static const String _keyThemeMode = 'theme_mode';
@@ -14,6 +15,8 @@ class StorageUtil {
   static const String _keyAppSize = 'app_size';
   static const String _keyLocale = 'locale';
   static const String _keySidebarCollapsed = 'sidebar_collapsed';
+  static const String _keyPageTransitionEnabled = 'page_transition_enabled';
+  static const String _keyPageTransitionType = 'page_transition_type';
   static const String _keyProjects = 'projects';
   static const String _keyProjectsPath = 'projects_path';
 
@@ -115,6 +118,68 @@ class StorageUtil {
   static Future<void> setSidebarCollapsed(bool collapsed) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool(_keySidebarCollapsed, collapsed);
+  }
+
+  static Future<bool> getPageTransitionEnabled() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(_keyPageTransitionEnabled) ?? true;
+  }
+
+  static Future<void> setPageTransitionEnabled(bool enabled) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_keyPageTransitionEnabled, enabled);
+  }
+
+  static Future<PageTransitionType> getPageTransitionType() async {
+    final prefs = await SharedPreferences.getInstance();
+    final type = prefs.getString(_keyPageTransitionType);
+    switch (type) {
+      case 'fade':
+        return PageTransitionType.fade;
+      case 'slideLeft':
+        return PageTransitionType.slideLeft;
+      case 'slideRight':
+        return PageTransitionType.slideRight;
+      case 'slideUp':
+        return PageTransitionType.slideUp;
+      case 'slideDown':
+        return PageTransitionType.slideDown;
+      case 'scale':
+        return PageTransitionType.scale;
+      case 'rotation':
+        return PageTransitionType.rotation;
+      default:
+        return PageTransitionType.slideLeft;
+    }
+  }
+
+  static Future<void> setPageTransitionType(PageTransitionType type) async {
+    final prefs = await SharedPreferences.getInstance();
+    String typeStr;
+    switch (type) {
+      case PageTransitionType.fade:
+        typeStr = 'fade';
+        break;
+      case PageTransitionType.slideLeft:
+        typeStr = 'slideLeft';
+        break;
+      case PageTransitionType.slideRight:
+        typeStr = 'slideRight';
+        break;
+      case PageTransitionType.slideUp:
+        typeStr = 'slideUp';
+        break;
+      case PageTransitionType.slideDown:
+        typeStr = 'slideDown';
+        break;
+      case PageTransitionType.scale:
+        typeStr = 'scale';
+        break;
+      case PageTransitionType.rotation:
+        typeStr = 'rotation';
+        break;
+    }
+    await prefs.setString(_keyPageTransitionType, typeStr);
   }
 
   // 默认实体文件路径：优先放到“文档/LDesignManager/projects.json”

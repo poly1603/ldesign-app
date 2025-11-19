@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../config/theme_config.dart';
 import '../utils/storage_util.dart';
 import '../models/project.dart';
+import '../widgets/page_transition.dart';
 
 class AppProvider extends ChangeNotifier {
   ThemeMode _themeMode = ThemeMode.light;
@@ -10,6 +11,8 @@ class AppProvider extends ChangeNotifier {
   AppSize _appSize = AppSize.standard;
   Locale _locale = const Locale('zh');
   bool _sidebarCollapsed = false;
+  bool _pageTransitionEnabled = true;
+  PageTransitionType _pageTransitionType = PageTransitionType.slideLeft;
   String _currentRoute = '/';
   Map<String, dynamic> _routeParams = {};
   List<Project> _projects = [];
@@ -24,6 +27,8 @@ class AppProvider extends ChangeNotifier {
   AppSize get appSize => _appSize;
   Locale get locale => _locale;
   bool get sidebarCollapsed => _sidebarCollapsed;
+  bool get pageTransitionEnabled => _pageTransitionEnabled;
+  PageTransitionType get pageTransitionType => _pageTransitionType;
   String get currentRoute => _currentRoute;
   Map<String, dynamic> get routeParams => _routeParams;
   List<Project> get projects => _getFilteredProjects();
@@ -91,6 +96,24 @@ class AppProvider extends ChangeNotifier {
           debugPrint('AppProvider._loadPreferences: Error loading sidebar state: $e');
         }
         _sidebarCollapsed = false;
+      }
+      
+      try {
+        _pageTransitionEnabled = await StorageUtil.getPageTransitionEnabled();
+      } catch (e) {
+        if (kDebugMode) {
+          debugPrint('AppProvider._loadPreferences: Error loading page transition state: $e');
+        }
+        _pageTransitionEnabled = true;
+      }
+      
+      try {
+        _pageTransitionType = await StorageUtil.getPageTransitionType();
+      } catch (e) {
+        if (kDebugMode) {
+          debugPrint('AppProvider._loadPreferences: Error loading page transition type: $e');
+        }
+        _pageTransitionType = PageTransitionType.slideLeft;
       }
       
       try {
@@ -170,6 +193,18 @@ class AppProvider extends ChangeNotifier {
   void setSidebarCollapsed(bool collapsed) {
     _sidebarCollapsed = collapsed;
     StorageUtil.setSidebarCollapsed(collapsed);
+    notifyListeners();
+  }
+
+  void setPageTransitionEnabled(bool enabled) {
+    _pageTransitionEnabled = enabled;
+    StorageUtil.setPageTransitionEnabled(enabled);
+    notifyListeners();
+  }
+
+  void setPageTransitionType(PageTransitionType type) {
+    _pageTransitionType = type;
+    StorageUtil.setPageTransitionType(type);
     notifyListeners();
   }
 

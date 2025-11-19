@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:icons_plus/icons_plus.dart';
@@ -30,511 +31,263 @@ class ProjectsScreen extends StatelessWidget {
               ),
             ),
           ),
-          child: Row(
-            children: [
-              // Title section
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    l10n.projects,
-                    style: theme.textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  Text(
-                    l10n.projectList,
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onSurface.withOpacity(0.6),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(width: 24),
-              // Search
-              Expanded(
-                flex: 3,
-                child: SizedBox(
-                  height: 40,
-                  child: TextField(
-                    onChanged: (value) => appProvider.setSearchQuery(value),
-                    decoration: InputDecoration(
-                      hintText: l10n.searchProjects,
-                      prefixIcon: const Icon(Bootstrap.search, size: 18),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(color: theme.dividerColor),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(color: theme.dividerColor),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(color: theme.colorScheme.primary, width: 2),
-                      ),
-                      filled: true,
-                      fillColor: Colors.white,
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                      isDense: true,
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 12),
-              // Filter (styled)
-              PopupMenuButton<ProjectType?>(
-                tooltip: l10n.filterBy,
-                onSelected: (type) => appProvider.setFilterType(type),
-                offset: const Offset(0, 4),
-                elevation: 12,
-                color: Colors.white,
-                shadowColor: Colors.black.withOpacity(0.15),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                splashRadius: 20,
-                itemBuilder: (context) => [
-                      PopupMenuItem<ProjectType?>(
-                        enabled: false,
-                        height: 32,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4),
-                          child: Text(
-                            l10n.filterBy,
-                            style: theme.textTheme.labelSmall?.copyWith(
-                              color: theme.colorScheme.onSurface.withOpacity(0.6),
-                              fontWeight: FontWeight.w600,
-                              letterSpacing: 0.5,
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              // 根据屏幕宽度决定布局方式
+              final isSmallScreen = constraints.maxWidth < 800;
+              
+              if (isSmallScreen) {
+                // 小屏幕：垂直布局
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // 标题行
+                    Row(
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              l10n.projects,
+                              style: theme.textTheme.headlineSmall?.copyWith(
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            Text(
+                              l10n.projectList,
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: theme.colorScheme.onSurface.withOpacity(0.6),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const Spacer(),
+                        // 导入按钮
+                        SizedBox(
+                          height: 40,
+                          child: ElevatedButton.icon(
+                            onPressed: () => _importProject(context, appProvider),
+                            icon: const Icon(Bootstrap.plus_circle, size: 16),
+                            label: Text(l10n.importProject),
+                            style: ElevatedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(horizontal: 16),
+                              backgroundColor: theme.colorScheme.primary,
+                              foregroundColor: Colors.white,
+                              elevation: 0,
+                              shadowColor: Colors.transparent,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
                             ),
                           ),
-                        ),
-                      ),
-                      PopupMenuDivider(height: 1),
-                      CheckedPopupMenuItem<ProjectType?> (
-                        value: null,
-                        checked: appProvider.filterType == null,
-                        height: 40,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4),
-                          child: Row(
-                            children: [
-                              Icon(Bootstrap.funnel, size: 16, color: theme.colorScheme.onSurface.withOpacity(0.7)),
-                              const SizedBox(width: 12),
-                              Text(
-                                l10n.all,
-                                style: theme.textTheme.bodyMedium?.copyWith(
-                                  fontWeight: appProvider.filterType == null ? FontWeight.w600 : FontWeight.normal,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      PopupMenuDivider(height: 1),
-                      CheckedPopupMenuItem<ProjectType?>(
-                        value: ProjectType.webApp,
-                        checked: appProvider.filterType == ProjectType.webApp,
-                        height: 40,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4),
-                          child: Row(
-                            children: [
-                              Icon(Bootstrap.globe, size: 16, color: Colors.blue),
-                              const SizedBox(width: 12),
-                              Text(
-                                l10n.webApp,
-                                style: theme.textTheme.bodyMedium?.copyWith(
-                                  fontWeight: appProvider.filterType == ProjectType.webApp ? FontWeight.w600 : FontWeight.normal,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      CheckedPopupMenuItem<ProjectType?>(
-                        value: ProjectType.mobileApp,
-                        checked: appProvider.filterType == ProjectType.mobileApp,
-                        height: 40,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4),
-                          child: Row(
-                            children: [
-                              Icon(Bootstrap.phone, size: 16, color: Colors.green),
-                              const SizedBox(width: 12),
-                              Text(
-                                l10n.mobileApp,
-                                style: theme.textTheme.bodyMedium?.copyWith(
-                                  fontWeight: appProvider.filterType == ProjectType.mobileApp ? FontWeight.w600 : FontWeight.normal,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      CheckedPopupMenuItem<ProjectType?>(
-                        value: ProjectType.desktopApp,
-                        checked: appProvider.filterType == ProjectType.desktopApp,
-                        height: 40,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4),
-                          child: Row(
-                            children: [
-                              Icon(Bootstrap.laptop, size: 16, color: Colors.purple),
-                              const SizedBox(width: 12),
-                              Text(
-                                l10n.desktopApp,
-                                style: theme.textTheme.bodyMedium?.copyWith(
-                                  fontWeight: appProvider.filterType == ProjectType.desktopApp ? FontWeight.w600 : FontWeight.normal,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      CheckedPopupMenuItem<ProjectType?>(
-                        value: ProjectType.backendApp,
-                        checked: appProvider.filterType == ProjectType.backendApp,
-                        height: 40,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4),
-                          child: Row(
-                            children: [
-                              Icon(Bootstrap.server, size: 16, color: Colors.orange),
-                              const SizedBox(width: 12),
-                              Text(
-                                l10n.backendApp,
-                                style: theme.textTheme.bodyMedium?.copyWith(
-                                  fontWeight: appProvider.filterType == ProjectType.backendApp ? FontWeight.w600 : FontWeight.normal,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      CheckedPopupMenuItem<ProjectType?>(
-                        value: ProjectType.componentLibrary,
-                        checked: appProvider.filterType == ProjectType.componentLibrary,
-                        height: 40,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4),
-                          child: Row(
-                            children: [
-                              Icon(Bootstrap.box, size: 16, color: Colors.teal),
-                              const SizedBox(width: 12),
-                              Text(
-                                l10n.componentLibrary,
-                                style: theme.textTheme.bodyMedium?.copyWith(
-                                  fontWeight: appProvider.filterType == ProjectType.componentLibrary ? FontWeight.w600 : FontWeight.normal,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      CheckedPopupMenuItem<ProjectType?>(
-                        value: ProjectType.utilityLibrary,
-                        checked: appProvider.filterType == ProjectType.utilityLibrary,
-                        height: 40,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4),
-                          child: Row(
-                            children: [
-                              Icon(Bootstrap.tools, size: 16, color: Colors.cyan),
-                              const SizedBox(width: 12),
-                              Text(
-                                l10n.utilityLibrary,
-                                style: theme.textTheme.bodyMedium?.copyWith(
-                                  fontWeight: appProvider.filterType == ProjectType.utilityLibrary ? FontWeight.w600 : FontWeight.normal,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      CheckedPopupMenuItem<ProjectType?>(
-                        value: ProjectType.nodeLibrary,
-                        checked: appProvider.filterType == ProjectType.nodeLibrary,
-                        height: 40,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4),
-                          child: Row(
-                            children: [
-                              Icon(Bootstrap.braces, size: 16, color: Colors.lime),
-                              const SizedBox(width: 12),
-                              Text(
-                                l10n.nodeLibrary,
-                                style: theme.textTheme.bodyMedium?.copyWith(
-                                  fontWeight: appProvider.filterType == ProjectType.nodeLibrary ? FontWeight.w600 : FontWeight.normal,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      CheckedPopupMenuItem<ProjectType?>(
-                        value: ProjectType.cliTool,
-                        checked: appProvider.filterType == ProjectType.cliTool,
-                        height: 40,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4),
-                          child: Row(
-                            children: [
-                              Icon(Bootstrap.terminal, size: 16, color: Colors.amber),
-                              const SizedBox(width: 12),
-                              Text(
-                                l10n.cliTool,
-                                style: theme.textTheme.bodyMedium?.copyWith(
-                                  fontWeight: appProvider.filterType == ProjectType.cliTool ? FontWeight.w600 : FontWeight.normal,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      CheckedPopupMenuItem<ProjectType?>(
-                        value: ProjectType.monorepo,
-                        checked: appProvider.filterType == ProjectType.monorepo,
-                        height: 40,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4),
-                          child: Row(
-                            children: [
-                              Icon(Bootstrap.folder, size: 16, color: Colors.indigo),
-                              const SizedBox(width: 12),
-                              Text(
-                                l10n.monorepo,
-                                style: theme.textTheme.bodyMedium?.copyWith(
-                                  fontWeight: appProvider.filterType == ProjectType.monorepo ? FontWeight.w600 : FontWeight.normal,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                    child: Container(
-                      height: 40,
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(color: theme.dividerColor),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.02),
-                            blurRadius: 2,
-                            offset: const Offset(0, 1),
-                          ),
-                        ],
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(Bootstrap.funnel, size: 16, color: theme.colorScheme.onSurface.withOpacity(0.7)),
-                          const SizedBox(width: 8),
-                          Text(
-                            _typeLabel(appProvider.filterType, l10n),
-                            style: theme.textTheme.bodyMedium?.copyWith(
-                              color: theme.colorScheme.onSurface.withOpacity(0.8),
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Icon(Bootstrap.chevron_down, size: 14, color: theme.colorScheme.onSurface.withOpacity(0.5)),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  // Sort (styled)
-                  PopupMenuButton<String>(
-                    tooltip: l10n.sortBy,
-                    onSelected: (sortBy) => appProvider.setSortBy(sortBy),
-                    offset: const Offset(0, 4),
-                    elevation: 12,
-                    color: Colors.white,
-                    shadowColor: Colors.black.withOpacity(0.15),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                    splashRadius: 20,
-                    itemBuilder: (context) => [
-                      PopupMenuItem<String>(
-                        enabled: false,
-                        height: 32,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4),
-                          child: Text(
-                            l10n.sortBy,
-                            style: theme.textTheme.labelSmall?.copyWith(
-                              color: theme.colorScheme.onSurface.withOpacity(0.6),
-                              fontWeight: FontWeight.w600,
-                              letterSpacing: 0.5,
-                            ),
-                          ),
-                        ),
-                      ),
-                      PopupMenuDivider(height: 1),
-                      CheckedPopupMenuItem<String>(
-                        value: 'name',
-                        checked: appProvider.sortBy == 'name',
-                        height: 40,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4),
-                          child: Row(
-                            children: [
-                              Icon(Bootstrap.sort_alpha_down, size: 16, color: theme.colorScheme.onSurface.withOpacity(0.7)),
-                              const SizedBox(width: 12),
-                              Text(
-                                l10n.sortByName,
-                                style: theme.textTheme.bodyMedium?.copyWith(
-                                  fontWeight: appProvider.sortBy == 'name' ? FontWeight.w600 : FontWeight.normal,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      CheckedPopupMenuItem<String>(
-                        value: 'date',
-                        checked: appProvider.sortBy == 'date',
-                        height: 40,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4),
-                          child: Row(
-                            children: [
-                              Icon(Bootstrap.calendar_event, size: 16, color: theme.colorScheme.onSurface.withOpacity(0.7)),
-                              const SizedBox(width: 12),
-                              Text(
-                                l10n.sortByDate,
-                                style: theme.textTheme.bodyMedium?.copyWith(
-                                  fontWeight: appProvider.sortBy == 'date' ? FontWeight.w600 : FontWeight.normal,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      CheckedPopupMenuItem<String>(
-                        value: 'type',
-                        checked: appProvider.sortBy == 'type',
-                        height: 40,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4),
-                          child: Row(
-                            children: [
-                              Icon(Bootstrap.list_ul, size: 16, color: theme.colorScheme.onSurface.withOpacity(0.7)),
-                              const SizedBox(width: 12),
-                              Text(
-                                l10n.sortByType,
-                                style: theme.textTheme.bodyMedium?.copyWith(
-                                  fontWeight: appProvider.sortBy == 'type' ? FontWeight.w600 : FontWeight.normal,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                    child: Container(
-                      height: 40,
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(color: theme.dividerColor),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.02),
-                            blurRadius: 2,
-                            offset: const Offset(0, 1),
-                          ),
-                        ],
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(Bootstrap.sort_down, size: 16, color: theme.colorScheme.onSurface.withOpacity(0.7)),
-                          const SizedBox(width: 8),
-                          Text(
-                            _sortLabel(appProvider.sortBy, l10n),
-                            style: theme.textTheme.bodyMedium?.copyWith(
-                              color: theme.colorScheme.onSurface.withOpacity(0.8),
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Icon(Bootstrap.chevron_down, size: 14, color: theme.colorScheme.onSurface.withOpacity(0.5)),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  // Sort order
-                  Container(
-                    height: 40,
-                    width: 40,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: theme.dividerColor),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.02),
-                          blurRadius: 2,
-                          offset: const Offset(0, 1),
                         ),
                       ],
                     ),
-                    child: IconButton(
-                      icon: Icon(
-                        appProvider.sortAscending 
-                            ? Bootstrap.sort_up 
-                            : Bootstrap.sort_down,
-                        size: 16,
-                        color: theme.colorScheme.onSurface.withOpacity(0.7),
-                      ),
-                      onPressed: () => appProvider.toggleSortOrder(),
-                      tooltip: appProvider.sortAscending ? l10n.ascending : l10n.descending,
-                      padding: EdgeInsets.zero,
+                    const SizedBox(height: 12),
+                    // 控件行
+                    Row(
+                      children: [
+                        // 搜索框
+                        Expanded(
+                          child: SizedBox(
+                            height: 40,
+                            child: TextField(
+                              onChanged: (value) => appProvider.setSearchQuery(value),
+                              decoration: InputDecoration(
+                                hintText: l10n.searchProjects,
+                                prefixIcon: const Icon(Bootstrap.search, size: 18),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: BorderSide(color: theme.dividerColor),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: BorderSide(color: theme.dividerColor),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: BorderSide(color: theme.colorScheme.primary, width: 2),
+                                ),
+                                filled: true,
+                                fillColor: Colors.white,
+                                contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                isDense: true,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        _buildFilterButton(theme, l10n, appProvider),
+                        const SizedBox(width: 8),
+                        _buildSortButton(theme, l10n, appProvider),
+                        const SizedBox(width: 8),
+                        _buildSortOrderButton(theme, l10n, appProvider),
+                      ],
                     ),
-                  ),
-                  const SizedBox(width: 12),
-                  // Import project button
-                  SizedBox(
-                    height: 40,
-                    child: ElevatedButton.icon(
-                      onPressed: () => _importProject(context, appProvider),
-                      icon: const Icon(Bootstrap.plus_circle, size: 16),
-                      label: Text(l10n.importProject),
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        backgroundColor: theme.colorScheme.primary,
-                        foregroundColor: Colors.white,
-                        elevation: 0,
-                        shadowColor: Colors.transparent,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
+                  ],
+                );
+              } else {
+                // 大屏幕：水平布局
+                return Row(
+                  children: [
+                    // Title section
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          l10n.projects,
+                          style: theme.textTheme.headlineSmall?.copyWith(
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        Text(
+                          l10n.projectList,
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: theme.colorScheme.onSurface.withOpacity(0.6),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(width: 24),
+                    // Search
+                    Expanded(
+                      flex: 3,
+                      child: SizedBox(
+                        height: 40,
+                        child: TextField(
+                          onChanged: (value) => appProvider.setSearchQuery(value),
+                          decoration: InputDecoration(
+                            hintText: l10n.searchProjects,
+                            prefixIcon: const Icon(Bootstrap.search, size: 18),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide(color: theme.dividerColor),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide(color: theme.dividerColor),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide(color: theme.colorScheme.primary, width: 2),
+                            ),
+                            filled: true,
+                            fillColor: Colors.white,
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                            isDense: true,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
-              ),
+                    const SizedBox(width: 12),
+                    _buildFilterButton(theme, l10n, appProvider),
+                    const SizedBox(width: 8),
+                    _buildSortButton(theme, l10n, appProvider),
+                    const SizedBox(width: 8),
+                    _buildSortOrderButton(theme, l10n, appProvider),
+                    const SizedBox(width: 12),
+                    // Import project button
+                    SizedBox(
+                      height: 40,
+                      child: ElevatedButton.icon(
+                        onPressed: () => _importProject(context, appProvider),
+                        icon: const Icon(Bootstrap.plus_circle, size: 16),
+                        label: Text(l10n.importProject),
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          backgroundColor: theme.colorScheme.primary,
+                          foregroundColor: Colors.white,
+                          elevation: 0,
+                          shadowColor: Colors.transparent,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              }
+            },
+          ),
         ),
         // Projects grid
         Expanded(
-          child: projects.isEmpty
-              ? _buildEmptyState(context, l10n, theme)
-              : GridView.builder(
-                  padding: const EdgeInsets.all(24),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    crossAxisSpacing: 16,
-                    mainAxisSpacing: 16,
-                    childAspectRatio: 1.3,
+          child: Align(
+            alignment: Alignment.topLeft,
+            child: projects.isEmpty
+                ? _buildEmptyState(context, l10n, theme)
+                : ClipRect(
+                  child: Consumer<AppProvider>(
+                    builder: (context, appProvider, _) {
+                      return AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 300),
+                        child: LayoutBuilder(
+                          key: ValueKey(appProvider.sidebarCollapsed),
+                          builder: (context, constraints) {
+                          // 计算响应式列数，考虑更精确的断点
+                          int crossAxisCount;
+                          final availableWidth = constraints.maxWidth;
+                    
+                    // 每个卡片的最小宽度约为280px（包括间距）
+                    const minCardWidth = 280.0;
+                    const cardSpacing = 16.0;
+                    const horizontalPadding = 48.0; // 左右各24px
+                    
+                    // 计算可以容纳的列数
+                    final maxPossibleColumns = ((availableWidth - horizontalPadding + cardSpacing) / (minCardWidth + cardSpacing)).floor();
+                    
+                    // 设置合理的列数范围
+                    if (maxPossibleColumns <= 1 || availableWidth < 400) {
+                      crossAxisCount = 1; // 非常小的屏幕：1列
+                    } else if (maxPossibleColumns == 2 || availableWidth < 700) {
+                      crossAxisCount = 2; // 小屏幕：2列
+                    } else if (maxPossibleColumns == 3 || availableWidth < 1000) {
+                      crossAxisCount = 3; // 中等屏幕：3列
+                    } else if (maxPossibleColumns == 4 || availableWidth < 1300) {
+                      crossAxisCount = 4; // 大屏幕：4列
+                    } else {
+                      crossAxisCount = 5; // 超大屏幕：5列
+                    }
+
+                    // 调试信息（可选）
+                    if (kDebugMode) {
+                      print('Available width: $availableWidth, Columns: $crossAxisCount, Max possible: $maxPossibleColumns');
+                    }
+
+                    return SingleChildScrollView(
+                      child: Padding(
+                        padding: const EdgeInsets.all(24),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            GridView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: crossAxisCount,
+                                crossAxisSpacing: 16,
+                                mainAxisSpacing: 16,
+                                childAspectRatio: crossAxisCount == 1 ? 2.5 : 1.3,
+                              ),
+                              itemCount: projects.length,
+                              itemBuilder: (context, index) {
+                                return _buildProjectCard(context, theme, l10n, projects[index], appProvider);
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                          },
+                        ),
+                      );
+                    },
                   ),
-                  itemCount: projects.length,
-                  itemBuilder: (context, index) {
-                    return _buildProjectCard(context, theme, l10n, projects[index], appProvider);
-                  },
                 ),
+            ),
         ),
       ],
     );
@@ -870,6 +623,8 @@ class ProjectsScreen extends StatelessWidget {
         return l10n.componentLibrary;
       case ProjectType.utilityLibrary:
         return l10n.utilityLibrary;
+      case ProjectType.frameworkLibrary:
+        return l10n.frameworkLibrary;
       case ProjectType.nodeLibrary:
         return l10n.nodeLibrary;
       case ProjectType.cliTool:
@@ -879,6 +634,422 @@ class ProjectsScreen extends StatelessWidget {
       case ProjectType.unknown:
         return l10n.unknown;
     }
+  }
+
+  Widget _buildFilterButton(ThemeData theme, AppLocalizations l10n, AppProvider appProvider) {
+    return PopupMenuButton<ProjectType?>(
+      tooltip: l10n.filterBy,
+      onSelected: (type) => appProvider.setFilterType(type),
+      offset: const Offset(0, 4),
+      elevation: 12,
+      color: Colors.white,
+      shadowColor: Colors.black.withOpacity(0.15),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      splashRadius: 20,
+      itemBuilder: (context) => [
+        PopupMenuItem<ProjectType?>(
+          enabled: false,
+          height: 32,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4),
+            child: Text(
+              l10n.filterBy,
+              style: theme.textTheme.labelSmall?.copyWith(
+                color: theme.colorScheme.onSurface.withOpacity(0.6),
+                fontWeight: FontWeight.w600,
+                letterSpacing: 0.5,
+              ),
+            ),
+          ),
+        ),
+        PopupMenuDivider(height: 1),
+        CheckedPopupMenuItem<ProjectType?>(
+          value: null,
+          checked: appProvider.filterType == null,
+          height: 40,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4),
+            child: Row(
+              children: [
+                Icon(Bootstrap.funnel, size: 16, color: theme.colorScheme.onSurface.withOpacity(0.7)),
+                const SizedBox(width: 12),
+                Text(
+                  l10n.all,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    fontWeight: appProvider.filterType == null ? FontWeight.w600 : FontWeight.normal,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        PopupMenuDivider(height: 1),
+        CheckedPopupMenuItem<ProjectType?>(
+          value: ProjectType.webApp,
+          checked: appProvider.filterType == ProjectType.webApp,
+          height: 40,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4),
+            child: Row(
+              children: [
+                Icon(Bootstrap.globe, size: 16, color: Colors.blue),
+                const SizedBox(width: 12),
+                Text(
+                  l10n.webApp,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    fontWeight: appProvider.filterType == ProjectType.webApp ? FontWeight.w600 : FontWeight.normal,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        CheckedPopupMenuItem<ProjectType?>(
+          value: ProjectType.mobileApp,
+          checked: appProvider.filterType == ProjectType.mobileApp,
+          height: 40,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4),
+            child: Row(
+              children: [
+                Icon(Bootstrap.phone, size: 16, color: Colors.green),
+                const SizedBox(width: 12),
+                Text(
+                  l10n.mobileApp,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    fontWeight: appProvider.filterType == ProjectType.mobileApp ? FontWeight.w600 : FontWeight.normal,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        CheckedPopupMenuItem<ProjectType?>(
+          value: ProjectType.desktopApp,
+          checked: appProvider.filterType == ProjectType.desktopApp,
+          height: 40,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4),
+            child: Row(
+              children: [
+                Icon(Bootstrap.laptop, size: 16, color: Colors.purple),
+                const SizedBox(width: 12),
+                Text(
+                  l10n.desktopApp,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    fontWeight: appProvider.filterType == ProjectType.desktopApp ? FontWeight.w600 : FontWeight.normal,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        CheckedPopupMenuItem<ProjectType?>(
+          value: ProjectType.backendApp,
+          checked: appProvider.filterType == ProjectType.backendApp,
+          height: 40,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4),
+            child: Row(
+              children: [
+                Icon(Bootstrap.server, size: 16, color: Colors.orange),
+                const SizedBox(width: 12),
+                Text(
+                  l10n.backendApp,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    fontWeight: appProvider.filterType == ProjectType.backendApp ? FontWeight.w600 : FontWeight.normal,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        CheckedPopupMenuItem<ProjectType?>(
+          value: ProjectType.componentLibrary,
+          checked: appProvider.filterType == ProjectType.componentLibrary,
+          height: 40,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4),
+            child: Row(
+              children: [
+                Icon(Bootstrap.box, size: 16, color: Colors.teal),
+                const SizedBox(width: 12),
+                Text(
+                  l10n.componentLibrary,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    fontWeight: appProvider.filterType == ProjectType.componentLibrary ? FontWeight.w600 : FontWeight.normal,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        CheckedPopupMenuItem<ProjectType?>(
+          value: ProjectType.utilityLibrary,
+          checked: appProvider.filterType == ProjectType.utilityLibrary,
+          height: 40,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4),
+            child: Row(
+              children: [
+                Icon(Bootstrap.tools, size: 16, color: Colors.cyan),
+                const SizedBox(width: 12),
+                Text(
+                  l10n.utilityLibrary,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    fontWeight: appProvider.filterType == ProjectType.utilityLibrary ? FontWeight.w600 : FontWeight.normal,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        CheckedPopupMenuItem<ProjectType?>(
+          value: ProjectType.nodeLibrary,
+          checked: appProvider.filterType == ProjectType.nodeLibrary,
+          height: 40,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4),
+            child: Row(
+              children: [
+                Icon(Bootstrap.braces, size: 16, color: Colors.lime),
+                const SizedBox(width: 12),
+                Text(
+                  l10n.nodeLibrary,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    fontWeight: appProvider.filterType == ProjectType.nodeLibrary ? FontWeight.w600 : FontWeight.normal,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        CheckedPopupMenuItem<ProjectType?>(
+          value: ProjectType.cliTool,
+          checked: appProvider.filterType == ProjectType.cliTool,
+          height: 40,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4),
+            child: Row(
+              children: [
+                Icon(Bootstrap.terminal, size: 16, color: Colors.amber),
+                const SizedBox(width: 12),
+                Text(
+                  l10n.cliTool,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    fontWeight: appProvider.filterType == ProjectType.cliTool ? FontWeight.w600 : FontWeight.normal,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        CheckedPopupMenuItem<ProjectType?>(
+          value: ProjectType.monorepo,
+          checked: appProvider.filterType == ProjectType.monorepo,
+          height: 40,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4),
+            child: Row(
+              children: [
+                Icon(Bootstrap.folder, size: 16, color: Colors.indigo),
+                const SizedBox(width: 12),
+                Text(
+                  l10n.monorepo,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    fontWeight: appProvider.filterType == ProjectType.monorepo ? FontWeight.w600 : FontWeight.normal,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+      child: Container(
+        height: 40,
+        padding: const EdgeInsets.symmetric(horizontal: 12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: theme.dividerColor),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.02),
+              blurRadius: 2,
+              offset: const Offset(0, 1),
+            ),
+          ],
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Bootstrap.funnel, size: 16, color: theme.colorScheme.onSurface.withOpacity(0.7)),
+            const SizedBox(width: 8),
+            Text(
+              _typeLabel(appProvider.filterType, l10n),
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.onSurface.withOpacity(0.8),
+              ),
+            ),
+            const SizedBox(width: 8),
+            Icon(Bootstrap.chevron_down, size: 14, color: theme.colorScheme.onSurface.withOpacity(0.5)),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSortButton(ThemeData theme, AppLocalizations l10n, AppProvider appProvider) {
+    return PopupMenuButton<String>(
+      tooltip: l10n.sortBy,
+      onSelected: (sortBy) => appProvider.setSortBy(sortBy),
+      offset: const Offset(0, 4),
+      elevation: 12,
+      color: Colors.white,
+      shadowColor: Colors.black.withOpacity(0.15),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      splashRadius: 20,
+      itemBuilder: (context) => [
+        PopupMenuItem<String>(
+          enabled: false,
+          height: 32,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4),
+            child: Text(
+              l10n.sortBy,
+              style: theme.textTheme.labelSmall?.copyWith(
+                color: theme.colorScheme.onSurface.withOpacity(0.6),
+                fontWeight: FontWeight.w600,
+                letterSpacing: 0.5,
+              ),
+            ),
+          ),
+        ),
+        PopupMenuDivider(height: 1),
+        CheckedPopupMenuItem<String>(
+          value: 'name',
+          checked: appProvider.sortBy == 'name',
+          height: 40,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4),
+            child: Row(
+              children: [
+                Icon(Bootstrap.sort_alpha_down, size: 16, color: theme.colorScheme.onSurface.withOpacity(0.7)),
+                const SizedBox(width: 12),
+                Text(
+                  l10n.sortByName,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    fontWeight: appProvider.sortBy == 'name' ? FontWeight.w600 : FontWeight.normal,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        CheckedPopupMenuItem<String>(
+          value: 'date',
+          checked: appProvider.sortBy == 'date',
+          height: 40,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4),
+            child: Row(
+              children: [
+                Icon(Bootstrap.calendar_event, size: 16, color: theme.colorScheme.onSurface.withOpacity(0.7)),
+                const SizedBox(width: 12),
+                Text(
+                  l10n.sortByDate,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    fontWeight: appProvider.sortBy == 'date' ? FontWeight.w600 : FontWeight.normal,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        CheckedPopupMenuItem<String>(
+          value: 'type',
+          checked: appProvider.sortBy == 'type',
+          height: 40,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4),
+            child: Row(
+              children: [
+                Icon(Bootstrap.list_ul, size: 16, color: theme.colorScheme.onSurface.withOpacity(0.7)),
+                const SizedBox(width: 12),
+                Text(
+                  l10n.sortByType,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    fontWeight: appProvider.sortBy == 'type' ? FontWeight.w600 : FontWeight.normal,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+      child: Container(
+        height: 40,
+        padding: const EdgeInsets.symmetric(horizontal: 12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: theme.dividerColor),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.02),
+              blurRadius: 2,
+              offset: const Offset(0, 1),
+            ),
+          ],
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Bootstrap.sort_down, size: 16, color: theme.colorScheme.onSurface.withOpacity(0.7)),
+            const SizedBox(width: 8),
+            Text(
+              _sortLabel(appProvider.sortBy, l10n),
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.onSurface.withOpacity(0.8),
+              ),
+            ),
+            const SizedBox(width: 8),
+            Icon(Bootstrap.chevron_down, size: 14, color: theme.colorScheme.onSurface.withOpacity(0.5)),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSortOrderButton(ThemeData theme, AppLocalizations l10n, AppProvider appProvider) {
+    return Container(
+      height: 40,
+      width: 40,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: theme.dividerColor),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.02),
+            blurRadius: 2,
+            offset: const Offset(0, 1),
+          ),
+        ],
+      ),
+      child: IconButton(
+        icon: Icon(
+          appProvider.sortAscending 
+              ? Bootstrap.sort_up 
+              : Bootstrap.sort_down,
+          size: 16,
+          color: theme.colorScheme.onSurface.withOpacity(0.7),
+        ),
+        onPressed: () => appProvider.toggleSortOrder(),
+        tooltip: appProvider.sortAscending ? l10n.ascending : l10n.descending,
+        padding: EdgeInsets.zero,
+      ),
+    );
   }
 
   String _sortLabel(String sortBy, AppLocalizations l10n) {

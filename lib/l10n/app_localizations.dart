@@ -411,6 +411,12 @@ abstract class AppLocalizations {
   /// **'Utility Library'**
   String get utilityLibrary;
 
+  /// No description provided for @frameworkLibrary.
+  ///
+  /// In en, this message translates to:
+  /// **'Framework Library'**
+  String get frameworkLibrary;
+
   /// No description provided for @nodeLibrary.
   ///
   /// In en, this message translates to:
@@ -428,6 +434,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Monorepo'**
   String get monorepo;
+
+  /// No description provided for @projectActions.
+  ///
+  /// In en, this message translates to:
+  /// **'Project Actions'**
+  String get projectActions;
+
+  /// No description provided for @startProject.
+  ///
+  /// In en, this message translates to:
+  /// **'Start'**
+  String get startProject;
+
+  /// No description provided for @buildProject.
+  ///
+  /// In en, this message translates to:
+  /// **'Build'**
+  String get buildProject;
+
+  /// No description provided for @previewProject.
+  ///
+  /// In en, this message translates to:
+  /// **'Preview'**
+  String get previewProject;
+
+  /// No description provided for @deployProject.
+  ///
+  /// In en, this message translates to:
+  /// **'Deploy'**
+  String get deployProject;
+
+  /// No description provided for @publishProject.
+  ///
+  /// In en, this message translates to:
+  /// **'Publish'**
+  String get publishProject;
+
+  /// No description provided for @testProject.
+  ///
+  /// In en, this message translates to:
+  /// **'Test'**
+  String get testProject;
 
   /// No description provided for @sortByName.
   ///
@@ -758,6 +806,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Failed to open folder'**
   String get failedToOpenFolder;
+
+  /// No description provided for @pageTransition.
+  ///
+  /// In en, this message translates to:
+  /// **'Page Transition Animation'**
+  String get pageTransition;
+
+  /// No description provided for @disabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Disabled'**
+  String get disabled;
+
+  /// No description provided for @fadeTransition.
+  ///
+  /// In en, this message translates to:
+  /// **'Fade'**
+  String get fadeTransition;
+
+  /// No description provided for @slideLeftTransition.
+  ///
+  /// In en, this message translates to:
+  /// **'Slide Left'**
+  String get slideLeftTransition;
+
+  /// No description provided for @slideRightTransition.
+  ///
+  /// In en, this message translates to:
+  /// **'Slide Right'**
+  String get slideRightTransition;
+
+  /// No description provided for @slideUpTransition.
+  ///
+  /// In en, this message translates to:
+  /// **'Slide Up'**
+  String get slideUpTransition;
+
+  /// No description provided for @slideDownTransition.
+  ///
+  /// In en, this message translates to:
+  /// **'Slide Down'**
+  String get slideDownTransition;
+
+  /// No description provided for @scaleTransition.
+  ///
+  /// In en, this message translates to:
+  /// **'Scale'**
+  String get scaleTransition;
+
+  /// No description provided for @rotationTransition.
+  ///
+  /// In en, this message translates to:
+  /// **'Rotation'**
+  String get rotationTransition;
 }
 
 class _AppLocalizationsDelegate

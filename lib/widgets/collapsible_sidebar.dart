@@ -154,49 +154,52 @@ class _CollapsibleSidebarState extends State<CollapsibleSidebar> {
                 }
               },
               borderRadius: BorderRadius.circular(12),
-              child: Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: collapsed ? 0 : ThemeConfig.getSpacing(size),
-                  vertical: 12,
-                ),
-                child: Row(
-                  mainAxisAlignment:
-                      collapsed ? MainAxisAlignment.center : MainAxisAlignment.start,
-                  children: [
-                    if (collapsed)
-                      Icon(
-                        item.icon,
-                        size: 20,
-                        color: isActive
-                            ? Colors.white
-                            : theme.colorScheme.onSurface.withOpacity(0.7),
-                      )
-                    else ...[
-                      Icon(
-                        item.icon,
-                        size: 20,
-                        color: isActive
-                            ? Colors.white
-                            : theme.colorScheme.onSurface.withOpacity(0.7),
-                      ),
-                      const SizedBox(width: 12),
-                      Flexible(
-                        child: Text(
-                          title,
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: isActive ? FontWeight.w600 : FontWeight.w500,
-                            color: isActive
-                                ? Colors.white
-                                : theme.colorScheme.onSurface.withOpacity(0.85),
-                            letterSpacing: -0.2,
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
+              child: Tooltip(
+                message: collapsed ? title : '',
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: collapsed ? 0 : ThemeConfig.getSpacing(size),
+                    vertical: 12,
+                  ),
+                  child: Row(
+                    mainAxisAlignment:
+                        collapsed ? MainAxisAlignment.center : MainAxisAlignment.start,
+                    children: [
+                      if (collapsed)
+                        Icon(
+                          item.icon,
+                          size: 20,
+                          color: isActive
+                              ? Colors.white
+                              : theme.colorScheme.onSurface.withOpacity(0.7),
+                        )
+                      else ...[
+                        Icon(
+                          item.icon,
+                          size: 20,
+                          color: isActive
+                              ? Colors.white
+                              : theme.colorScheme.onSurface.withOpacity(0.7),
                         ),
-                      ),
+                        const SizedBox(width: 12),
+                        Flexible(
+                          child: Text(
+                            title,
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: isActive ? FontWeight.w600 : FontWeight.w500,
+                              color: isActive
+                                  ? Colors.white
+                                  : theme.colorScheme.onSurface.withOpacity(0.85),
+                              letterSpacing: -0.2,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                          ),
+                        ),
+                      ],
                     ],
-                  ],
+                  ),
                 ),
               ),
             ),

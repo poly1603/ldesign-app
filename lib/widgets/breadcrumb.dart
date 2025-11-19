@@ -117,6 +117,67 @@ class Breadcrumb extends StatelessWidget {
       return items;
     }
 
+    // 特殊处理项目操作页面
+    if (route.startsWith('/project/') && route.split('/').length >= 4) {
+      final parts = route.split('/');
+      final projectId = parts[2];
+      final action = parts[3];
+      
+      items.add(BreadcrumbItem(
+        label: l10n.projects,
+        route: '/projects',
+        icon: Icons.folder,
+      ));
+      
+      // 尝试获取项目名称
+      try {
+        final project = appProvider.allProjects.firstWhere(
+          (p) => p.id == projectId,
+        );
+        items.add(BreadcrumbItem(
+          label: project.name,
+          route: null, // 需要特殊处理，因为需要传递projectId参数
+        ));
+      } catch (e) {
+        items.add(BreadcrumbItem(
+          label: '项目详情',
+          route: '/project-detail',
+        ));
+      }
+      
+      // 添加操作名称
+      String actionLabel;
+      switch (action) {
+        case 'start':
+          actionLabel = '启动';
+          break;
+        case 'build':
+          actionLabel = '构建';
+          break;
+        case 'preview':
+          actionLabel = '预览';
+          break;
+        case 'deploy':
+          actionLabel = '部署';
+          break;
+        case 'publish':
+          actionLabel = '发布';
+          break;
+        case 'test':
+          actionLabel = '测试';
+          break;
+        default:
+          actionLabel = action;
+      }
+      
+      items.add(BreadcrumbItem(
+        label: actionLabel,
+        route: null, // 当前页面，不可点击
+      ));
+      
+      return items;
+    }
+
     final pathSegments = route.split('/').where((s) => s.isNotEmpty).toList();
 
     for (var i = 0; i < pathSegments.length; i++) {

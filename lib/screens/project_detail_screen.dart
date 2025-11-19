@@ -34,6 +34,7 @@ class ProjectDetailScreen extends StatelessWidget {
       ProjectType.backendApp: Colors.orange,
       ProjectType.componentLibrary: Colors.teal,
       ProjectType.utilityLibrary: Colors.cyan,
+      ProjectType.frameworkLibrary: Colors.deepPurple,
       ProjectType.nodeLibrary: Colors.lime,
       ProjectType.cliTool: Colors.amber,
       ProjectType.monorepo: Colors.indigo,
@@ -47,6 +48,7 @@ class ProjectDetailScreen extends StatelessWidget {
       ProjectType.backendApp: Bootstrap.server,
       ProjectType.componentLibrary: Bootstrap.box,
       ProjectType.utilityLibrary: Bootstrap.tools,
+      ProjectType.frameworkLibrary: Bootstrap.gear,
       ProjectType.nodeLibrary: Bootstrap.braces,
       ProjectType.cliTool: Bootstrap.terminal,
       ProjectType.monorepo: Bootstrap.folder,
@@ -171,6 +173,9 @@ class ProjectDetailScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // 操作按钮区域
+                _buildActionButtons(context, theme, l10n, project),
+                const SizedBox(height: 16),
                 // 基本信息卡片
                 _buildInfoCard(
                   theme,
@@ -565,6 +570,189 @@ class ProjectDetailScreen extends StatelessWidget {
       ),
     );
   }
+
+  // 构建操作按钮区域
+  Widget _buildActionButtons(BuildContext context, ThemeData theme, AppLocalizations l10n, Project project) {
+    final actions = _getActionsForProject(project, l10n);
+    
+    if (actions.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: theme.dividerColor.withOpacity(0.3),
+          width: 1,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(
+                Bootstrap.play_circle,
+                size: 20,
+                color: theme.colorScheme.primary,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                l10n.projectActions,
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Wrap(
+            spacing: 12,
+            runSpacing: 12,
+            children: actions.map((action) {
+              return SizedBox(
+                width: 140,
+                child: ElevatedButton.icon(
+                  onPressed: () => _handleAction(context, action.type, project),
+                  icon: Icon(action.icon, size: 18),
+                  label: Text(action.label),
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                    backgroundColor: action.color,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // 根据项目类型获取可用操作
+  List<_ProjectAction> _getActionsForProject(Project project, AppLocalizations l10n) {
+    final actions = <_ProjectAction>[];
+
+    switch (project.type) {
+      case ProjectType.webApp:
+      case ProjectType.mobileApp:
+      case ProjectType.desktopApp:
+        // 应用类项目的操作
+        actions.addAll([
+          _ProjectAction(_ActionType.start, l10n.startProject, Bootstrap.play_fill, Colors.green),
+          _ProjectAction(_ActionType.build, l10n.buildProject, Bootstrap.hammer, Colors.blue),
+          _ProjectAction(_ActionType.preview, l10n.previewProject, Bootstrap.eye, Colors.purple),
+          _ProjectAction(_ActionType.deploy, l10n.deployProject, Bootstrap.cloud_upload, Colors.orange),
+        ]);
+        break;
+      
+      case ProjectType.backendApp:
+        // 后端应用的操作
+        actions.addAll([
+          _ProjectAction(_ActionType.start, l10n.startProject, Bootstrap.play_fill, Colors.green),
+          _ProjectAction(_ActionType.build, l10n.buildProject, Bootstrap.hammer, Colors.blue),
+          _ProjectAction(_ActionType.deploy, l10n.deployProject, Bootstrap.cloud_upload, Colors.orange),
+        ]);
+        break;
+
+      case ProjectType.componentLibrary:
+      case ProjectType.utilityLibrary:
+      case ProjectType.frameworkLibrary:
+      case ProjectType.nodeLibrary:
+        // 库类项目的操作
+        actions.addAll([
+          _ProjectAction(_ActionType.build, l10n.buildProject, Bootstrap.hammer, Colors.blue),
+          _ProjectAction(_ActionType.publish, l10n.publishProject, Bootstrap.box_arrow_up, Colors.teal),
+        ]);
+        break;
+
+      case ProjectType.cliTool:
+        // CLI工具的操作
+        actions.addAll([
+          _ProjectAction(_ActionType.build, l10n.buildProject, Bootstrap.hammer, Colors.blue),
+          _ProjectAction(_ActionType.publish, l10n.publishProject, Bootstrap.box_arrow_up, Colors.teal),
+          _ProjectAction(_ActionType.test, l10n.testProject, Bootstrap.check_circle, Colors.green),
+        ]);
+        break;
+
+      case ProjectType.monorepo:
+        // Monorepo的操作
+        actions.addAll([
+          _ProjectAction(_ActionType.build, l10n.buildProject, Bootstrap.hammer, Colors.blue),
+          _ProjectAction(_ActionType.test, l10n.testProject, Bootstrap.check_circle, Colors.green),
+          _ProjectAction(_ActionType.deploy, l10n.deployProject, Bootstrap.cloud_upload, Colors.orange),
+        ]);
+        break;
+
+      case ProjectType.unknown:
+        // 未知类型项目的基本操作
+        actions.addAll([
+          _ProjectAction(_ActionType.build, l10n.buildProject, Bootstrap.hammer, Colors.blue),
+        ]);
+        break;
+    }
+
+    return actions;
+  }
+
+  // 处理操作按钮点击
+  void _handleAction(BuildContext context, _ActionType actionType, Project project) {
+    final appProvider = context.read<AppProvider>();
+    
+    switch (actionType) {
+      case _ActionType.start:
+        // 导航到启动页面
+        appProvider.setCurrentRoute('/project/${project.id}/start');
+        break;
+      case _ActionType.build:
+        // 导航到构建页面
+        appProvider.setCurrentRoute('/project/${project.id}/build');
+        break;
+      case _ActionType.preview:
+        // 导航到预览页面
+        appProvider.setCurrentRoute('/project/${project.id}/preview');
+        break;
+      case _ActionType.deploy:
+        // 导航到部署页面
+        appProvider.setCurrentRoute('/project/${project.id}/deploy');
+        break;
+      case _ActionType.publish:
+        // 导航到发布页面
+        appProvider.setCurrentRoute('/project/${project.id}/publish');
+        break;
+      case _ActionType.test:
+        // 导航到测试页面
+        appProvider.setCurrentRoute('/project/${project.id}/test');
+        break;
+    }
+  }
+}
+
+// 项目操作类型枚举
+enum _ActionType {
+  start,
+  build,
+  preview,
+  deploy,
+  publish,
+  test,
+}
+
+// 项目操作数据类
+class _ProjectAction {
+  final _ActionType type;
+  final String label;
+  final IconData icon;
+  final Color color;
+
+  _ProjectAction(this.type, this.label, this.icon, this.color);
 }
 
 class _InfoItem {
