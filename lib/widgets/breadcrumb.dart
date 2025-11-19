@@ -29,13 +29,14 @@ class Breadcrumb extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     final spacing = ThemeConfig.getSpacing(size);
 
-    final items = _getBreadcrumbItems(appProvider.currentRoute, l10n);
+    final items = _getBreadcrumbItems(appProvider.currentRoute, l10n, appProvider);
 
     if (items.isEmpty) {
       return const SizedBox.shrink();
     }
 
     return Container(
+      color: Colors.white,
       padding: EdgeInsets.symmetric(
         horizontal: spacing * 2,
         vertical: spacing,
@@ -67,7 +68,7 @@ class Breadcrumb extends StatelessWidget {
     );
   }
 
-  List<BreadcrumbItem> _getBreadcrumbItems(String route, AppLocalizations l10n) {
+  List<BreadcrumbItem> _getBreadcrumbItems(String route, AppLocalizations l10n, AppProvider appProvider) {
     final items = <BreadcrumbItem>[];
 
     items.add(BreadcrumbItem(
@@ -77,6 +78,42 @@ class Breadcrumb extends StatelessWidget {
     ));
 
     if (route == '/') {
+      return items;
+    }
+
+    // 特殊处理项目详情页面
+    if (route == '/project-detail') {
+      items.add(BreadcrumbItem(
+        label: l10n.projects,
+        route: '/projects',
+        icon: Icons.folder,
+      ));
+      
+      // 尝试获取项目名称
+      final projectId = appProvider.routeParams['projectId'] as String?;
+      if (projectId != null) {
+        try {
+          final project = appProvider.allProjects.firstWhere(
+            (p) => p.id == projectId,
+          );
+          items.add(BreadcrumbItem(
+            label: project.name,
+            route: null, // 当前页面，不可点击
+          ));
+        } catch (e) {
+          // 如果找不到项目，显示项目详情
+          items.add(BreadcrumbItem(
+            label: l10n.projectDetails,
+            route: null,
+          ));
+        }
+      } else {
+        items.add(BreadcrumbItem(
+          label: l10n.projectDetails,
+          route: null,
+        ));
+      }
+      
       return items;
     }
 

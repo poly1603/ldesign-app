@@ -151,5 +151,6 @@
   "projectPath": "Project Path",
   "timeInfo": "Time Information",
   "addedAt": "Added At",
-  "tags": "Tags"
+  "tags": "Tags",
+  "failedToOpenFolder": "Failed to open folder"
 }

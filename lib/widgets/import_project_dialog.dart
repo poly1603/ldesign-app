@@ -56,9 +56,10 @@ class _ImportProjectDialogState extends State<ImportProjectDialog> with SingleTi
         opacity: _fadeAnimation,
         child: Dialog(
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(24),
+            borderRadius: BorderRadius.circular(12),
           ),
-          elevation: 24,
+          elevation: 16,
+          backgroundColor: Colors.white,
           child: Container(
             width: 680,
             constraints: const BoxConstraints(
@@ -66,80 +67,65 @@ class _ImportProjectDialogState extends State<ImportProjectDialog> with SingleTi
               minHeight: 480,
             ),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(24),
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  theme.colorScheme.surface,
-                  theme.colorScheme.surface.withOpacity(0.95),
-                ],
-              ),
+              borderRadius: BorderRadius.circular(12),
+              color: Colors.white,
               boxShadow: [
                 BoxShadow(
-                  color: theme.colorScheme.primary.withOpacity(0.1),
-                  blurRadius: 32,
-                  offset: const Offset(0, 16),
+                  color: Colors.black.withOpacity(0.1),
+                  blurRadius: 24,
+                  offset: const Offset(0, 8),
                 ),
               ],
             ),
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(24),
+              borderRadius: BorderRadius.circular(12),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Header with gradient background
+                  // Header with clean background
                   Container(
-                    padding: const EdgeInsets.all(20),
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
                     decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [
-                          theme.colorScheme.primary.withOpacity(0.08),
-                          theme.colorScheme.primary.withOpacity(0.02),
-                        ],
+                      color: Colors.white,
+                      border: Border(
+                        bottom: BorderSide(
+                          color: theme.dividerColor.withOpacity(0.3),
+                          width: 1,
+                        ),
                       ),
                     ),
                     child: Row(
                       children: [
                         Container(
-                          padding: const EdgeInsets.all(10),
+                          padding: const EdgeInsets.all(8),
                           decoration: BoxDecoration(
-                            color: theme.colorScheme.primary.withOpacity(0.15),
-                            borderRadius: BorderRadius.circular(10),
+                            color: theme.colorScheme.primary.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(8),
                           ),
                           child: Icon(
                             Bootstrap.folder_plus,
                             color: theme.colorScheme.primary,
-                            size: 22,
+                            size: 20,
                           ),
                         ),
                         const SizedBox(width: 12),
                         Expanded(
                           child: Text(
                             l10n.importProjectDialog,
-                            style: theme.textTheme.titleLarge?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              letterSpacing: -0.5,
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: -0.3,
                             ),
                           ),
                         ),
                         Container(
                           decoration: BoxDecoration(
-                            color: theme.colorScheme.surface,
-                            borderRadius: BorderRadius.circular(8),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.05),
-                                blurRadius: 4,
-                                offset: const Offset(0, 2),
-                              ),
-                            ],
+                            color: Colors.grey.shade100,
+                            borderRadius: BorderRadius.circular(6),
                           ),
                           child: IconButton(
-                            icon: const Icon(Bootstrap.x, size: 20),
+                            icon: Icon(Bootstrap.x, size: 18, color: Colors.grey.shade600),
                             onPressed: () async {
                               await _animationController.reverse();
                               if (context.mounted) {
@@ -147,6 +133,7 @@ class _ImportProjectDialogState extends State<ImportProjectDialog> with SingleTi
                               }
                             },
                             tooltip: '关闭',
+                            padding: const EdgeInsets.all(8),
                           ),
                         ),
                       ],
@@ -161,22 +148,15 @@ class _ImportProjectDialogState extends State<ImportProjectDialog> with SingleTi
                           children: [
                             const SizedBox(height: 24),
                             Container(
-                              padding: const EdgeInsets.all(24),
+                              padding: const EdgeInsets.all(20),
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                gradient: LinearGradient(
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                  colors: [
-                                    theme.colorScheme.primary.withOpacity(0.1),
-                                    theme.colorScheme.primary.withOpacity(0.05),
-                                  ],
-                                ),
+                                color: theme.colorScheme.primary.withOpacity(0.08),
                               ),
                               child: Icon(
                                 Bootstrap.folder,
-                                size: 64,
-                                color: theme.colorScheme.primary.withOpacity(0.6),
+                                size: 48,
+                                color: theme.colorScheme.primary.withOpacity(0.7),
                               ),
                             ),
                             const SizedBox(height: 24),
@@ -187,41 +167,24 @@ class _ImportProjectDialogState extends State<ImportProjectDialog> with SingleTi
                               ),
                             ),
                             const SizedBox(height: 20),
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12),
-                                gradient: LinearGradient(
-                                  colors: [
-                                    theme.colorScheme.primary,
-                                    theme.colorScheme.primary.withOpacity(0.8),
-                                  ],
-                                ),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: theme.colorScheme.primary.withOpacity(0.3),
-                                    blurRadius: 12,
-                                    offset: const Offset(0, 4),
-                                  ),
-                                ],
+                            ElevatedButton.icon(
+                              onPressed: _selectDirectory,
+                              icon: const Icon(Bootstrap.folder, size: 18),
+                              label: Text(
+                                l10n.selectProjectDirectory,
+                                style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
                               ),
-                              child: ElevatedButton.icon(
-                                onPressed: _selectDirectory,
-                                icon: const Icon(Bootstrap.folder, size: 18),
-                                label: Text(
-                                  l10n.selectProjectDirectory,
-                                  style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: theme.colorScheme.primary,
+                                foregroundColor: Colors.white,
+                                elevation: 0,
+                                shadowColor: Colors.transparent,
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 24,
+                                  vertical: 14,
                                 ),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.transparent,
-                                  foregroundColor: Colors.white,
-                                  shadowColor: Colors.transparent,
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 28,
-                                    vertical: 16,
-                                  ),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
                                 ),
                               ),
                             ),
@@ -368,12 +331,12 @@ class _ImportProjectDialogState extends State<ImportProjectDialog> with SingleTi
     final color = typeColors[project.type] ?? Colors.grey;
 
     return Container(
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceContainerHighest.withOpacity(0.5),
-        borderRadius: BorderRadius.circular(16),
+        color: Colors.grey.shade50,
+        borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: theme.dividerColor.withOpacity(0.5),
+          color: theme.dividerColor.withOpacity(0.3),
           width: 1,
         ),
       ),
@@ -490,8 +453,12 @@ class _ImportProjectDialogState extends State<ImportProjectDialog> with SingleTi
             Container(
               padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
-                color: theme.colorScheme.surface.withOpacity(0.5),
-                borderRadius: BorderRadius.circular(12),
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(
+                  color: theme.dividerColor.withOpacity(0.2),
+                  width: 1,
+                ),
               ),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -572,8 +539,12 @@ class _ImportProjectDialogState extends State<ImportProjectDialog> with SingleTi
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: theme.colorScheme.surface.withOpacity(0.5),
-        borderRadius: BorderRadius.circular(10),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(
+          color: theme.dividerColor.withOpacity(0.2),
+          width: 1,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -612,12 +583,12 @@ class _ImportProjectDialogState extends State<ImportProjectDialog> with SingleTi
 
   Widget _buildBottomActions(BuildContext context, ThemeData theme, AppLocalizations l10n) {
     return Container(
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
+        color: Colors.white,
         border: Border(
           top: BorderSide(
-            color: theme.dividerColor.withOpacity(0.5),
+            color: theme.dividerColor.withOpacity(0.3),
             width: 1,
           ),
         ),
@@ -639,7 +610,7 @@ class _ImportProjectDialogState extends State<ImportProjectDialog> with SingleTi
                     width: 2,
                   ),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(14),
+                    borderRadius: BorderRadius.circular(8),
                   ),
                 ),
               ),
@@ -661,7 +632,7 @@ class _ImportProjectDialogState extends State<ImportProjectDialog> with SingleTi
                         width: 2,
                       ),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(14),
+                        borderRadius: BorderRadius.circular(8),
                       ),
                     ),
                   ),
@@ -670,22 +641,6 @@ class _ImportProjectDialogState extends State<ImportProjectDialog> with SingleTi
                 Expanded(
                   flex: 2,
                   child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(14),
-                      gradient: LinearGradient(
-                        colors: [
-                          theme.colorScheme.primary,
-                          theme.colorScheme.primary.withOpacity(0.85),
-                        ],
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: theme.colorScheme.primary.withOpacity(0.4),
-                          blurRadius: 12,
-                          offset: const Offset(0, 6),
-                        ),
-                      ],
-                    ),
                     child: ElevatedButton.icon(
                       onPressed: () => _closeWithAnimation(context),
                       icon: const Icon(Bootstrap.check_circle, size: 18),
@@ -693,16 +648,17 @@ class _ImportProjectDialogState extends State<ImportProjectDialog> with SingleTi
                         l10n.confirmImport,
                         style: const TextStyle(
                           fontSize: 15,
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 16),
-                        backgroundColor: Colors.transparent,
+                        backgroundColor: theme.colorScheme.primary,
                         foregroundColor: Colors.white,
+                        elevation: 0,
                         shadowColor: Colors.transparent,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(14),
+                          borderRadius: BorderRadius.circular(8),
                         ),
                       ),
                     ),

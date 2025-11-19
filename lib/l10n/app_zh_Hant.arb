@@ -151,5 +151,6 @@
   "projectPath": "項目路徑",
   "timeInfo": "時間信息",
   "addedAt": "添加時間",
-  "tags": "標籤"
+  "tags": "標籤",
+  "failedToOpenFolder": "無法打開文件夾"
 }

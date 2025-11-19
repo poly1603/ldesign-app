@@ -40,9 +40,11 @@ dependencies:
   window_manager: ^0.4.3
   flex_color_picker: ^3.6.0
   icons_plus: ^5.0.0
+  fluentui_system_icons: ^1.1.273
   path: ^1.9.0
   file_picker: ^8.1.6
   path_provider: ^2.1.4
+  url_launcher: ^6.3.1
 
 dev_dependencies:
   flutter_test:

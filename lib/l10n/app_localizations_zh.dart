@@ -346,6 +346,9 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get tags => '标签';
+
+  @override
+  String get failedToOpenFolder => '无法打开文件夹';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hant`).
@@ -690,4 +693,7 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get tags => '標籤';
+
+  @override
+  String get failedToOpenFolder => '無法打開文件夾';
 }

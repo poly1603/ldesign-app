@@ -752,6 +752,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Tags'**
   String get tags;
+
+  /// No description provided for @failedToOpenFolder.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to open folder'**
+  String get failedToOpenFolder;
 }
 
 class _AppLocalizationsDelegate

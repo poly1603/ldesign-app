@@ -18,7 +18,7 @@ class TopBar extends StatelessWidget {
     return Container(
       height: 56,
       decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
+        color: Colors.white,
         border: Border(
           bottom: BorderSide(
             color: theme.dividerColor,

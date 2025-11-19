@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:icons_plus/icons_plus.dart';
 
 import '../providers/app_provider.dart';
 import '../config/theme_config.dart';
@@ -37,6 +36,22 @@ class CollapsibleSidebar extends StatefulWidget {
 class _CollapsibleSidebarState extends State<CollapsibleSidebar> {
   String? _hoveredItemId;
 
+  /// 判断路由是否处于活动状态
+  /// 支持子路由匹配，例如 /project-detail 应该匹配 /projects
+  bool _isRouteActive(String currentRoute, String? itemRoute) {
+    if (itemRoute == null) return false;
+    
+    // 精确匹配
+    if (currentRoute == itemRoute) return true;
+    
+    // 项目相关路由的特殊处理
+    if (itemRoute == '/projects') {
+      return currentRoute == '/projects' || currentRoute == '/project-detail';
+    }
+    
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
     final appProvider = context.watch<AppProvider>();
@@ -54,19 +69,7 @@ class _CollapsibleSidebarState extends State<CollapsibleSidebar> {
       curve: Curves.easeInOut,
       width: width,
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: theme.brightness == Brightness.dark
-              ? [
-                  theme.colorScheme.surface,
-                  theme.colorScheme.surface.withOpacity(0.95),
-                ]
-              : [
-                  Colors.white,
-                  Colors.grey.shade50,
-                ],
-        ),
+        color: Colors.white,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.08),
@@ -77,67 +80,6 @@ class _CollapsibleSidebarState extends State<CollapsibleSidebar> {
       ),
       child: Column(
         children: [
-          // Logo/Brand Section
-          Container(
-            padding: EdgeInsets.symmetric(
-              horizontal: ThemeConfig.getSpacing(size),
-              vertical: ThemeConfig.getSpacing(size) * 1.5,
-            ),
-            decoration: BoxDecoration(
-              border: Border(
-                bottom: BorderSide(
-                  color: theme.dividerColor.withOpacity(0.3),
-                  width: 1,
-                ),
-              ),
-            ),
-            child: Row(
-              mainAxisAlignment:
-                  collapsed ? MainAxisAlignment.center : MainAxisAlignment.start,
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        theme.colorScheme.primary,
-                        theme.colorScheme.primary.withOpacity(0.8),
-                      ],
-                    ),
-                    borderRadius: BorderRadius.circular(12),
-                    boxShadow: [
-                      BoxShadow(
-                        color: theme.colorScheme.primary.withOpacity(0.3),
-                        blurRadius: 8,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: Icon(
-                    Bootstrap.grid_3x3_gap,
-                    color: Colors.white,
-                    size: 20,
-                  ),
-                ),
-                if (!collapsed) ...[
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      l10n.appTitle,
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                        color: theme.colorScheme.onSurface,
-                        letterSpacing: -0.5,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                ],
-              ],
-            ),
-          ),
-          
           // Menu Items
           Expanded(
             child: ListView(
@@ -148,58 +90,6 @@ class _CollapsibleSidebarState extends State<CollapsibleSidebar> {
               children: widget.menuItems.map((item) {
                 return _buildMenuItem(item, collapsed, size, l10n, theme);
               }).toList(),
-            ),
-          ),
-          
-          // Collapse/Expand Button
-          Container(
-            margin: EdgeInsets.all(collapsed ? 8 : ThemeConfig.getSpacing(size)),
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: theme.dividerColor.withOpacity(0.3),
-                width: 1,
-              ),
-              borderRadius: BorderRadius.circular(12),
-              color: theme.colorScheme.surface.withOpacity(0.5),
-            ),
-            child: Material(
-              color: Colors.transparent,
-              borderRadius: BorderRadius.circular(12),
-              child: InkWell(
-                onTap: () {
-                  appProvider.toggleSidebar();
-                },
-                borderRadius: BorderRadius.circular(12),
-                child: Container(
-                  height: 44,
-                  padding: EdgeInsets.symmetric(
-                    horizontal: ThemeConfig.getSpacing(size),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: collapsed
-                        ? MainAxisAlignment.center
-                        : MainAxisAlignment.spaceBetween,
-                    children: [
-                      if (!collapsed)
-                        Text(
-                          l10n.collapse,
-                          style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w500,
-                            color: theme.colorScheme.onSurface.withOpacity(0.7),
-                          ),
-                        ),
-                      Icon(
-                        collapsed
-                            ? Bootstrap.chevron_right
-                            : Bootstrap.chevron_left,
-                        size: 16,
-                        color: theme.colorScheme.onSurface.withOpacity(0.7),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
             ),
           ),
         ],
@@ -215,7 +105,7 @@ class _CollapsibleSidebarState extends State<CollapsibleSidebar> {
     ThemeData theme,
   ) {
     final appProvider = context.watch<AppProvider>();
-    final isActive = appProvider.currentRoute == item.route;
+    final isActive = _isRouteActive(appProvider.currentRoute, item.route);
     final isHovered = _hoveredItemId == item.id;
 
     final title = _getLocalizedTitle(l10n, item.titleKey);
@@ -290,7 +180,7 @@ class _CollapsibleSidebarState extends State<CollapsibleSidebar> {
                             : theme.colorScheme.onSurface.withOpacity(0.7),
                       ),
                       const SizedBox(width: 12),
-                      Expanded(
+                      Flexible(
                         child: Text(
                           title,
                           style: TextStyle(
@@ -302,6 +192,7 @@ class _CollapsibleSidebarState extends State<CollapsibleSidebar> {
                             letterSpacing: -0.2,
                           ),
                           overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
                         ),
                       ),
                     ],
