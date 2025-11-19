@@ -143,37 +143,31 @@ class HomeScreenSkeleton extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
+        // 计算安全的内容高度
+        final safeHeight = constraints.maxHeight - 60; // 预留更多空间
+        
         return SingleChildScrollView(
-          padding: const EdgeInsets.all(20), // 减少外边距
-          child: ConstrainedBox(
-            constraints: BoxConstraints(
-              minHeight: constraints.maxHeight - 40, // 确保不超过可用高度
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min, // 使用最小尺寸
-              children: [
-                // Welcome Section Skeleton
-                _buildWelcomeSkeleton(),
-                const SizedBox(height: 16), // 减少间距
-                
-                // Project Stats Skeleton
-                _buildProjectStatsSkeleton(),
-                const SizedBox(height: 16),
-                
-                // Development Environment Skeleton
-                _buildDevelopmentEnvironmentSkeleton(),
-                const SizedBox(height: 16),
-                
-                // System Information Skeleton
-                _buildSystemInformationSkeleton(),
-                const SizedBox(height: 16),
-                
-                // Installed Software Skeleton
-                _buildInstalledSoftwareSkeleton(),
-                const SizedBox(height: 20), // 底部间距
-              ],
-            ),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Welcome Section Skeleton (简化)
+              _buildWelcomeSkeleton(),
+              const SizedBox(height: 12),
+              
+              // Project Stats Skeleton (紧凑版)
+              _buildCompactProjectStatsSkeleton(),
+              const SizedBox(height: 12),
+              
+              // Combined Environment & System Info (合并减少高度)
+              _buildCombinedInfoSkeleton(),
+              const SizedBox(height: 12),
+              
+              // Simplified Software Skeleton (简化版)
+              _buildSimplifiedSoftwareSkeleton(),
+              const SizedBox(height: 16), // 底部安全间距
+            ],
           ),
         );
       },
@@ -184,9 +178,146 @@ class HomeScreenSkeleton extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SkeletonLoader(width: 200, height: 32),
+        const SkeletonLoader(width: 180, height: 24),
+        const SizedBox(height: 6),
+        const SkeletonLoader(width: 250, height: 14),
+      ],
+    );
+  }
+
+  Widget _buildCompactProjectStatsSkeleton() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SkeletonLoader(width: 100, height: 18),
         const SizedBox(height: 8),
-        const SkeletonLoader(width: 300, height: 16),
+        Row(
+          children: [
+            Expanded(
+              child: SkeletonCard(
+                height: 50,
+                padding: const EdgeInsets.all(8),
+                children: [
+                  Row(
+                    children: [
+                      const SkeletonLoader(width: 20, height: 20, borderRadius: BorderRadius.all(Radius.circular(4))),
+                      const SizedBox(width: 6),
+                      const Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            SkeletonLoader(width: 25, height: 12),
+                            SizedBox(height: 2),
+                            SkeletonLoader(width: 35, height: 8),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: SkeletonCard(
+                height: 50,
+                padding: const EdgeInsets.all(8),
+                children: [
+                  Row(
+                    children: [
+                      const SkeletonLoader(width: 20, height: 20, borderRadius: BorderRadius.all(Radius.circular(4))),
+                      const SizedBox(width: 6),
+                      const Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            SkeletonLoader(width: 25, height: 12),
+                            SizedBox(height: 2),
+                            SkeletonLoader(width: 35, height: 8),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildCombinedInfoSkeleton() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SkeletonLoader(width: 120, height: 18),
+        const SizedBox(height: 8),
+        SkeletonCard(
+          padding: const EdgeInsets.all(10),
+          children: [
+            _buildCompactInfoRowSkeleton(),
+            const SizedBox(height: 6),
+            _buildCompactInfoRowSkeleton(),
+            const SizedBox(height: 6),
+            _buildCompactInfoRowSkeleton(),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSimplifiedSoftwareSkeleton() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SkeletonLoader(width: 100, height: 18),
+        const SizedBox(height: 8),
+        SkeletonCard(
+          padding: const EdgeInsets.all(10),
+          children: [
+            Row(
+              children: [
+                const Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SkeletonLoader(width: 60, height: 14),
+                      SizedBox(height: 4),
+                      SkeletonLoader(width: 80, height: 12),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 12),
+                const Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SkeletonLoader(width: 60, height: 14),
+                      SizedBox(height: 4),
+                      SkeletonLoader(width: 80, height: 12),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildCompactInfoRowSkeleton() {
+    return Row(
+      children: [
+        const SkeletonLoader(width: 16, height: 16, borderRadius: BorderRadius.all(Radius.circular(8))),
+        const SizedBox(width: 6),
+        const Expanded(child: SkeletonLoader(width: double.infinity, height: 12)),
+        const SizedBox(width: 6),
+        const SkeletonLoader(width: 60, height: 12),
       ],
     );
   }
