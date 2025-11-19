@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:icons_plus/icons_plus.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'dart:io';
+import 'dart:convert';
 import '../l10n/app_localizations.dart';
 import '../models/project.dart';
 import '../providers/app_provider.dart';
@@ -24,13 +26,24 @@ class ProjectActionScreen extends StatefulWidget {
   State<ProjectActionScreen> createState() => _ProjectActionScreenState();
 }
 
-class _ProjectActionScreenState extends State<ProjectActionScreen> {
+class _ProjectActionScreenState extends State<ProjectActionScreen> with TickerProviderStateMixin {
   Environment _selectedEnvironment = Environment.development;
   final ScrollController _logScrollController = ScrollController();
+  late AnimationController _cursorAnimationController;
+
+  @override
+  void initState() {
+    super.initState();
+    _cursorAnimationController = AnimationController(
+      duration: const Duration(milliseconds: 1000),
+      vsync: this,
+    )..repeat(reverse: true);
+  }
 
   @override
   void dispose() {
     _logScrollController.dispose();
+    _cursorAnimationController.dispose();
     super.dispose();
   }
 
@@ -58,15 +71,7 @@ class _ProjectActionScreenState extends State<ProjectActionScreen> {
               // Header
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border(
-                    bottom: BorderSide(
-                      color: theme.dividerColor.withOpacity(0.3),
-                      width: 1,
-                    ),
-                  ),
-                ),
+                color: Colors.white,
                 child: Row(
                   children: [
                     // 返回按钮
@@ -87,6 +92,7 @@ class _ProjectActionScreenState extends State<ProjectActionScreen> {
                             style: theme.textTheme.titleLarge?.copyWith(
                               fontWeight: FontWeight.bold,
                             ),
+                            overflow: TextOverflow.ellipsis,
                           ),
                           const SizedBox(height: 4),
                           Text(
@@ -99,56 +105,59 @@ class _ProjectActionScreenState extends State<ProjectActionScreen> {
                         ],
                       ),
                     ),
-                  ],
-                ),
-              ),
-              // 控制区域
-              Container(
-                padding: const EdgeInsets.all(20),
-                color: Colors.white,
-                child: Column(
-                  children: [
-                    // 环境选择和操作按钮
-                    Row(
-                      children: [
-                        // 环境选择
-                        Expanded(
-                          flex: 2,
-                          child: _buildEnvironmentSelector(theme),
-                        ),
-                        const SizedBox(width: 16),
-                        // 操作按钮
-                        Expanded(
-                          flex: 3,
-                          child: _buildActionButton(context, theme, serviceInfo, actionInfo, project, serviceManager),
-                        ),
-                        // 服务地址按钮（只有运行中才显示）
-                        if (serviceInfo?.status == ServiceStatus.running && serviceInfo?.url != null) ...[
-                          const SizedBox(width: 16),
-                          _buildServiceUrlButton(context, theme, serviceInfo!.url!),
+                    const SizedBox(width: 8),
+                    // 控制区域（移到右侧）
+                    Flexible(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          // 环境选择
+                          _buildEnvironmentSelector(theme),
+                          const SizedBox(width: 8),
+                          // 操作按钮
+                          _buildActionButton(context, theme, serviceInfo, actionInfo, project, serviceManager),
+                          // 服务地址按钮（只有运行中才显示）
+                          if (serviceInfo?.status == ServiceStatus.running && serviceInfo?.url != null) ...[
+                            const SizedBox(width: 8),
+                            _buildServiceUrlButton(context, theme, serviceInfo!.url!),
+                          ],
                         ],
-                      ],
+                      ),
                     ),
                   ],
                 ),
               ),
-              // 日志区域
+              // 命令行窗口区域
               Expanded(
-                child: Container(
-                  margin: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF1E1E1E),
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Colors.grey.shade300),
-                  ),
+                child: Consumer<AppProvider>(
+                  builder: (context, appProvider, child) {
+                    final isTerminalDarkTheme = appProvider.terminalDarkTheme;
+                    final isLogDisplayDarkTheme = appProvider.logDisplayDarkTheme;
+                    final windowBg = isLogDisplayDarkTheme ? const Color(0xFF0C0C0C) : const Color(0xFFF5F5F5);
+                    final titleBarBg = isTerminalDarkTheme ? const Color(0xFF2D2D30) : const Color(0xFFE1E1E1);
+                    
+                    return Container(
+                      margin: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                      decoration: BoxDecoration(
+                        color: windowBg,
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: Colors.grey.shade400, width: 1),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.3),
+                            blurRadius: 8,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
+                      ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // 日志标题
+                      // 窗口标题栏（模拟真实系统）
                       Container(
-                        padding: const EdgeInsets.all(12),
+                        height: 32,
                         decoration: BoxDecoration(
-                          color: Colors.grey.shade100,
+                          color: titleBarBg,
                           borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(8),
                             topRight: Radius.circular(8),
@@ -156,41 +165,83 @@ class _ProjectActionScreenState extends State<ProjectActionScreen> {
                         ),
                         child: Row(
                           children: [
+                            const SizedBox(width: 12),
+                            // 窗口图标
                             Icon(
                               Bootstrap.terminal,
-                              size: 16,
-                              color: Colors.grey.shade600,
+                              size: 14,
+                              color: isTerminalDarkTheme ? Colors.grey.shade300 : Colors.grey.shade700,
                             ),
                             const SizedBox(width: 8),
+                            // 窗口标题
                             Text(
-                              '控制台输出',
-                              style: theme.textTheme.bodyMedium?.copyWith(
-                                fontWeight: FontWeight.w600,
-                                color: Colors.grey.shade700,
+                              isTerminalDarkTheme ? 'Windows PowerShell' : 'Command Prompt',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: isTerminalDarkTheme ? Colors.grey.shade300 : Colors.grey.shade700,
+                                fontWeight: FontWeight.w400,
                               ),
                             ),
                             const Spacer(),
-                            // 清空日志按钮
-                            IconButton(
-                              icon: Icon(
-                                Bootstrap.trash,
-                                size: 14,
-                                color: Colors.grey.shade600,
-                              ),
-                              onPressed: () => _clearLogs(serviceManager),
-                              tooltip: '清空日志',
-                              padding: EdgeInsets.zero,
-                              constraints: const BoxConstraints(),
+                            // 日志操作按钮
+                            Row(
+                              children: [
+                                // 清空日志按钮
+                                Material(
+                                  color: Colors.transparent,
+                                  child: InkWell(
+                                    borderRadius: BorderRadius.circular(4),
+                                    onTap: () => _clearLogs(serviceManager),
+                                    child: Container(
+                                      padding: const EdgeInsets.all(6),
+                                      child: Icon(
+                                        Bootstrap.trash,
+                                        size: 12,
+                                        color: isTerminalDarkTheme ? Colors.grey.shade300 : Colors.grey.shade600,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 4),
+                                // 导出日志按钮
+                                Material(
+                                  color: Colors.transparent,
+                                  child: InkWell(
+                                    borderRadius: BorderRadius.circular(4),
+                                    onTap: () => _exportLogs(serviceInfo?.logs ?? []),
+                                    child: Container(
+                                      padding: const EdgeInsets.all(6),
+                                      child: Icon(
+                                        Bootstrap.download,
+                                        size: 12,
+                                        color: isTerminalDarkTheme ? Colors.grey.shade300 : Colors.grey.shade600,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                              ],
                             ),
+                            // 窗口控制按钮
+                            Row(
+                              children: [
+                                _buildWindowButton(Icons.minimize, Colors.grey.shade400),
+                                _buildWindowButton(Icons.crop_square, Colors.grey.shade400),
+                                _buildWindowButton(Icons.close, Colors.red.shade400),
+                              ],
+                            ),
+                            const SizedBox(width: 8),
                           ],
                         ),
                       ),
-                      // 日志内容
+                      // 命令行内容区域
                       Expanded(
-                        child: _buildLogArea(serviceInfo?.logs ?? []),
+                        child: _buildTerminalArea(serviceInfo?.logs ?? [], project.path),
                       ),
                     ],
                   ),
+                    );
+                  },
                 ),
               ),
             ],
@@ -222,34 +273,37 @@ class _ProjectActionScreenState extends State<ProjectActionScreen> {
 
   // 构建环境选择器
   Widget _buildEnvironmentSelector(ThemeData theme) {
-    return Container(
-      height: 48, // 统一高度
-      padding: const EdgeInsets.symmetric(horizontal: 12),
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey.shade300),
-        borderRadius: BorderRadius.circular(6),
-        color: Colors.white,
-      ),
-      child: DropdownButtonHideUnderline(
-        child: DropdownButton<Environment>(
-          value: _selectedEnvironment,
-          isExpanded: true,
-          onChanged: (Environment? newValue) {
-            if (newValue != null) {
-              setState(() {
-                _selectedEnvironment = newValue;
-              });
-            }
-          },
-          items: Environment.values.map<DropdownMenuItem<Environment>>((Environment value) {
-            return DropdownMenuItem<Environment>(
-              value: value,
-              child: Text(
-                _getEnvironmentLabel(value),
-                style: const TextStyle(fontSize: 14),
-              ),
-            );
-          }).toList(),
+    return IntrinsicWidth(
+      child: Container(
+        height: 36,
+        constraints: const BoxConstraints(minWidth: 80),
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey.shade300),
+          borderRadius: BorderRadius.circular(6),
+          color: Colors.white,
+        ),
+        child: DropdownButtonHideUnderline(
+          child: DropdownButton<Environment>(
+            value: _selectedEnvironment,
+            isExpanded: true,
+            onChanged: (Environment? newValue) {
+              if (newValue != null) {
+                setState(() {
+                  _selectedEnvironment = newValue;
+                });
+              }
+            },
+            items: Environment.values.map<DropdownMenuItem<Environment>>((Environment value) {
+              return DropdownMenuItem<Environment>(
+                value: value,
+                child: Text(
+                  _getEnvironmentLabel(value),
+                  style: const TextStyle(fontSize: 14),
+                ),
+              );
+            }).toList(),
+          ),
         ),
       ),
     );
@@ -284,8 +338,7 @@ class _ProjectActionScreenState extends State<ProjectActionScreen> {
     // 对于构建操作，不需要停止按钮
     if (widget.action == 'build') {
       return SizedBox(
-        width: double.infinity,
-        height: 48,
+        height: 36, // 减小高度
         child: ElevatedButton.icon(
           onPressed: isStarting ? null : () => _startAction(serviceManager, project),
           icon: isStarting
@@ -309,8 +362,7 @@ class _ProjectActionScreenState extends State<ProjectActionScreen> {
 
     // 对于启动和预览操作，支持启动/停止切换
     return SizedBox(
-      width: double.infinity,
-      height: 48,
+      height: 36,
       child: ElevatedButton.icon(
         onPressed: (isStarting || isStopping) ? null : () {
           if (isRunning) {
@@ -370,52 +422,176 @@ class _ProjectActionScreenState extends State<ProjectActionScreen> {
 
   // 构建服务地址按钮
   Widget _buildServiceUrlButton(BuildContext context, ThemeData theme, String url) {
-    return PopupMenuButton<String>(
-      tooltip: '服务地址',
-      child: Container(
-        height: 48,
-        padding: const EdgeInsets.symmetric(horizontal: 12),
-        decoration: BoxDecoration(
-          color: Colors.green.shade50,
-          border: Border.all(color: Colors.green.shade300),
-          borderRadius: BorderRadius.circular(6),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              Bootstrap.globe,
-              size: 16,
-              color: Colors.green.shade600,
-            ),
-            const SizedBox(width: 8),
-            Text(
-              '服务地址',
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.green.shade700,
-                fontWeight: FontWeight.w500,
+    return Container(
+      height: 36,
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(8),
+          onTap: () => _showServiceUrlDialog(context, url),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Colors.green.shade400,
+                  Colors.green.shade600,
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
               ),
+              borderRadius: BorderRadius.circular(8),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.green.shade200,
+                  blurRadius: 4,
+                  offset: const Offset(0, 2),
+                ),
+              ],
             ),
-            const SizedBox(width: 4),
-            Icon(
-              Bootstrap.chevron_down,
-              size: 12,
-              color: Colors.green.shade600,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(
+                  Bootstrap.globe,
+                  size: 15,
+                  color: Colors.white,
+                ),
+                const SizedBox(width: 6),
+                const Text(
+                  '服务地址',
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(width: 4),
+                const Icon(
+                  Bootstrap.chevron_down,
+                  size: 10,
+                  color: Colors.white,
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
-      itemBuilder: (context) => [
-        PopupMenuItem<String>(
-          enabled: false,
-          child: _buildServiceUrlPopup(url),
-        ),
-      ],
     );
   }
 
-  // 构建服务地址弹窗内容
+  // 显示服务地址对话框
+  void _showServiceUrlDialog(BuildContext context, String url) {
+    showDialog(
+      context: context,
+      builder: (context) => Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Container(
+          width: 400,
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // 标题
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [Colors.green.shade400, Colors.green.shade600],
+                      ),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: const Icon(
+                      Bootstrap.globe,
+                      color: Colors.white,
+                      size: 20,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  const Text(
+                    '服务地址',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const Spacer(),
+                  IconButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    icon: const Icon(Icons.close),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              // 地址列表
+              _buildUrlCard('本地访问', url, Bootstrap.laptop, Colors.blue),
+              const SizedBox(height: 12),
+              FutureBuilder<String>(
+                future: _getNetworkUrl(url),
+                builder: (context, snapshot) {
+                  final networkUrl = snapshot.data ?? url;
+                  return Column(
+                    children: [
+                      _buildUrlCard('局域网访问', networkUrl, Bootstrap.wifi, Colors.orange),
+                      const SizedBox(height: 20),
+                      // 二维码
+                      Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade50,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: Colors.grey.shade200),
+                        ),
+                        child: Column(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(8),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.1),
+                                    blurRadius: 4,
+                                    offset: const Offset(0, 2),
+                                  ),
+                                ],
+                              ),
+                              child: QrImageView(
+                                data: networkUrl,
+                                version: QrVersions.auto,
+                                size: 120,
+                                backgroundColor: Colors.white,
+                              ),
+                            ),
+                            const SizedBox(height: 12),
+                            Text(
+                              '扫码访问',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.grey.shade600,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  // 构建服务地址弹窗内容（已弃用，保留以防编译错误）
   Widget _buildServiceUrlPopup(String url) {
     return Container(
       width: 300,
@@ -481,7 +657,99 @@ class _ProjectActionScreenState extends State<ProjectActionScreen> {
     );
   }
 
-  // 构建URL项目
+  // 构建URL卡片
+  Widget _buildUrlCard(String label, String url, IconData icon, Color color) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.05),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: color.withOpacity(0.2)),
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: color.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Icon(
+              icon,
+              size: 20,
+              color: color,
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.grey.shade700,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  url,
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: color,
+                    fontFamily: 'monospace',
+                    fontWeight: FontWeight.w500,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 12),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(6),
+                  onTap: () => _copyUrl(url),
+                  child: Container(
+                    padding: const EdgeInsets.all(8),
+                    child: Icon(
+                      Bootstrap.clipboard,
+                      size: 16,
+                      color: Colors.grey.shade600,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 4),
+              Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(6),
+                  onTap: () => _openUrl(url),
+                  child: Container(
+                    padding: const EdgeInsets.all(8),
+                    child: Icon(
+                      Bootstrap.box_arrow_up_right,
+                      size: 16,
+                      color: Colors.grey.shade600,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  // 构建URL项目（旧版本，保留以防编译错误）
   Widget _buildUrlItem(String label, String url, IconData icon) {
     return Container(
       padding: const EdgeInsets.all(8),
@@ -585,8 +853,32 @@ class _ProjectActionScreenState extends State<ProjectActionScreen> {
     }
   }
 
-  // 构建日志区域
-  Widget _buildLogArea(List<String> logs) {
+  // 构建窗口控制按钮
+  Widget _buildWindowButton(IconData icon, Color color) {
+    return Container(
+      width: 24,
+      height: 24,
+      margin: const EdgeInsets.only(left: 4),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(2),
+          onTap: icon == Icons.close ? () => _clearLogs(ProjectServiceManager()) : null,
+          child: Icon(
+            icon,
+            size: 12,
+            color: color,
+          ),
+        ),
+      ),
+    );
+  }
+
+  // 构建终端区域
+  Widget _buildTerminalArea(List<String> logs, String projectPath) {
+    final appProvider = context.watch<AppProvider>();
+    final isTerminalDarkTheme = appProvider.terminalDarkTheme;
+    final isLogDisplayDarkTheme = appProvider.logDisplayDarkTheme;
     // 当日志更新时自动滚动到底部
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (_logScrollController.hasClients && logs.isNotEmpty) {
@@ -598,19 +890,149 @@ class _ProjectActionScreenState extends State<ProjectActionScreen> {
       }
     });
 
+    // 定义主题颜色 - 使用日志展示主题设置
+    final backgroundColor = isLogDisplayDarkTheme ? const Color(0xFF0C0C0C) : const Color(0xFFF5F5F5);
+    final textColor = isLogDisplayDarkTheme ? Colors.white : const Color(0xFF333333);
+    final promptColor = isLogDisplayDarkTheme ? Colors.yellow.shade300 : Colors.blue.shade700;
+    final infoColor = isLogDisplayDarkTheme ? Colors.grey.shade400 : Colors.grey.shade600;
+    final cursorColor = isLogDisplayDarkTheme ? Colors.white : const Color(0xFF333333);
+
     return Container(
-      padding: const EdgeInsets.all(12),
-      child: SingleChildScrollView(
-        controller: _logScrollController,
-        child: SelectableText(
-          logs.isEmpty ? '暂无日志信息...' : logs.join('\n'),
-          style: const TextStyle(
-            fontFamily: 'Consolas',
-            fontSize: 12,
-            color: Colors.white,
-            height: 1.4,
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // 显示当前路径（模拟真实命令行）
+          if (logs.isEmpty) ...[
+            Text(
+              isLogDisplayDarkTheme ? 'Windows PowerShell' : 'Command Prompt',
+              style: TextStyle(
+                fontFamily: 'Consolas',
+                fontSize: 13,
+                color: infoColor,
+                height: 1.4,
+              ),
+            ),
+            Text(
+              'Copyright (C) Microsoft Corporation. All rights reserved.',
+              style: TextStyle(
+                fontFamily: 'Consolas',
+                fontSize: 13,
+                color: infoColor,
+                height: 1.4,
+              ),
+            ),
+            const SizedBox(height: 8),
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: isLogDisplayDarkTheme ? 'PS ' : 'C:\\>',
+                    style: TextStyle(
+                      fontFamily: 'Consolas',
+                      fontSize: 13,
+                      color: promptColor,
+                      height: 1.4,
+                    ),
+                  ),
+                  if (isLogDisplayDarkTheme) ...[
+                    TextSpan(
+                      text: projectPath,
+                      style: TextStyle(
+                        fontFamily: 'Consolas',
+                        fontSize: 13,
+                        color: textColor,
+                        height: 1.4,
+                      ),
+                    ),
+                    TextSpan(
+                      text: '> ',
+                      style: TextStyle(
+                        fontFamily: 'Consolas',
+                        fontSize: 13,
+                        color: promptColor,
+                        height: 1.4,
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+          ],
+          // 日志内容
+          Expanded(
+            child: SingleChildScrollView(
+              controller: _logScrollController,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (logs.isNotEmpty) ...[
+                    // 显示命令提示符和路径
+                    RichText(
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: isLogDisplayDarkTheme ? 'PS ' : 'C:\\>',
+                            style: TextStyle(
+                              fontFamily: 'Consolas',
+                              fontSize: 13,
+                              color: promptColor,
+                              height: 1.4,
+                            ),
+                          ),
+                          if (isLogDisplayDarkTheme) ...[
+                            TextSpan(
+                              text: projectPath,
+                              style: TextStyle(
+                                fontFamily: 'Consolas',
+                                fontSize: 13,
+                                color: textColor,
+                                height: 1.4,
+                              ),
+                            ),
+                            TextSpan(
+                              text: '> ',
+                              style: TextStyle(
+                                fontFamily: 'Consolas',
+                                fontSize: 13,
+                                color: promptColor,
+                                height: 1.4,
+                              ),
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
+                    // 显示日志
+                    SelectableText(
+                      logs.join('\n'),
+                      style: TextStyle(
+                        fontFamily: 'Consolas',
+                        fontSize: 13,
+                        color: textColor,
+                        height: 1.4,
+                      ),
+                    ),
+                  ],
+                  // 光标（模拟真实命令行）
+                  AnimatedBuilder(
+                    animation: _cursorAnimationController,
+                    builder: (context, child) {
+                      return Container(
+                        width: 8,
+                        height: 16,
+                        margin: const EdgeInsets.only(top: 4),
+                        decoration: BoxDecoration(
+                          color: cursorColor.withOpacity(_cursorAnimationController.value),
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
@@ -646,6 +1068,65 @@ class _ProjectActionScreenState extends State<ProjectActionScreen> {
   // 清空日志
   void _clearLogs(ProjectServiceManager serviceManager) {
     serviceManager.addLog(widget.projectId, widget.action, '');
+  }
+
+  // 导出日志
+  void _exportLogs(List<String> logs) async {
+    if (logs.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('暂无日志可导出'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+      return;
+    }
+
+    try {
+      // 生成日志内容
+      final timestamp = DateTime.now().toIso8601String().replaceAll(':', '-');
+      final projectName = widget.projectId.split('/').last;
+      final fileName = '${projectName}_${widget.action}_$timestamp.log';
+      
+      final logContent = [
+        '# ${projectName} - ${widget.action} 日志',
+        '# 导出时间: ${DateTime.now()}',
+        '# ==========================================',
+        '',
+        ...logs,
+      ].join('\n');
+
+      // 使用文件选择器保存文件
+      final result = await FilePicker.platform.saveFile(
+        dialogTitle: '导出日志文件',
+        fileName: fileName,
+        type: FileType.custom,
+        allowedExtensions: ['log', 'txt'],
+      );
+
+      if (result != null) {
+        final file = File(result);
+        await file.writeAsString(logContent, encoding: utf8);
+        
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('日志已导出到: ${result}'),
+              duration: const Duration(seconds: 3),
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('导出失败: $e'),
+            duration: const Duration(seconds: 3),
+          ),
+        );
+      }
+    }
   }
 
 }

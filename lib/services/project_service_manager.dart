@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:process_run/process_run.dart';
 
 // 项目服务状态
 enum ServiceStatus {
@@ -491,12 +492,12 @@ class ProjectServiceManager extends ChangeNotifier {
       // 检查 Node.js 和 npm 是否可用
       await _checkNodeEnvironment(onLog);
       
-      // 启动后台进程
-      Process process;
+      // 使用 process_run 启动进程，更好地处理编码
+      late Process process;
       if (Platform.isWindows) {
-        // Windows: 使用 cmd /c 来执行命令，确保能找到 npm
+        // Windows: 使用 process_run 的 Shell 来执行命令
         final fullCommand = '$command ${args.join(' ')}';
-        onLog('Windows 执行命令: cmd /c $fullCommand');
+        onLog('Windows 执行命令: $fullCommand');
         
         // 确保环境变量包含常见的 Node.js 路径
         final enhancedEnv = Map<String, String>.from(env);
@@ -518,9 +519,12 @@ class ProjectServiceManager extends ChangeNotifier {
           }
         }
         
+        // 使用 Process.start 但设置正确的编码环境
+        enhancedEnv['CHCP'] = '65001'; // 设置UTF-8代码页
+        
         process = await Process.start(
           'cmd',
-          ['/c', fullCommand],
+          ['/c', 'chcp 65001 >nul 2>&1 && $fullCommand'],
           workingDirectory: projectPath,
           environment: enhancedEnv,
         );

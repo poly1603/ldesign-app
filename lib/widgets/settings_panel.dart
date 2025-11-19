@@ -221,6 +221,111 @@ class SettingsPanel extends StatelessWidget {
             ],
           ),
         ),
+        const SizedBox(height: 16),
+        // 终端主题设置
+        _buildSection(
+          context,
+          title: '终端主题',
+          child: Padding(
+            padding: const EdgeInsets.all(8),
+            child: Column(
+              children: [
+                RadioListTile<bool>(
+                  title: const Text('深色主题'),
+                  subtitle: const Text('黑色背景，白色文字 (推荐)'),
+                  value: true,
+                  groupValue: appProvider.terminalDarkTheme,
+                  onChanged: (value) {
+                    if (value != null) {
+                      appProvider.setTerminalTheme(value);
+                    }
+                  },
+                ),
+                RadioListTile<bool>(
+                  title: const Text('浅色主题'),
+                  subtitle: const Text('白色背景，黑色文字'),
+                  value: false,
+                  groupValue: appProvider.terminalDarkTheme,
+                  onChanged: (value) {
+                    if (value != null) {
+                      appProvider.setTerminalTheme(value);
+                    }
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(height: 16),
+        // 日志展示主题设置
+        _buildSection(
+          context,
+          title: '日志展示主题',
+          child: Padding(
+            padding: const EdgeInsets.all(8),
+            child: Column(
+              children: [
+                RadioListTile<bool>(
+                  title: const Text('深色主题'),
+                  subtitle: const Text('项目操作页面中的日志区域使用深色背景'),
+                  value: true,
+                  groupValue: appProvider.logDisplayDarkTheme,
+                  onChanged: (value) {
+                    if (value != null) {
+                      appProvider.setLogDisplayTheme(value);
+                    }
+                  },
+                ),
+                RadioListTile<bool>(
+                  title: const Text('浅色主题'),
+                  subtitle: const Text('项目操作页面中的日志区域使用浅色背景'),
+                  value: false,
+                  groupValue: appProvider.logDisplayDarkTheme,
+                  onChanged: (value) {
+                    if (value != null) {
+                      appProvider.setLogDisplayTheme(value);
+                    }
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(height: 16),
+        // 控制台窗口主题设置
+        _buildSection(
+          context,
+          title: '控制台窗口主题',
+          child: Padding(
+            padding: const EdgeInsets.all(8),
+            child: Column(
+              children: [
+                RadioListTile<bool>(
+                  title: const Text('深色主题'),
+                  subtitle: const Text('控制台窗口使用深色外观 (推荐)'),
+                  value: true,
+                  groupValue: appProvider.terminalDarkTheme,
+                  onChanged: (value) {
+                    if (value != null) {
+                      appProvider.setTerminalTheme(value);
+                    }
+                  },
+                ),
+                RadioListTile<bool>(
+                  title: const Text('浅色主题'),
+                  subtitle: const Text('控制台窗口使用浅色外观'),
+                  value: false,
+                  groupValue: appProvider.terminalDarkTheme,
+                  onChanged: (value) {
+                    if (value != null) {
+                      appProvider.setTerminalTheme(value);
+                    }
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
       ],
     );
   }

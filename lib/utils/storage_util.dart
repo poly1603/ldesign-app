@@ -19,17 +19,26 @@ class StorageUtil {
   static const String _keyPageTransitionType = 'page_transition_type';
   static const String _keyProjects = 'projects';
   static const String _keyProjectsPath = 'projects_path';
+  static const String _keyTerminalTheme = 'terminal_theme';
+  static const String _keyLogDisplayTheme = 'log_display_theme';
 
   static Future<ThemeMode> getThemeMode() async {
-    final prefs = await SharedPreferences.getInstance();
-    final mode = prefs.getString(_keyThemeMode);
-    switch (mode) {
-      case 'light':
-        return ThemeMode.light;
-      case 'dark':
-        return ThemeMode.dark;
-      default:
-        return ThemeMode.light;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final mode = prefs.getString(_keyThemeMode);
+      switch (mode) {
+        case 'light':
+          return ThemeMode.light;
+        case 'dark':
+          return ThemeMode.dark;
+        default:
+          return ThemeMode.light;
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('StorageUtil.getThemeMode: Error reading theme mode, using default: $e');
+      }
+      return ThemeMode.light;
     }
   }
 
@@ -39,17 +48,58 @@ class StorageUtil {
   }
 
   static Future<Color> getPrimaryColor() async {
-    final prefs = await SharedPreferences.getInstance();
-    final colorValue = prefs.getInt(_keyPrimaryColor);
-    if (colorValue != null) {
-      return Color(colorValue);
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final colorValue = prefs.getInt(_keyPrimaryColor);
+      if (colorValue != null) {
+        return Color(colorValue);
+      }
+      return ThemeConfig.presetColors[0];
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('StorageUtil.getPrimaryColor: Error reading primary color, using default: $e');
+      }
+      return ThemeConfig.presetColors[0];
     }
-    return ThemeConfig.presetColors[0];
   }
 
   static Future<void> setPrimaryColor(Color color) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt(_keyPrimaryColor, color.value);
+  }
+
+  static Future<bool> getTerminalTheme() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      return prefs.getBool(_keyTerminalTheme) ?? true; // 默认深色主题
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('StorageUtil.getTerminalTheme: Error reading terminal theme, using default: $e');
+      }
+      return true;
+    }
+  }
+
+  static Future<void> setTerminalTheme(bool isDark) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_keyTerminalTheme, isDark);
+  }
+
+  static Future<bool> getLogDisplayTheme() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      return prefs.getBool(_keyLogDisplayTheme) ?? true; // 默认深色主题
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('StorageUtil.getLogDisplayTheme: Error reading log display theme, using default: $e');
+      }
+      return true;
+    }
+  }
+
+  static Future<void> setLogDisplayTheme(bool isDark) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_keyLogDisplayTheme, isDark);
   }
 
   static Future<AppSize> getAppSize() async {
@@ -459,6 +509,8 @@ class StorageUtil {
       await setAppSize(AppSize.standard);
       await setLocale(const Locale('zh'));
       await setSidebarCollapsed(false);
+      await setTerminalTheme(true);
+      await setLogDisplayTheme(true);
       
       if (kDebugMode) {
         debugPrint('StorageUtil.resetAllPreferences: Successfully reset all preferences to defaults');
@@ -468,6 +520,42 @@ class StorageUtil {
         debugPrint('StorageUtil.resetAllPreferences: Error: $e');
       }
       rethrow;
+    }
+  }
+
+  /// 修复损坏的SharedPreferences数据
+  static Future<void> fixCorruptedPreferences() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final keys = prefs.getKeys();
+      
+      for (final key in keys) {
+        try {
+          // 尝试读取每个键的值
+          final value = prefs.get(key);
+          if (value is String && value.startsWith('...')) {
+            // 发现损坏的数据，删除它
+            await prefs.remove(key);
+            if (kDebugMode) {
+              debugPrint('StorageUtil.fixCorruptedPreferences: Removed corrupted key: $key');
+            }
+          }
+        } catch (e) {
+          // 如果读取失败，删除这个键
+          await prefs.remove(key);
+          if (kDebugMode) {
+            debugPrint('StorageUtil.fixCorruptedPreferences: Removed unreadable key: $key, error: $e');
+          }
+        }
+      }
+      
+      if (kDebugMode) {
+        debugPrint('StorageUtil.fixCorruptedPreferences: Successfully fixed corrupted preferences');
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('StorageUtil.fixCorruptedPreferences: Error: $e');
+      }
     }
   }
 }

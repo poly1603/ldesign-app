@@ -21,6 +21,8 @@ class AppProvider extends ChangeNotifier {
   ProjectType? _filterType;
   String _sortBy = 'name'; // name, date, type
   bool _sortAscending = true;
+  bool _terminalDarkTheme = true; // 终端主题，默认深色
+  bool _logDisplayDarkTheme = true; // 日志展示组件主题，默认深色
 
   ThemeMode get themeMode => _themeMode;
   Color get primaryColor => _primaryColor;
@@ -38,12 +40,16 @@ class AppProvider extends ChangeNotifier {
   ProjectType? get filterType => _filterType;
   String get sortBy => _sortBy;
   bool get sortAscending => _sortAscending;
+  bool get terminalDarkTheme => _terminalDarkTheme;
+  bool get logDisplayDarkTheme => _logDisplayDarkTheme;
 
   bool get isDarkMode => _themeMode == ThemeMode.dark;
 
   AppProvider();
 
   Future<void> initialize() async {
+    // 首先修复可能损坏的SharedPreferences数据
+    await StorageUtil.fixCorruptedPreferences();
     await _loadPreferences();
   }
 
@@ -115,6 +121,24 @@ class AppProvider extends ChangeNotifier {
         }
         _pageTransitionType = PageTransitionType.slideLeft;
       }
+
+      try {
+        _terminalDarkTheme = await StorageUtil.getTerminalTheme();
+      } catch (e) {
+        if (kDebugMode) {
+          debugPrint('AppProvider._loadPreferences: Error loading terminal theme: $e');
+        }
+        _terminalDarkTheme = true;
+      }
+
+      try {
+        _logDisplayDarkTheme = await StorageUtil.getLogDisplayTheme();
+      } catch (e) {
+        if (kDebugMode) {
+          debugPrint('AppProvider._loadPreferences: Error loading log display theme: $e');
+        }
+        _logDisplayDarkTheme = true;
+      }
       
       try {
         _projectsPath = await StorageUtil.getProjectsPath();
@@ -181,6 +205,18 @@ class AppProvider extends ChangeNotifier {
   void setLocale(Locale locale) {
     _locale = locale;
     StorageUtil.setLocale(locale);
+    notifyListeners();
+  }
+
+  void setTerminalTheme(bool isDark) {
+    _terminalDarkTheme = isDark;
+    StorageUtil.setTerminalTheme(isDark);
+    notifyListeners();
+  }
+
+  void setLogDisplayTheme(bool isDark) {
+    _logDisplayDarkTheme = isDark;
+    StorageUtil.setLogDisplayTheme(isDark);
     notifyListeners();
   }
 
