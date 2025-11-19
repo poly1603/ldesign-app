@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:icons_plus/icons_plus.dart';
 import '../providers/app_provider.dart';
+import '../services/project_service_manager.dart';
 import 'custom_title_bar.dart';
 import 'collapsible_sidebar.dart';
 import 'top_bar.dart';
@@ -50,7 +51,9 @@ class _MainLayoutState extends State<MainLayout> {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
 
-    return Scaffold(
+    return ChangeNotifierProvider(
+      create: (context) => ProjectServiceManager(),
+      child: Scaffold(
       body: Column(
         children: [
           CustomTitleBar(
@@ -224,6 +227,7 @@ class _MainLayoutState extends State<MainLayout> {
             ),
           ),
         ],
+      ),
       ),
     );
   }
