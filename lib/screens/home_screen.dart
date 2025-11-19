@@ -6,6 +6,7 @@ import '../l10n/app_localizations.dart';
 import '../services/system_info_service.dart';
 import '../services/project_service_manager.dart';
 import '../providers/app_provider.dart';
+import '../widgets/skeleton_loader.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -99,9 +100,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final l10n = AppLocalizations.of(context)!;
 
     if (_isLoading) {
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
+      return const HomeScreenSkeleton();
     }
 
     return RefreshIndicator(

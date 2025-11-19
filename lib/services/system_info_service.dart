@@ -46,33 +46,42 @@ class SystemInfoService {
   DateTime? _lastUpdate;
 
   Future<SystemInfo> getSystemInfo({bool forceRefresh = false}) async {
+    // 检查缓存，延长缓存时间到15分钟
     if (!forceRefresh && 
         _cachedInfo != null && 
         _lastUpdate != null && 
-        DateTime.now().difference(_lastUpdate!).inMinutes < 5) {
+        DateTime.now().difference(_lastUpdate!).inMinutes < 15) {
       return _cachedInfo!;
     }
 
     try {
-      final results = await Future.wait([
+      // 分阶段加载：先加载关键信息，后加载次要信息
+      
+      // 第一阶段：快速加载基础信息
+      final coreResults = await Future.wait([
         _getNodeInfo(),
         _getGitInfo(),
-        _getInstalledEditors(),
-        _getInstalledBrowsers(),
-        _getSystemInfo(),
-        _getHardwareInfo(),
-        _getNetworkInfo(),
-        _getProjectStats(),
+        _getProjectStats(), // 项目统计最重要，优先加载
       ]);
 
-      final nodeInfo = results[0] as Map<String, dynamic>;
-      final gitInfo = results[1] as Map<String, dynamic>;
-      final editors = results[2] as List<String>;
-      final browsers = results[3] as List<String>;
-      final systemInfo = results[4] as Map<String, dynamic>;
-      final hardwareInfo = results[5] as Map<String, dynamic>;
-      final networkInfo = results[6] as String;
-      final projectStats = results[7] as Map<String, int>;
+      final nodeInfo = coreResults[0] as Map<String, dynamic>;
+      final gitInfo = coreResults[1] as Map<String, dynamic>;
+      final projectStats = coreResults[2] as Map<String, int>;
+
+      // 第二阶段：并行加载其他信息（有超时保护）
+      final secondaryResults = await Future.wait([
+        _getInstalledEditors().timeout(const Duration(seconds: 3), onTimeout: () => <String>[]),
+        _getInstalledBrowsers().timeout(const Duration(seconds: 3), onTimeout: () => <String>[]),
+        _getSystemInfo().timeout(const Duration(seconds: 2), onTimeout: () => <String, dynamic>{}),
+        _getHardwareInfo().timeout(const Duration(seconds: 2), onTimeout: () => <String, dynamic>{}),
+        _getNetworkInfo().timeout(const Duration(seconds: 1), onTimeout: () => '未知'),
+      ]);
+
+      final editors = secondaryResults[0] as List<String>;
+      final browsers = secondaryResults[1] as List<String>;
+      final systemInfo = secondaryResults[2] as Map<String, dynamic>;
+      final hardwareInfo = secondaryResults[3] as Map<String, dynamic>;
+      final networkInfo = secondaryResults[4] as String;
 
       _cachedInfo = SystemInfo(
         nodeVersion: nodeInfo['version'] ?? '未安装',
@@ -213,29 +222,11 @@ class SystemInfoService {
     }
     
     if (Platform.isWindows) {
-      final editorPaths = {
+      // 优化策略：只检查最常见的编辑器路径，快速返回
+      final commonEditorPaths = {
         'Visual Studio Code': [
           r'C:\Users\%USERNAME%\AppData\Local\Programs\Microsoft VS Code\Code.exe',
           r'C:\Program Files\Microsoft VS Code\Code.exe',
-          r'C:\Program Files (x86)\Microsoft VS Code\Code.exe',
-        ],
-        'Visual Studio': [
-          r'C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\devenv.exe',
-          r'C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\devenv.exe',
-          r'C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\devenv.exe',
-        ],
-        'IntelliJ IDEA': [
-          r'C:\Program Files\JetBrains\IntelliJ IDEA*\bin\idea64.exe',
-        ],
-        'WebStorm': [
-          r'C:\Program Files\JetBrains\WebStorm*\bin\webstorm64.exe',
-        ],
-        'Sublime Text': [
-          r'C:\Program Files\Sublime Text\sublime_text.exe',
-          r'C:\Program Files\Sublime Text 3\sublime_text.exe',
-        ],
-        'Atom': [
-          r'C:\Users\%USERNAME%\AppData\Local\atom\atom.exe',
         ],
         'Notepad++': [
           r'C:\Program Files\Notepad++\notepad++.exe',
@@ -243,19 +234,52 @@ class SystemInfoService {
         ],
       };
 
-      for (final entry in editorPaths.entries) {
+      // 快速路径检查
+      for (final entry in commonEditorPaths.entries) {
         for (final path in entry.value) {
           final expandedPath = path.replaceAll('%USERNAME%', Platform.environment['USERNAME'] ?? '');
-          if (kDebugMode) {
-            print('SystemInfoService: 检查编辑器路径: $expandedPath');
-          }
-          if (await _fileExists(expandedPath) || await _globExists(expandedPath)) {
+          if (await _fileExists(expandedPath)) {
             editors.add(entry.key);
             if (kDebugMode) {
-              print('SystemInfoService: 找到编辑器: ${entry.key}');
+              print('SystemInfoService: 通过路径找到编辑器: ${entry.key}');
             }
             break;
           }
+        }
+      }
+    } else if (Platform.isMacOS) {
+      // macOS 检测逻辑
+      try {
+        final result = await Process.run('ls', ['/Applications']);
+        if (result.exitCode == 0) {
+          final output = result.stdout.toString();
+          final macEditors = {
+            'Visual Studio Code': 'Visual Studio Code.app',
+            'Xcode': 'Xcode.app',
+          };
+          
+          for (final entry in macEditors.entries) {
+            if (output.contains(entry.value)) {
+              editors.add(entry.key);
+            }
+          }
+        }
+      } catch (e) {
+        if (kDebugMode) {
+          print('SystemInfoService: macOS编辑器检测失败: $e');
+        }
+      }
+    } else if (Platform.isLinux) {
+      // Linux 检测逻辑
+      final linuxEditors = ['code', 'subl', 'atom', 'vim', 'emacs', 'gedit', 'nano'];
+      for (final editor in linuxEditors) {
+        try {
+          final result = await Process.run('which', [editor]);
+          if (result.exitCode == 0) {
+            editors.add(editor);
+          }
+        } catch (e) {
+          // 忽略错误，继续检测下一个
         }
       }
     }
@@ -274,6 +298,7 @@ class SystemInfoService {
     }
     
     if (Platform.isWindows) {
+      // 优化：直接检查常见浏览器路径，避免复杂的注册表查询
       final browserPaths = {
         'Google Chrome': [
           r'C:\Program Files\Google\Chrome\Application\chrome.exe',
@@ -283,33 +308,39 @@ class SystemInfoService {
           r'C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe',
           r'C:\Program Files\Microsoft\Edge\Application\msedge.exe',
         ],
-        'Mozilla Firefox': [
-          r'C:\Program Files\Mozilla Firefox\firefox.exe',
-          r'C:\Program Files (x86)\Mozilla Firefox\firefox.exe',
-        ],
-        'Opera': [
-          r'C:\Program Files\Opera\opera.exe',
-          r'C:\Users\%USERNAME%\AppData\Local\Programs\Opera\opera.exe',
-        ],
-        'Brave': [
-          r'C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe',
-          r'C:\Program Files (x86)\BraveSoftware\Brave-Browser\Application\brave.exe',
-        ],
       };
 
       for (final entry in browserPaths.entries) {
         for (final path in entry.value) {
-          final expandedPath = path.replaceAll('%USERNAME%', Platform.environment['USERNAME'] ?? '');
-          if (kDebugMode) {
-            print('SystemInfoService: 检查浏览器路径: $expandedPath');
-          }
-          if (await _fileExists(expandedPath)) {
+          if (await _fileExists(path)) {
             browsers.add(entry.key);
             if (kDebugMode) {
-              print('SystemInfoService: 找到浏览器: ${entry.key}');
+              print('SystemInfoService: 通过路径找到浏览器: ${entry.key}');
             }
             break;
           }
+        }
+      }
+    } else if (Platform.isMacOS) {
+      // macOS 浏览器检测
+      try {
+        final result = await Process.run('ls', ['/Applications']);
+        if (result.exitCode == 0) {
+          final output = result.stdout.toString();
+          final macBrowsers = {
+            'Google Chrome': 'Google Chrome.app',
+            'Safari': 'Safari.app',
+          };
+          
+          for (final entry in macBrowsers.entries) {
+            if (output.contains(entry.value)) {
+              browsers.add(entry.key);
+            }
+          }
+        }
+      } catch (e) {
+        if (kDebugMode) {
+          print('SystemInfoService: macOS浏览器检测失败: $e');
         }
       }
     }

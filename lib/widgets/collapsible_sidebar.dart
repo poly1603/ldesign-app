@@ -37,7 +37,7 @@ class _CollapsibleSidebarState extends State<CollapsibleSidebar> {
   String? _hoveredItemId;
 
   /// 判断路由是否处于活动状态
-  /// 支持子路由匹配，例如 /project-detail 应该匹配 /projects
+  /// 支持子路由匹配，例如 /project-detail 和 /project/{id}/{action} 应该匹配 /projects
   bool _isRouteActive(String currentRoute, String? itemRoute) {
     if (itemRoute == null) return false;
     
@@ -46,7 +46,9 @@ class _CollapsibleSidebarState extends State<CollapsibleSidebar> {
     
     // 项目相关路由的特殊处理
     if (itemRoute == '/projects') {
-      return currentRoute == '/projects' || currentRoute == '/project-detail';
+      return currentRoute == '/projects' || 
+             currentRoute == '/project-detail' ||
+             currentRoute.startsWith('/project/');  // 匹配所有项目操作路由
     }
     
     return false;
