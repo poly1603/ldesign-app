@@ -6,7 +6,6 @@ import '../services/project_service_manager.dart';
 import 'custom_title_bar.dart';
 import 'collapsible_sidebar.dart';
 import 'top_bar.dart';
-import 'breadcrumb.dart';
 import 'page_transition.dart';
 import '../l10n/app_localizations.dart';
 
@@ -129,9 +128,6 @@ class _MainLayoutState extends State<MainLayout> {
                   child: Column(
                     children: [
                       const TopBar(),
-                      Breadcrumb(
-                        onNavigate: _handleNavigation,
-                      ),
                       Expanded(
                         child: Container(
                           color: theme.colorScheme.surfaceContainerLowest,
