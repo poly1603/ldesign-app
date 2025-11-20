@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:provider/provider.dart';
 
@@ -32,24 +32,24 @@ class _HomeScreenState extends State<HomeScreen> {
       final serviceManager = context.read<ProjectServiceManager>();
       final systemInfoService = SystemInfoService.instance;
       
-      print('HomeScreen: 寮€濮嬭幏鍙栫郴缁熶俊鎭?..');
+      print('HomeScreen: 开始获取系统信�?..');
       final systemInfo = await systemInfoService.getSystemInfo();
-      print('HomeScreen: 绯荤粺淇℃伅鑾峰彇瀹屾垚');
-      print('HomeScreen: Node鐗堟湰: ${systemInfo.nodeVersion}');
-      print('HomeScreen: Git鐗堟湰: ${systemInfo.gitVersion}');
-      print('HomeScreen: 缂栬緫鍣ㄦ暟閲? ${systemInfo.installedEditors.length}');
-      print('HomeScreen: 娴忚鍣ㄦ暟閲? ${systemInfo.installedBrowsers.length}');
+      print('HomeScreen: 系统信息获取完成');
+      print('HomeScreen: Node版本: ${systemInfo.nodeVersion}');
+      print('HomeScreen: Git版本: ${systemInfo.gitVersion}');
+      print('HomeScreen: 编辑器数�? ${systemInfo.installedEditors.length}');
+      print('HomeScreen: 浏览器数�? ${systemInfo.installedBrowsers.length}');
       
-      // 鑾峰彇椤圭洰缁熻淇℃伅
+      // 获取项目统计信息
       final projects = appProvider.allProjects;
-      print('HomeScreen: 椤圭洰鎬绘暟: ${projects.length}');
+      print('HomeScreen: 项目总数: ${projects.length}');
       final runningProjects = projects.where((project) {
         final startInfo = serviceManager.getServiceInfo(project.id, 'start');
         final previewInfo = serviceManager.getServiceInfo(project.id, 'preview');
         return startInfo?.status == ServiceStatus.running || 
                previewInfo?.status == ServiceStatus.running;
       }).length;
-      print('HomeScreen: 杩愯涓」鐩? $runningProjects');
+      print('HomeScreen: 运行中项�? $runningProjects');
 
       setState(() {
         _systemInfo = SystemInfo(
@@ -71,7 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
         _isLoading = false;
       });
     } catch (e) {
-      print('HomeScreen: 获取系统信息失败: $e');
+      print('HomeScreen: ��ȡϵͳ��Ϣʧ��: $e');
       final l10n = AppLocalizations.of(context)!;
       setState(() {
         _systemInfo = SystemInfo(
@@ -182,7 +182,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   l10n.realtimeMonitoring,
                   style: TextStyle(
                     fontSize: 16,
-                    fontWeight: FontWeight.w400,
+                    fontWeight: FontWeight.w500,
                     color: Colors.white.withValues(alpha: 0.9),
                     letterSpacing: -0.2,
                   ),
@@ -206,7 +206,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           const SizedBox(width: 6),
                           Text(
-                            _systemInfo?.osVersion ?? '鏈煡绯荤粺',
+                            _systemInfo?.osVersion ?? '未知系统',
                             style: TextStyle(
                               fontSize: 12,
                               color: Colors.white,
@@ -631,7 +631,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     const SizedBox(width: 4),
                     Text(
-status == 'installed' ? '已安装' : '未安装',
+status == 'installed' ? '�Ѱ�װ' : 'δ��װ',
                       style: TextStyle(
                         fontSize: 10,
                         fontWeight: FontWeight.w500,
@@ -657,7 +657,7 @@ status == 'installed' ? '已安装' : '未安装',
             subtitle,
             style: TextStyle(
               fontSize: 13,
-              fontWeight: FontWeight.w400,
+              fontWeight: FontWeight.w500,
               color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
             ),
             maxLines: 2,
@@ -707,7 +707,7 @@ status == 'installed' ? '已安装' : '未安装',
                 value,
                 style: TextStyle(
                   fontSize: 13,
-                  fontWeight: FontWeight.w400,
+                  fontWeight: FontWeight.w500,
                   color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
                 ),
                 maxLines: 2,
@@ -825,7 +825,7 @@ status == 'installed' ? '已安装' : '未安装',
                         item,
                         style: TextStyle(
                           fontSize: 13,
-                          fontWeight: FontWeight.w400,
+                          fontWeight: FontWeight.w500,
                           color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
                         ),
                       ),

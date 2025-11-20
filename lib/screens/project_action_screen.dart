@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:icons_plus/icons_plus.dart';
@@ -53,7 +53,7 @@ class _ProjectActionScreenState extends State<ProjectActionScreen> with TickerPr
     final l10n = AppLocalizations.of(context)!;
     final appProvider = context.watch<AppProvider>();
     
-    // 鏌ユ壘椤圭洰
+    // 查找项目
     final project = appProvider.allProjects.firstWhere(
       (p) => p.id == widget.projectId,
       orElse: () => throw Exception('Project not found'),
@@ -74,14 +74,14 @@ class _ProjectActionScreenState extends State<ProjectActionScreen> with TickerPr
                 color: Colors.white,
                 child: Row(
                   children: [
-                    // 杩斿洖鎸夐挳
+                    // 返回按钮
                     IconButton(
                       icon: const Icon(Bootstrap.arrow_left, size: 20),
                       onPressed: () => appProvider.setCurrentRoute('/project-detail', params: {'projectId': widget.projectId}),
                       tooltip: l10n.back,
                     ),
                     const SizedBox(width: 12),
-                    // 椤圭洰淇℃伅
+                    // 项目信息
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -106,17 +106,17 @@ class _ProjectActionScreenState extends State<ProjectActionScreen> with TickerPr
                       ),
                     ),
                     const SizedBox(width: 8),
-                    // 鎺у埗鍖哄煙锛堢Щ鍒板彸渚э級
+                    // 控制区域（移到右侧）
                     Flexible(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          // 鐜閫夋嫨
+                          // 环境选择
                           _buildEnvironmentSelector(theme),
                           const SizedBox(width: 8),
-                          // 鎿嶄綔鎸夐挳
+                          // 操作按钮
                           _buildActionButton(context, theme, serviceInfo, actionInfo, project, serviceManager),
-                          // 鏈嶅姟鍦板潃鎸夐挳锛堝彧鏈夎繍琛屼腑鎵嶆樉绀猴級
+                          // 服务地址按钮（只有运行中才显示）
                           if (serviceInfo?.status == ServiceStatus.running && serviceInfo?.url != null) ...[
                             const SizedBox(width: 8),
                             _buildServiceUrlButton(context, theme, serviceInfo!.url!),
@@ -127,7 +127,7 @@ class _ProjectActionScreenState extends State<ProjectActionScreen> with TickerPr
                   ],
                 ),
               ),
-              // 鍛戒护琛岀獥鍙ｅ尯鍩?
+              // 命令行窗口区�?
               Expanded(
                 child: Consumer<AppProvider>(
                   builder: (context, appProvider, child) {
@@ -153,7 +153,7 @@ class _ProjectActionScreenState extends State<ProjectActionScreen> with TickerPr
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // 绐楀彛鏍囬鏍忥紙妯℃嫙鐪熷疄绯荤粺锛?
+                      // 窗口标题栏（模拟真实系统�?
                       Container(
                         height: 32,
                         decoration: BoxDecoration(
@@ -166,27 +166,27 @@ class _ProjectActionScreenState extends State<ProjectActionScreen> with TickerPr
                         child: Row(
                           children: [
                             const SizedBox(width: 12),
-                            // 绐楀彛鍥炬爣
+                            // 窗口图标
                             Icon(
                               Bootstrap.terminal,
                               size: 14,
                               color: isTerminalDarkTheme ? Colors.grey.shade300 : Colors.grey.shade700,
                             ),
                             const SizedBox(width: 8),
-                            // 绐楀彛鏍囬
+                            // 窗口标题
                             Text(
                               isTerminalDarkTheme ? 'Windows PowerShell' : 'Command Prompt',
                               style: TextStyle(
                                 fontSize: 12,
                                 color: isTerminalDarkTheme ? Colors.grey.shade300 : Colors.grey.shade700,
-                                fontWeight: FontWeight.w400,
+                                fontWeight: FontWeight.w500,
                               ),
                             ),
                             const Spacer(),
-                            // 鏃ュ織鎿嶄綔鎸夐挳
+                            // 日志操作按钮
                             Row(
                               children: [
-                                // 娓呯┖鏃ュ織鎸夐挳
+                                // 清空日志按钮
                                 Material(
                                   color: Colors.transparent,
                                   child: InkWell(
@@ -203,7 +203,7 @@ class _ProjectActionScreenState extends State<ProjectActionScreen> with TickerPr
                                   ),
                                 ),
                                 const SizedBox(width: 4),
-                                // 瀵煎嚭鏃ュ織鎸夐挳
+                                // 导出日志按钮
                                 Material(
                                   color: Colors.transparent,
                                   child: InkWell(
@@ -222,7 +222,7 @@ class _ProjectActionScreenState extends State<ProjectActionScreen> with TickerPr
                                 const SizedBox(width: 8),
                               ],
                             ),
-                            // 绐楀彛鎺у埗鎸夐挳
+                            // 窗口控制按钮
                             Row(
                               children: [
                                 _buildWindowButton(Icons.minimize, Colors.grey.shade400),
@@ -234,7 +234,7 @@ class _ProjectActionScreenState extends State<ProjectActionScreen> with TickerPr
                           ],
                         ),
                       ),
-                      // 鍛戒护琛屽唴瀹瑰尯鍩?
+                      // 命令行内容区�?
                       Expanded(
                         child: _buildTerminalArea(serviceInfo?.logs ?? [], project.path),
                       ),
@@ -251,7 +251,7 @@ class _ProjectActionScreenState extends State<ProjectActionScreen> with TickerPr
     );
   }
 
-  // 鑾峰彇鎿嶄綔淇℃伅
+  // 获取操作信息
   _ActionInfo _getActionInfo(String action, AppLocalizations l10n) {
     switch (action) {
       case 'start':
@@ -267,11 +267,11 @@ class _ProjectActionScreenState extends State<ProjectActionScreen> with TickerPr
       case 'test':
         return _ActionInfo(l10n.testProject, Bootstrap.check_circle, Colors.green);
       default:
-        return _ActionInfo('未知操作', Bootstrap.question_circle, Colors.grey);
+        return _ActionInfo('δ֪����', Bootstrap.question_circle, Colors.grey);
     }
   }
 
-  // 鏋勫缓鐜閫夋嫨鍣?
+  // 构建环境选择�?
   Widget _buildEnvironmentSelector(ThemeData theme) {
     return IntrinsicWidth(
       child: Container(
@@ -309,7 +309,7 @@ class _ProjectActionScreenState extends State<ProjectActionScreen> with TickerPr
     );
   }
 
-  // 获取环境标签
+  // ��ȡ������ǩ
   String _getEnvironmentLabel(Environment env) {
     final l10n = AppLocalizations.of(context)!;
     switch (env) {
@@ -322,7 +322,7 @@ class _ProjectActionScreenState extends State<ProjectActionScreen> with TickerPr
     }
   }
 
-  // 鏋勫缓鎿嶄綔鎸夐挳
+  // 构建操作按钮
   Widget _buildActionButton(
     BuildContext context,
     ThemeData theme,
@@ -337,10 +337,10 @@ class _ProjectActionScreenState extends State<ProjectActionScreen> with TickerPr
     final isStopping = serviceInfo?.status == ServiceStatus.stopping;
     final hasError = serviceInfo?.status == ServiceStatus.error;
 
-    // 对于构建操作，不需要停止按钮
+    // ���ڹ�������������Ҫֹͣ��ť
     if (widget.action == 'build') {
       return SizedBox(
-        height: 36, // 减小高度
+        height: 36, // ��С�߶�
         child: ElevatedButton.icon(
           onPressed: isStarting ? null : () => _startAction(serviceManager, project),
           icon: isStarting
@@ -362,7 +362,7 @@ class _ProjectActionScreenState extends State<ProjectActionScreen> with TickerPr
       );
     }
 
-    // 瀵逛簬鍚姩鍜岄瑙堟搷浣滐紝鏀寔鍚姩/鍋滄鍒囨崲
+    // 对于启动和预览操作，支持启动/停止切换
     return SizedBox(
       height: 36,
       child: ElevatedButton.icon(
@@ -395,7 +395,7 @@ class _ProjectActionScreenState extends State<ProjectActionScreen> with TickerPr
     );
   }
 
-  // 获取按钮标签
+  // ��ȡ��ť��ǩ
   String _getButtonLabel(bool isRunning, bool isStarting, bool isStopping, bool hasError) {
     final l10n = AppLocalizations.of(context)!;
     if (hasError) return l10n.retry;
@@ -423,7 +423,7 @@ class _ProjectActionScreenState extends State<ProjectActionScreen> with TickerPr
   }
 
 
-  // 鏋勫缓鏈嶅姟鍦板潃鎸夐挳
+  // 构建服务地址按钮
   Widget _buildServiceUrlButton(BuildContext context, ThemeData theme, String url) {
     return Container(
       height: 36,
@@ -483,7 +483,7 @@ class _ProjectActionScreenState extends State<ProjectActionScreen> with TickerPr
     );
   }
 
-  // 鏄剧ず鏈嶅姟鍦板潃瀵硅瘽妗?
+  // 显示服务地址对话�?
   void _showServiceUrlDialog(BuildContext context, String url) {
     showDialog(
       context: context,
@@ -497,7 +497,7 @@ class _ProjectActionScreenState extends State<ProjectActionScreen> with TickerPr
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // 鏍囬
+              // 标题
               Row(
                 children: [
                   Container(
@@ -516,7 +516,7 @@ class _ProjectActionScreenState extends State<ProjectActionScreen> with TickerPr
                   ),
                   const SizedBox(width: 12),
                   const Text(
-                    '服务地址',
+                    '�����ַ',
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w600,
@@ -530,8 +530,8 @@ class _ProjectActionScreenState extends State<ProjectActionScreen> with TickerPr
                 ],
               ),
               const SizedBox(height: 20),
-              // 鍦板潃鍒楄〃
-              _buildUrlCard('鏈湴璁块棶', url, Bootstrap.laptop, Colors.blue),
+              // 地址列表
+              _buildUrlCard('本地访问', url, Bootstrap.laptop, Colors.blue),
               const SizedBox(height: 12),
               FutureBuilder<String>(
                 future: _getNetworkUrl(url),
@@ -539,9 +539,9 @@ class _ProjectActionScreenState extends State<ProjectActionScreen> with TickerPr
                   final networkUrl = snapshot.data ?? url;
                   return Column(
                     children: [
-                      _buildUrlCard('灞€鍩熺綉璁块棶', networkUrl, Bootstrap.wifi, Colors.orange),
+                      _buildUrlCard('局域网访问', networkUrl, Bootstrap.wifi, Colors.orange),
                       const SizedBox(height: 20),
-                      // 浜岀淮鐮?
+                      // 二维�?
                       Container(
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
@@ -573,7 +573,7 @@ class _ProjectActionScreenState extends State<ProjectActionScreen> with TickerPr
                             ),
                             const SizedBox(height: 12),
                             Text(
-                              '鎵爜璁块棶',
+                              '扫码访问',
                               style: TextStyle(
                                 fontSize: 14,
                                 color: Colors.grey.shade600,
@@ -594,7 +594,7 @@ class _ProjectActionScreenState extends State<ProjectActionScreen> with TickerPr
     );
   }
 
-  // 鏋勫缓鏈嶅姟鍦板潃寮圭獥鍐呭锛堝凡寮冪敤锛屼繚鐣欎互闃茬紪璇戦敊璇級
+  // 构建服务地址弹窗内容（已弃用，保留以防编译错误）
   Widget _buildServiceUrlPopup(String url) {
     return Container(
       width: 300,
@@ -604,7 +604,7 @@ class _ProjectActionScreenState extends State<ProjectActionScreen> with TickerPr
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            '服务地址',
+            '�����ַ',
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w600,
@@ -612,19 +612,19 @@ class _ProjectActionScreenState extends State<ProjectActionScreen> with TickerPr
             ),
           ),
           const SizedBox(height: 12),
-          // 鏈湴鍦板潃
-          _buildUrlItem('鏈湴璁块棶', url, Bootstrap.laptop),
+          // 本地地址
+          _buildUrlItem('本地访问', url, Bootstrap.laptop),
           const SizedBox(height: 8),
-          // 灞€鍩熺綉鍦板潃
+          // 局域网地址
           FutureBuilder<String>(
             future: _getNetworkUrl(url),
             builder: (context, snapshot) {
               final networkUrl = snapshot.data ?? url;
               return Column(
                 children: [
-                  _buildUrlItem('灞€鍩熺綉璁块棶', networkUrl, Bootstrap.wifi),
+                  _buildUrlItem('局域网访问', networkUrl, Bootstrap.wifi),
                   const SizedBox(height: 12),
-                  // 浜岀淮鐮?
+                  // 二维�?
                   Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
@@ -642,7 +642,7 @@ class _ProjectActionScreenState extends State<ProjectActionScreen> with TickerPr
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          '鎵爜璁块棶',
+                          '扫码访问',
                           style: TextStyle(
                             fontSize: 12,
                             color: Colors.grey.shade600,
@@ -660,7 +660,7 @@ class _ProjectActionScreenState extends State<ProjectActionScreen> with TickerPr
     );
   }
 
-  // 鏋勫缓URL鍗＄墖
+  // 构建URL卡片
   Widget _buildUrlCard(String label, String url, IconData icon, Color color) {
     return Container(
       padding: const EdgeInsets.all(16),
@@ -752,7 +752,7 @@ class _ProjectActionScreenState extends State<ProjectActionScreen> with TickerPr
     );
   }
 
-  // 鏋勫缓URL椤圭洰锛堟棫鐗堟湰锛屼繚鐣欎互闃茬紪璇戦敊璇級
+  // 构建URL项目（旧版本，保留以防编译错误）
   Widget _buildUrlItem(String label, String url, IconData icon) {
     return Container(
       padding: const EdgeInsets.all(8),
@@ -819,7 +819,7 @@ class _ProjectActionScreenState extends State<ProjectActionScreen> with TickerPr
     );
   }
 
-  // 鑾峰彇缃戠粶鍦板潃
+  // 获取网络地址
   Future<String> _getNetworkUrl(String localUrl) async {
     try {
       final interfaces = await NetworkInterface.list();
@@ -832,23 +832,23 @@ class _ProjectActionScreenState extends State<ProjectActionScreen> with TickerPr
         }
       }
     } catch (e) {
-      // 濡傛灉鑾峰彇澶辫触锛岃繑鍥炲師鍦板潃
+      // 如果获取失败，返回原地址
     }
     return localUrl;
   }
 
-  // 澶嶅埗URL
+  // 复制URL
   void _copyUrl(String url) {
     Clipboard.setData(ClipboardData(text: url));
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('宸插鍒跺埌鍓创鏉? $url'),
+        content: Text('已复制到剪贴�? $url'),
         duration: const Duration(seconds: 2),
       ),
     );
   }
 
-  // 鎵撳紑URL
+  // 打开URL
   void _openUrl(String url) async {
     final uri = Uri.parse(url);
     if (await canLaunchUrl(uri)) {
@@ -856,7 +856,7 @@ class _ProjectActionScreenState extends State<ProjectActionScreen> with TickerPr
     }
   }
 
-  // 鏋勫缓绐楀彛鎺у埗鎸夐挳
+  // 构建窗口控制按钮
   Widget _buildWindowButton(IconData icon, Color color) {
     return Container(
       width: 24,
@@ -877,12 +877,12 @@ class _ProjectActionScreenState extends State<ProjectActionScreen> with TickerPr
     );
   }
 
-  // 鏋勫缓缁堢鍖哄煙
+  // 构建终端区域
   Widget _buildTerminalArea(List<String> logs, String projectPath) {
     final appProvider = context.watch<AppProvider>();
     final isTerminalDarkTheme = appProvider.terminalDarkTheme;
     final isLogDisplayDarkTheme = appProvider.logDisplayDarkTheme;
-    // 褰撴棩蹇楁洿鏂版椂鑷姩婊氬姩鍒板簳閮?
+    // 当日志更新时自动滚动到底�?
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (_logScrollController.hasClients && logs.isNotEmpty) {
         _logScrollController.animateTo(
@@ -893,7 +893,7 @@ class _ProjectActionScreenState extends State<ProjectActionScreen> with TickerPr
       }
     });
 
-    // 瀹氫箟涓婚棰滆壊 - 浣跨敤鏃ュ織灞曠ず涓婚璁剧疆
+    // 定义主题颜色 - 使用日志展示主题设置
     final backgroundColor = isLogDisplayDarkTheme ? const Color(0xFF0C0C0C) : const Color(0xFFF5F5F5);
     final textColor = isLogDisplayDarkTheme ? Colors.white : const Color(0xFF333333);
     final promptColor = isLogDisplayDarkTheme ? Colors.yellow.shade300 : Colors.blue.shade700;
@@ -905,7 +905,7 @@ class _ProjectActionScreenState extends State<ProjectActionScreen> with TickerPr
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 鏄剧ず褰撳墠璺緞锛堟ā鎷熺湡瀹炲懡浠よ锛?
+          // 显示当前路径（模拟真实命令行�?
           if (logs.isEmpty) ...[
             Text(
               isLogDisplayDarkTheme ? 'Windows PowerShell' : 'Command Prompt',
@@ -962,7 +962,7 @@ class _ProjectActionScreenState extends State<ProjectActionScreen> with TickerPr
               ),
             ),
           ],
-          // 鏃ュ織鍐呭
+          // 日志内容
           Expanded(
             child: SingleChildScrollView(
               controller: _logScrollController,
@@ -970,7 +970,7 @@ class _ProjectActionScreenState extends State<ProjectActionScreen> with TickerPr
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   if (logs.isNotEmpty) ...[
-                    // 鏄剧ず鍛戒护鎻愮ず绗﹀拰璺緞
+                    // 显示命令提示符和路径
                     RichText(
                       text: TextSpan(
                         children: [
@@ -1006,7 +1006,7 @@ class _ProjectActionScreenState extends State<ProjectActionScreen> with TickerPr
                         ],
                       ),
                     ),
-                    // 鏄剧ず鏃ュ織
+                    // 显示日志
                     SelectableText(
                       logs.join('\n'),
                       style: TextStyle(
@@ -1017,7 +1017,7 @@ class _ProjectActionScreenState extends State<ProjectActionScreen> with TickerPr
                       ),
                     ),
                   ],
-                  // 鍏夋爣锛堟ā鎷熺湡瀹炲懡浠よ锛?
+                  // 光标（模拟真实命令行�?
                   AnimatedBuilder(
                     animation: _cursorAnimationController,
                     builder: (context, child) {
@@ -1040,7 +1040,7 @@ class _ProjectActionScreenState extends State<ProjectActionScreen> with TickerPr
     );
   }
 
-  // 鍚姩鎿嶄綔
+  // 启动操作
   void _startAction(ProjectServiceManager serviceManager, Project project) {
     serviceManager.startService(
       widget.projectId,
@@ -1049,7 +1049,7 @@ class _ProjectActionScreenState extends State<ProjectActionScreen> with TickerPr
       _selectedEnvironment,
       (log) {
         serviceManager.addLog(widget.projectId, widget.action, log);
-        // 鑷姩婊氬姩鍒板簳閮?
+        // 自动滚动到底�?
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (_logScrollController.hasClients) {
             _logScrollController.animateTo(
@@ -1063,22 +1063,22 @@ class _ProjectActionScreenState extends State<ProjectActionScreen> with TickerPr
     );
   }
 
-  // 鍋滄鎿嶄綔
+  // 停止操作
   void _stopAction(ProjectServiceManager serviceManager) {
     serviceManager.stopService(widget.projectId, widget.action);
   }
 
-  // 娓呯┖鏃ュ織
+  // 清空日志
   void _clearLogs(ProjectServiceManager serviceManager) {
     serviceManager.addLog(widget.projectId, widget.action, '');
   }
 
-  // 瀵煎嚭鏃ュ織
+  // 导出日志
   void _exportLogs(List<String> logs) async {
     if (logs.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('当前没有可导出的日志'),
+          content: Text('��ǰû�пɵ�������־'),
           duration: Duration(seconds: 2),
         ),
       );
@@ -1086,22 +1086,22 @@ class _ProjectActionScreenState extends State<ProjectActionScreen> with TickerPr
     }
 
     try {
-      // 鐢熸垚鏃ュ織鍐呭
+      // 生成日志内容
       final timestamp = DateTime.now().toIso8601String().replaceAll(':', '-');
       final projectName = widget.projectId.split('/').last;
       final fileName = '${projectName}_${widget.action}_$timestamp.log';
       
       final logContent = [
-        '# ${projectName} - ${widget.action} 日志',
-        '# 导出时间: ${DateTime.now()}',
+        '# ${projectName} - ${widget.action} ��־',
+        '# ����ʱ��: ${DateTime.now()}',
         '# ==========================================',
         '',
         ...logs,
       ].join('\n');
 
-      // 使用文件选择器保存日志文件
+      // ʹ���ļ�ѡ����������־�ļ�
       final result = await FilePicker.platform.saveFile(
-        dialogTitle: '导出日志文件',
+        dialogTitle: '������־�ļ�',
         fileName: fileName,
         type: FileType.custom,
         allowedExtensions: ['log', 'txt'],
@@ -1114,7 +1114,7 @@ class _ProjectActionScreenState extends State<ProjectActionScreen> with TickerPr
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('日志已导出到: ${result}'),
+              content: Text('��־�ѵ�����: ${result}'),
               duration: const Duration(seconds: 3),
             ),
           );
@@ -1124,7 +1124,7 @@ class _ProjectActionScreenState extends State<ProjectActionScreen> with TickerPr
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('导出失败: $e'),
+            content: Text('����ʧ��: $e'),
             duration: const Duration(seconds: 3),
           ),
         );
@@ -1134,7 +1134,7 @@ class _ProjectActionScreenState extends State<ProjectActionScreen> with TickerPr
 
 }
 
-// 鎿嶄綔淇℃伅鏁版嵁绫?
+// 操作信息数据�?
 class _ActionInfo {
   final String label;
   final IconData icon;

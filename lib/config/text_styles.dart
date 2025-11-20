@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-/// 统一的文本样式配置
+/// 统一的文本样式配�?
 /// 
-/// 使用规范：
-/// - 常规文本使用 FontWeight.w400 (normal)
+/// 使用规范�?
+/// - 常规文本使用 FontWeight.w500 (normal)
 /// - 标题使用 FontWeight.w600 (semibold)
 /// - 数字使用 UniveconBold 字体
 class AppTextStyles {
@@ -13,12 +13,12 @@ class AppTextStyles {
   static const String numberFontFamily = 'UniveconBold';
 
   // 标准字重
-  static const FontWeight normalWeight = FontWeight.w400;
+  static const FontWeight normalWeight = FontWeight.w500;
   static const FontWeight mediumWeight = FontWeight.w500;
   static const FontWeight semiboldWeight = FontWeight.w600;
 
   /// 为包含数字的文本创建样式
-  /// 如果文本包含数字，使用 UniveconBold 字体
+  /// 如果文本包含数字，使�?UniveconBold 字体
   static TextStyle withNumberFont(TextStyle base) {
     return base.copyWith(
       fontFamily: numberFontFamily,
@@ -41,7 +41,7 @@ class AppTextStyles {
     );
   }
 
-  /// 标题样式（用于卡片标题、区块标题等）
+  /// 标题样式（用于卡片标题、区块标题等�?
   static TextStyle titleStyle(BuildContext context, {
     double? fontSize,
     Color? color,
@@ -95,7 +95,7 @@ class AppTextStyles {
   }
 }
 
-/// 为 Text Widget 添加便捷扩展
+/// �?Text Widget 添加便捷扩展
 extension TextStyleExtension on Text {
   /// 应用数字字体
   Text asNumber() {

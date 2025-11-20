@@ -146,12 +146,12 @@ class ThemeConfig {
     return TextTheme(
       displayLarge: TextStyle(
         fontSize: baseSize + 22,
-        fontWeight: FontWeight.w700,
+        fontWeight: FontWeight.w600,
         letterSpacing: -0.5,
       ),
       displayMedium: TextStyle(
         fontSize: baseSize + 18,
-        fontWeight: FontWeight.w700,
+        fontWeight: FontWeight.w600,
         letterSpacing: -0.5,
       ),
       displaySmall: TextStyle(
@@ -191,19 +191,19 @@ class ThemeConfig {
       ),
       bodyLarge: TextStyle(
         fontSize: baseSize,
-        fontWeight: FontWeight.w400,
+        fontWeight: FontWeight.w500,
         letterSpacing: 0.5,
         height: 1.5,
       ),
       bodyMedium: TextStyle(
         fontSize: baseSize - 1,
-        fontWeight: FontWeight.w400,
+        fontWeight: FontWeight.w500,
         letterSpacing: 0.25,
         height: 1.43,
       ),
       bodySmall: TextStyle(
         fontSize: baseSize - 2,
-        fontWeight: FontWeight.w400,
+        fontWeight: FontWeight.w500,
         letterSpacing: 0.4,
         height: 1.33,
       ),

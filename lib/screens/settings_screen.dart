@@ -1,4 +1,4 @@
-锘縤mport 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:icons_plus/icons_plus.dart';
 
 import 'package:provider/provider.dart';
@@ -354,7 +354,7 @@ class SettingsScreen extends StatelessWidget {
                   title,
                   style: TextStyle(
                     fontSize: 18,
-                    fontWeight: FontWeight.w600,
+                    fontWeight: FontWeight.w500,
                     color: theme.colorScheme.onSurface,
                     letterSpacing: -0.5,
                   ),
@@ -443,7 +443,7 @@ class SettingsScreen extends StatelessWidget {
     final messenger = ScaffoldMessenger.of(context);
     
     try {
-      // 鏄剧ず鍔犺浇鎻愮ず
+      // 显示加载提示
       messenger.showSnackBar(
         SnackBar(
           content: Row(
@@ -464,15 +464,15 @@ class SettingsScreen extends StatelessWidget {
         ),
       );
 
-      // 鎵ц娓呯悊
+      // 执行清理
       await StorageUtil.resetAllPreferences();
 
-      // 閲嶆柊鍔犺浇璁剧疆
+      // 重新加载设置
       if (context.mounted) {
         await context.read<AppProvider>().initialize();
       }
 
-      // 鏄剧ず鎴愬姛娑堟伅
+      // 显示成功消息
       messenger.clearSnackBars();
       messenger.showSnackBar(
         SnackBar(

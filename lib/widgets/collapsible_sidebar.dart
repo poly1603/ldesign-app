@@ -195,7 +195,7 @@ class _CollapsibleSidebarState extends State<CollapsibleSidebar> {
                             title,
                             style: TextStyle(
                               fontSize: 14,
-                              fontWeight: isActive ? FontWeight.w600 : FontWeight.w500,
+                              fontWeight: FontWeight.w500,
                               color: isActive
                                   ? Colors.white
                                   : theme.colorScheme.onSurface.withValues(alpha: 0.85),
