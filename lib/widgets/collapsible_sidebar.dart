@@ -217,6 +217,8 @@ class _CollapsibleSidebarState extends State<CollapsibleSidebar> {
         return l10n.home;
       case 'projects':
         return l10n.projects;
+      case 'nodeManager':
+        return l10n.nodeManager;
       case 'settings':
         return l10n.settings;
       default:

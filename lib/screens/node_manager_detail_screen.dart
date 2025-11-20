@@ -122,14 +122,14 @@ class _NodeManagerDetailScreenState extends State<NodeManagerDetailScreen> {
           Icon(Bootstrap.exclamation_circle, size: 64, color: Colors.grey.shade400),
           const SizedBox(height: 16),
           Text(
-            '${widget.manager.displayName} 未安装',
+            l10n.notInstalledMessage(widget.manager.displayName),
             style: theme.textTheme.titleLarge?.copyWith(
               color: Colors.grey.shade700,
             ),
           ),
           const SizedBox(height: 8),
           Text(
-            '请先安装此工具后再管理其版本。',
+            l10n.installFirstMessage,
             style: theme.textTheme.bodyMedium?.copyWith(
               color: Colors.grey.shade600,
             ),
@@ -138,7 +138,7 @@ class _NodeManagerDetailScreenState extends State<NodeManagerDetailScreen> {
           ElevatedButton.icon(
             onPressed: () => Navigator.of(context).pop(),
             icon: const Icon(Bootstrap.arrow_left),
-            label: const Text('返回'),
+            label: Text(l10n.back),
             style: ElevatedButton.styleFrom(
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
             ),
@@ -161,36 +161,36 @@ class _NodeManagerDetailScreenState extends State<NodeManagerDetailScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                Icon(Bootstrap.info_circle, size: 20, color: theme.colorScheme.primary),
-                const SizedBox(width: 8),
-                Text(
-                  '工具信息',
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
+              Row(
+                children: [
+                  Icon(Bootstrap.info_circle, size: 20, color: theme.colorScheme.primary),
+                  const SizedBox(width: 8),
+                  Text(
+                    l10n.toolInfo,
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            _buildInfoRow(theme, '名称', widget.manager.displayName),
-            _buildInfoRow(theme, '版本', widget.manager.version ?? '未知'),
-            _buildInfoRow(theme, '安装路径', widget.manager.installPath ?? '未知'),
-            _buildInfoRow(theme, '描述', widget.manager.description),
-            const SizedBox(height: 12),
-            Row(
-              children: [
-                Expanded(
-                  child: OutlinedButton.icon(
-                    onPressed: () async {
-                      final url = Uri.parse(widget.manager.website);
-                      if (await canLaunchUrl(url)) {
-                        await launchUrl(url);
-                      }
-                    },
-                    icon: const Icon(Bootstrap.globe, size: 16),
-                    label: const Text('访问官网'),
+                ],
+              ),
+              const SizedBox(height: 16),
+              _buildInfoRow(theme, l10n.name, widget.manager.displayName),
+              _buildInfoRow(theme, l10n.version, widget.manager.version ?? l10n.unknown),
+              _buildInfoRow(theme, l10n.installPath, widget.manager.installPath ?? l10n.unknown),
+              _buildInfoRow(theme, l10n.description, widget.manager.description),
+              const SizedBox(height: 12),
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      onPressed: () async {
+                        final url = Uri.parse(widget.manager.website);
+                        if (await canLaunchUrl(url)) {
+                          await launchUrl(url);
+                        }
+                      },
+                      icon: const Icon(Bootstrap.globe, size: 16),
+                      label: Text(l10n.visitWebsite),
                   ),
                 ),
               ],
@@ -363,9 +363,9 @@ class _NodeManagerDetailScreenState extends State<NodeManagerDetailScreen> {
                             color: theme.colorScheme.primary,
                             borderRadius: BorderRadius.circular(4),
                           ),
-                          child: const Text(
-                            '当前',
-                            style: TextStyle(
+                          child: Text(
+                            l10n.current,
+                            style: const TextStyle(
                               fontSize: 10,
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
@@ -495,55 +495,58 @@ class _NodeManagerDetailScreenState extends State<NodeManagerDetailScreen> {
   }
 
   Future<void> _switchVersion(String version, NodeVersionManagerService service) async {
+    final l10n = AppLocalizations.of(context)!;
     try {
       await service.switchNodeVersion(version);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('宸插垏鎹㈠埌 Node.js $version')),
+          SnackBar(content: Text(l10n.switchedToNode(version))),
         );
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('鍒囨崲澶辫触: $e'), backgroundColor: Colors.red),
+          SnackBar(content: Text('${l10n.switchToNodeFailed}: $e'), backgroundColor: Colors.red),
         );
       }
     }
   }
 
   Future<void> _installVersion(String version, NodeVersionManagerService service) async {
+    final l10n = AppLocalizations.of(context)!;
     try {
       await service.installNodeVersion(version);
       setState(() => _newVersionInput = '');
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Node.js $version 瀹夎鎴愬姛')),
+          SnackBar(content: Text(l10n.nodeInstalled(version))),
         );
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('瀹夎澶辫触: $e'), backgroundColor: Colors.red),
+          SnackBar(content: Text('${l10n.nodeInstallFailed}: $e'), backgroundColor: Colors.red),
         );
       }
     }
   }
 
   Future<void> _uninstallVersion(String version, NodeVersionManagerService service) async {
+    final l10n = AppLocalizations.of(context)!;
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('确认卸载'),
-        content: Text('纭畾瑕佸嵏杞?Node.js $version 鍚楋紵'),
+        title: Text(l10n.confirmUninstall),
+        content: Text(l10n.confirmUninstallNode(version)),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('鍙栨秷'),
+            child: Text(l10n.cancel),
           ),
           ElevatedButton(
             onPressed: () => Navigator.of(context).pop(true),
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-            child: const Text('卸载'),
+            child: Text(l10n.uninstall),
           ),
         ],
       ),
@@ -554,13 +557,13 @@ class _NodeManagerDetailScreenState extends State<NodeManagerDetailScreen> {
         await service.uninstallNodeVersion(version);
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Node.js $version 鍗歌浇鎴愬姛')),
+            SnackBar(content: Text(l10n.nodeUninstalled(version))),
           );
         }
       } catch (e) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('鍗歌浇澶辫触: $e'), backgroundColor: Colors.red),
+            SnackBar(content: Text('${l10n.nodeUninstallFailed}: $e'), backgroundColor: Colors.red),
           );
         }
       }

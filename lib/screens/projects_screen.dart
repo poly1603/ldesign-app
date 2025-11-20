@@ -1,4 +1,4 @@
-﻿import 'package:flutter/foundation.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:icons_plus/icons_plus.dart';
@@ -6,6 +6,7 @@ import '../l10n/app_localizations.dart';
 import '../providers/app_provider.dart';
 import '../models/project.dart';
 import '../widgets/import_project_dialog.dart';
+import '../utils/dialog_utils.dart';
 
 class ProjectsScreen extends StatelessWidget {
   const ProjectsScreen({super.key});
@@ -558,12 +559,9 @@ class ProjectsScreen extends StatelessWidget {
       // appProvider.setSortBy('name');
 
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(AppLocalizations.of(context)!.projectImportedSuccess(project.name)),
-            backgroundColor: Colors.green,
-            duration: const Duration(seconds: 2),
-          ),
+        DialogUtils.showSuccessSnackBar(
+          context: context,
+          message: AppLocalizations.of(context)!.projectImportedSuccess(project.name),
         );
       }
     }
@@ -574,34 +572,22 @@ class ProjectsScreen extends StatelessWidget {
     Project project,
     AppProvider appProvider,
   ) async {
-    final confirmed = await showDialog<bool>(
+    final l10n = AppLocalizations.of(context)!;
+    
+    final confirmed = await DialogUtils.showConfirmDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text(AppLocalizations.of(context)!.delete),
-        content: Text(AppLocalizations.of(context)!.confirmRemoveFromList(project.name)),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: Text(AppLocalizations.of(context)!.cancel),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: Text(
-              AppLocalizations.of(context)!.delete,
-              style: const TextStyle(color: Colors.red),
-            ),
-          ),
-        ],
-      ),
+      title: l10n.delete,
+      content: l10n.confirmRemoveFromList(project.name),
+      confirmText: l10n.delete,
+      isDangerous: true,
     );
 
-    if (confirmed == true) {
+    if (confirmed) {
       await appProvider.removeProject(project.id);
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(AppLocalizations.of(context)!.projectRemoved(project.name)),
-          ),
+        DialogUtils.showInfoSnackBar(
+          context: context,
+          message: l10n.projectRemoved(project.name),
         );
       }
     }

@@ -1,4 +1,4 @@
-﻿import 'dart:io';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:icons_plus/icons_plus.dart';
@@ -7,6 +7,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../services/node_version_manager_service.dart';
 import '../l10n/app_localizations.dart';
 import 'node_manager_detail_screen.dart';
+import '../utils/dialog_utils.dart';
 
 class NodeManagerScreen extends StatefulWidget {
   const NodeManagerScreen({super.key});
@@ -163,7 +164,7 @@ class _NodeManagerScreenState extends State<NodeManagerScreen> {
                 ),
                 const SizedBox(width: 12),
                 Text(
-                  '当前环境版本',
+                  l10n.currentEnvironmentVersion,
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
@@ -176,8 +177,9 @@ class _NodeManagerScreenState extends State<NodeManagerScreen> {
                 Expanded(
                   child: _buildVersionInfo(
                     theme,
+                    l10n,
                     'Node.js',
-                    _currentNodeVersion ?? '未安装',
+                    _currentNodeVersion ?? l10n.notInstalled,
                     _currentNodeVersion != null ? Colors.green : Colors.grey,
                     Bootstrap.terminal,
                   ),
@@ -186,8 +188,9 @@ class _NodeManagerScreenState extends State<NodeManagerScreen> {
                 Expanded(
                   child: _buildVersionInfo(
                     theme,
+                    l10n,
                     'npm',
-                    _currentNpmVersion ?? '未安装',
+                    _currentNpmVersion ?? l10n.notInstalled,
                     _currentNpmVersion != null ? Colors.blue : Colors.grey,
                     Bootstrap.box,
                   ),
@@ -202,7 +205,7 @@ class _NodeManagerScreenState extends State<NodeManagerScreen> {
     return card;
   }
 
-  Widget _buildVersionInfo(ThemeData theme, String name, String version, Color color, IconData icon) {
+  Widget _buildVersionInfo(ThemeData theme, AppLocalizations l10n, String name, String version, Color color, IconData icon) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -454,7 +457,7 @@ class _NodeManagerScreenState extends State<NodeManagerScreen> {
                             ),
                             const SizedBox(width: 4),
                             Text(
-                              isInstalled ? '已安装' : '未安装',
+                              isInstalled ? l10n.installed : l10n.notInstalled,
                               style: theme.textTheme.bodySmall?.copyWith(
                                 fontSize: 11,
                                 color: isInstalled ? Colors.green : Colors.grey.shade600,
@@ -469,9 +472,9 @@ class _NodeManagerScreenState extends State<NodeManagerScreen> {
                                   color: theme.colorScheme.primary,
                                   borderRadius: BorderRadius.circular(8),
                                 ),
-                                child: const Text(
-                                  '使用中',
-                                  style: TextStyle(
+                                child: Text(
+                                  l10n.active,
+                                  style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 9,
                                     fontWeight: FontWeight.w500,
@@ -487,7 +490,7 @@ class _NodeManagerScreenState extends State<NodeManagerScreen> {
                   
                   // 鍙充晶鎸夐挳
                   if (isInstalled) ...[
-                    // "閫夋嫨" 鎸夐挳 - 杩涘叆璇︽儏椤?
+                    // "选择" 按钮 - 进入详情页
                     SizedBox(
                       height: 28,
                       child: OutlinedButton(
@@ -501,11 +504,11 @@ class _NodeManagerScreenState extends State<NodeManagerScreen> {
                           ),
                           minimumSize: const Size(0, 28),
                         ),
-                        child: const Text('详情', style: TextStyle(fontSize: 11)),
+                        child: Text(l10n.details, style: const TextStyle(fontSize: 11)),
                       ),
                     ),
                     const SizedBox(width: 4),
-                    // "浣跨敤" / "褰撳墠" 鎸夐挳
+                    // "使用" / "当前" 按钮
                     if (!isActive)
                       SizedBox(
                         height: 28,
@@ -520,7 +523,7 @@ class _NodeManagerScreenState extends State<NodeManagerScreen> {
                             ),
                             minimumSize: const Size(0, 28),
                           ),
-                          child: const Text('浣跨敤', style: TextStyle(fontSize: 11)),
+                          child: Text(l10n.inUse, style: const TextStyle(fontSize: 11)),
                         ),
                       )
                     else
@@ -533,7 +536,7 @@ class _NodeManagerScreenState extends State<NodeManagerScreen> {
                         ),
                         alignment: Alignment.center,
                         child: Text(
-                          '当前',
+                          l10n.current,
                           style: TextStyle(
                             fontSize: 11,
                             color: theme.colorScheme.primary,
@@ -557,7 +560,7 @@ class _NodeManagerScreenState extends State<NodeManagerScreen> {
                       child: ElevatedButton.icon(
                         onPressed: () => _showInstallDialog(manager),
                         icon: const Icon(Bootstrap.download, size: 12),
-                        label: const Text('安装', style: TextStyle(fontSize: 11)),
+                        label: Text(l10n.install, style: const TextStyle(fontSize: 11)),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.green,
                           foregroundColor: Colors.white,
@@ -880,89 +883,91 @@ class _NodeManagerScreenState extends State<NodeManagerScreen> {
   }
 
   Future<void> _setActiveManager(NodeVersionManager manager, NodeVersionManagerService service) async {
+    final l10n = AppLocalizations.of(context)!;
     try {
       await service.setActiveManager(manager);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('宸插垏鎹㈠埌 ${manager.displayName}')),
+        DialogUtils.showSuccessSnackBar(
+          context: context,
+          message: l10n.switchedToManager(manager.displayName),
         );
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('鍒囨崲澶辫触: $e'), backgroundColor: Colors.red),
+        DialogUtils.showErrorSnackBar(
+          context: context,
+          message: '${l10n.switchFailed}: $e',
         );
       }
     }
   }
 
   Future<void> _switchVersion(String version, NodeVersionManagerService service) async {
+    final l10n = AppLocalizations.of(context)!;
     try {
       await service.switchNodeVersion(version);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('宸插垏鎹㈠埌 Node.js $version')),
+        DialogUtils.showSuccessSnackBar(
+          context: context,
+          message: l10n.switchedToNodeVersion(version),
         );
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('鍒囨崲澶辫触: $e'), backgroundColor: Colors.red),
+        DialogUtils.showErrorSnackBar(
+          context: context,
+          message: '${l10n.switchFailed}: $e',
         );
       }
     }
   }
 
   Future<void> _installVersion(String version, NodeVersionManagerService service) async {
+    final l10n = AppLocalizations.of(context)!;
     try {
       await service.installNodeVersion(version);
       setState(() => _newVersionInput = '');
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Node.js $version 瀹夎鎴愬姛')),
+        DialogUtils.showSuccessSnackBar(
+          context: context,
+          message: l10n.nodeVersionInstalled(version),
         );
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('瀹夎澶辫触: $e'), backgroundColor: Colors.red),
+        DialogUtils.showErrorSnackBar(
+          context: context,
+          message: '${l10n.installFailed}: $e',
         );
       }
     }
   }
 
   Future<void> _uninstallVersion(String version, NodeVersionManagerService service) async {
-    final confirmed = await showDialog<bool>(
+    final l10n = AppLocalizations.of(context)!;
+    
+    final confirmed = await DialogUtils.showConfirmDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('确认卸载'),
-        content: Text('纭畾瑕佸嵏杞?Node.js $version 鍚楋紵'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('鍙栨秷'),
-          ),
-          ElevatedButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-            child: const Text('卸载'),
-          ),
-        ],
-      ),
+      title: l10n.confirmUninstall,
+      content: l10n.confirmUninstallMessage(version),
+      confirmText: l10n.uninstall,
+      isDangerous: true,
     );
 
-    if (confirmed == true) {
+    if (confirmed) {
       try {
         await service.uninstallNodeVersion(version);
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Node.js $version 鍗歌浇鎴愬姛')),
+          DialogUtils.showSuccessSnackBar(
+            context: context,
+            message: l10n.nodeVersionUninstalled(version),
           );
         }
       } catch (e) {
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('鍗歌浇澶辫触: $e'), backgroundColor: Colors.red),
+          DialogUtils.showErrorSnackBar(
+            context: context,
+            message: '${l10n.uninstallFailed}: $e',
           );
         }
       }
@@ -996,59 +1001,33 @@ class _NodeManagerScreenState extends State<NodeManagerScreen> {
   }
 
   Future<void> _installManager(NodeVersionManager manager) async {
-    final confirmed = await showDialog<bool>(
+    final l10n = AppLocalizations.of(context)!;
+    
+    final confirmed = await DialogUtils.showConfirmDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text('瀹夎 ${manager.displayName}'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('纭畾瑕佸畨瑁?${manager.displayName} 鍚楋紵'),
-            const SizedBox(height: 12),
-            Text(
-              '安装命令：',
-              style: TextStyle(
-                fontSize: 12,
-                color: Colors.grey.shade600,
-                fontFamily: 'monospace',
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('鍙栨秷'),
-          ),
-          ElevatedButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-            child: const Text('安装'),
-          ),
-        ],
-      ),
+      title: l10n.confirmInstallManager(manager.displayName),
+      content: l10n.confirmInstallManagerMessage(manager.displayName),
+      confirmText: l10n.install,
     );
 
-    if (confirmed == true) {
+    if (confirmed) {
       try {
         await _service.installManager(manager);
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('${manager.displayName} 瀹夎鎴愬姛')),
+          DialogUtils.showSuccessSnackBar(
+            context: context,
+            message: l10n.managerInstalled(manager.displayName),
           );
         }
       } catch (e) {
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('瀹夎澶辫触: $e'),
-              backgroundColor: Colors.red,
-              action: SnackBarAction(
-                label: '查看官网',
-                textColor: Colors.white,
-                onPressed: () => _launchUrl(manager.website),
-              ),
+          DialogUtils.showErrorSnackBar(
+            context: context,
+            message: '${l10n.installFailed}: $e',
+            action: SnackBarAction(
+              label: l10n.viewWebsite,
+              textColor: Colors.white,
+              onPressed: () => _launchUrl(manager.website),
             ),
           );
         }
@@ -1057,6 +1036,7 @@ class _NodeManagerScreenState extends State<NodeManagerScreen> {
   }
 
   void _showManagerOptions(NodeVersionManager manager) {
+    final l10n = AppLocalizations.of(context)!;
     showModalBottomSheet(
       context: context,
       builder: (context) => Container(
@@ -1074,7 +1054,7 @@ class _NodeManagerScreenState extends State<NodeManagerScreen> {
             const SizedBox(height: 16),
             ListTile(
               leading: const Icon(Bootstrap.arrow_clockwise),
-              title: const Text('更新'),
+              title: Text(l10n.update),
               onTap: () {
                 Navigator.of(context).pop();
                 _updateManager(manager);
@@ -1082,7 +1062,7 @@ class _NodeManagerScreenState extends State<NodeManagerScreen> {
             ),
             ListTile(
               leading: const Icon(Bootstrap.trash, color: Colors.red),
-              title: const Text('卸载', style: TextStyle(color: Colors.red)),
+              title: Text(l10n.uninstall, style: const TextStyle(color: Colors.red)),
               onTap: () {
                 Navigator.of(context).pop();
                 _uninstallManager(manager);
@@ -1090,7 +1070,7 @@ class _NodeManagerScreenState extends State<NodeManagerScreen> {
             ),
             ListTile(
               leading: const Icon(Bootstrap.box_arrow_up_right),
-              title: const Text('查看官网'),
+              title: Text(l10n.viewWebsite),
               onTap: () {
                 Navigator.of(context).pop();
                 _launchUrl(manager.website);
@@ -1103,36 +1083,29 @@ class _NodeManagerScreenState extends State<NodeManagerScreen> {
   }
 
   Future<void> _updateManager(NodeVersionManager manager) async {
-    final confirmed = await showDialog<bool>(
+    final l10n = AppLocalizations.of(context)!;
+    
+    final confirmed = await DialogUtils.showConfirmDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text('更新 ${manager.displayName}'),
-        content: Text('确定要将 ${manager.displayName} 更新到最新版本吗？'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('鍙栨秷'),
-          ),
-          ElevatedButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('更新'),
-          ),
-        ],
-      ),
+      title: l10n.confirmUpdateManager(manager.displayName),
+      content: l10n.confirmUpdateManagerMessage(manager.displayName),
+      confirmText: l10n.update,
     );
 
-    if (confirmed == true) {
+    if (confirmed) {
       try {
         await _service.updateManager(manager);
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('${manager.displayName} 鏇存柊鎴愬姛')),
+          DialogUtils.showSuccessSnackBar(
+            context: context,
+            message: l10n.managerUpdated(manager.displayName),
           );
         }
       } catch (e) {
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('鏇存柊澶辫触: $e'), backgroundColor: Colors.red),
+          DialogUtils.showErrorSnackBar(
+            context: context,
+            message: '${l10n.updateFailed}: $e',
           );
         }
       }
@@ -1200,8 +1173,7 @@ class _UninstallProgressDialogState extends State<_UninstallProgressDialog> {
   @override
   void initState() {
     super.initState();
-    _statusMessage = '鍑嗗鍗歌浇 ${widget.manager.displayName}...';
-    // 鍏堟樉绀虹‘璁ゆ寜閽?
+    // 初始化状态信息会在 build 方法中设置
   }
 
   @override
@@ -1229,6 +1201,12 @@ class _UninstallProgressDialogState extends State<_UninstallProgressDialog> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
+    
+    // 初始化状态信息
+    if (_statusMessage.isEmpty) {
+      _statusMessage = l10n.preparingUninstall(widget.manager.displayName);
+    }
     
     return AlertDialog(
       title: Row(
@@ -1243,8 +1221,8 @@ class _UninstallProgressDialogState extends State<_UninstallProgressDialog> {
           const SizedBox(width: 12),
           Expanded(
             child: Text(
-              _hasError ? '卸载失败' : 
-              _isCompleted ? '卸载完成' : '鍗歌浇 ${widget.manager.displayName}',
+              _hasError ? l10n.uninstallFailedTitle : 
+              _isCompleted ? l10n.uninstallComplete : l10n.uninstalling(widget.manager.displayName),
               style: theme.textTheme.titleLarge,
             ),
           ),
@@ -1318,7 +1296,7 @@ class _UninstallProgressDialogState extends State<_UninstallProgressDialog> {
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
-                        '卸载后，使用此工具安装的所有 Node.js 版本也会被删除，此操作不可撤销。',
+                        l10n.uninstallWarning,
                         style: TextStyle(
                           fontSize: 12,
                           color: Colors.orange.shade700,
@@ -1375,7 +1353,7 @@ class _UninstallProgressDialogState extends State<_UninstallProgressDialog> {
             // 鍗歌浇鏃ュ織
             if (_userConfirmed || _isUninstalling || _isCompleted) ...[
               Text(
-                '卸载日志',
+                l10n.uninstallLog,
                 style: theme.textTheme.titleSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),

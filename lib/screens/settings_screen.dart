@@ -258,12 +258,12 @@ class SettingsScreen extends StatelessWidget {
           if (const bool.fromEnvironment('dart.vm.product') == false)
             _buildSettingsCard(
               theme: theme,
-              title: '璋冭瘯宸ュ叿',
+              title: l10n.debugTools,
               icon: Bootstrap.bug,
               children: [
                 _buildSettingItem(
                   theme: theme,
-                  title: '瀛樺偍璋冭瘯淇℃伅',
+                  title: l10n.storageDebugInfo,
                   icon: Bootstrap.database,
                   trailing: ElevatedButton.icon(
                     onPressed: () {
@@ -273,18 +273,18 @@ class SettingsScreen extends StatelessWidget {
                       );
                     },
                     icon: const Icon(Bootstrap.bug, size: 14),
-                    label: const Text('鏌ョ湅'),
+                    label: Text(l10n.view),
                   ),
                 ),
                 const SizedBox(height: 16),
                 _buildSettingItem(
                   theme: theme,
-                  title: '娓呯悊鎹熷潖鏁版嵁',
+                  title: l10n.clearCorruptedData,
                   icon: Bootstrap.trash,
                   trailing: ElevatedButton.icon(
                     onPressed: () => _showClearDataDialog(context),
                     icon: const Icon(Bootstrap.trash, size: 14),
-                    label: const Text('娓呯悊'),
+                    label: Text(l10n.clear),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: theme.colorScheme.error,
                       foregroundColor: theme.colorScheme.onError,
@@ -404,6 +404,7 @@ class SettingsScreen extends StatelessWidget {
 
   void _showClearDataDialog(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -411,18 +412,14 @@ class SettingsScreen extends StatelessWidget {
           children: [
             Icon(Bootstrap.exclamation_triangle, color: theme.colorScheme.error),
             const SizedBox(width: 12),
-            const Text('纭娓呯悊'),
+            Text(l10n.confirmClear),
           ],
         ),
-        content: const Text(
-          '本操作将清理所有 SharedPreferences 中的缓存数据，并重置所有设置为默认值。\n\n'
-          '项目数据不会受影响（保存在文件中）。\n\n'
-          '是否继续？',
-        ),
+        content: Text(l10n.clearDataWarning),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('取消'),
+            child: Text(l10n.cancel),
           ),
           ElevatedButton(
             onPressed: () async {
@@ -433,7 +430,7 @@ class SettingsScreen extends StatelessWidget {
               backgroundColor: theme.colorScheme.error,
               foregroundColor: theme.colorScheme.onError,
             ),
-            child: const Text('清理'),
+            child: Text(l10n.clear),
           ),
         ],
       ),
@@ -442,10 +439,11 @@ class SettingsScreen extends StatelessWidget {
 
   Future<void> _clearCorruptedData(BuildContext context) async {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
     final messenger = ScaffoldMessenger.of(context);
     
     try {
-      // 鏄剧ず鍔犺浇鎻愮ず
+      // 显示加载提示
       messenger.showSnackBar(
         SnackBar(
           content: Row(
@@ -459,22 +457,22 @@ class SettingsScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 12),
-              const Text('正在清理数据...'),
+              Text(l10n.clearingData),
             ],
           ),
           duration: const Duration(seconds: 2),
         ),
       );
 
-      // 鎵ц娓呯悊
+      // 执行清理
       await StorageUtil.resetAllPreferences();
 
-      // 閲嶆柊鍔犺浇璁剧疆
+      // 重新加载设置
       if (context.mounted) {
         await context.read<AppProvider>().initialize();
       }
 
-      // 鏄剧ず鎴愬姛娑堟伅
+      // 显示成功消息
       messenger.clearSnackBars();
       messenger.showSnackBar(
         SnackBar(
@@ -482,7 +480,7 @@ class SettingsScreen extends StatelessWidget {
             children: [
               Icon(Bootstrap.check_circle, color: theme.colorScheme.onPrimary, size: 18),
               const SizedBox(width: 12),
-              const Text('清理成功，设置已重置为默认值。'),
+              Text(l10n.clearSuccess),
             ],
           ),
           backgroundColor: theme.colorScheme.primary,
@@ -497,7 +495,7 @@ class SettingsScreen extends StatelessWidget {
             children: [
               Icon(Bootstrap.exclamation_circle, color: theme.colorScheme.onError, size: 18),
               const SizedBox(width: 12),
-              Text('清理失败: $e'),
+              Text('${l10n.clearFailed}: $e'),
             ],
           ),
           backgroundColor: theme.colorScheme.error,

@@ -70,21 +70,22 @@ class _HomeScreenState extends State<HomeScreen> {
         _isLoading = false;
       });
     } catch (e) {
-      print('HomeScreen: 鑾峰彇绯荤粺淇℃伅鏃跺彂鐢熼敊璇? $e');
+      print('HomeScreen: 获取系统信息失败: $e');
+      final l10n = AppLocalizations.of(context)!;
       setState(() {
         _systemInfo = SystemInfo(
-          nodeVersion: '未安装',
+          nodeVersion: l10n.notInstalled,
           hasNodeVersionManager: false,
           nodeVersionManager: '',
-          gitVersion: '未安装',
+          gitVersion: l10n.notInstalled,
           hasGit: false,
           installedEditors: [],
           installedBrowsers: [],
-          osVersion: '未知',
-          cpuInfo: '未知',
-          memoryInfo: '未知',
-          diskInfo: '未知',
-          networkInfo: '未知',
+          osVersion: l10n.unknown,
+          cpuInfo: l10n.unknown,
+          memoryInfo: l10n.unknown,
+          diskInfo: l10n.unknown,
+          networkInfo: l10n.unknown,
           totalProjects: 0,
           runningProjects: 0,
         );
@@ -167,7 +168,7 @@ class _HomeScreenState extends State<HomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-'系统信息总览',
+                  l10n.systemInfoOverview,
                   style: TextStyle(
                     fontSize: 32,
                     fontWeight: FontWeight.w800,
@@ -177,7 +178,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 const SizedBox(height: 8),
                 Text(
-'实时监控你的开发环境和系统状态',
+                  l10n.realtimeMonitoring,
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w400,
@@ -231,7 +232,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           const SizedBox(width: 6),
                           Text(
-_systemInfo?.networkInfo != '未知' && _systemInfo?.networkInfo.isNotEmpty == true ? '在线' : '离线',
+                            _systemInfo?.networkInfo != l10n.unknown && _systemInfo?.networkInfo.isNotEmpty == true ? l10n.online : l10n.offline,
                             style: TextStyle(
                               fontSize: 12,
                               color: Colors.white,
@@ -268,7 +269,7 @@ _systemInfo?.networkInfo != '未知' && _systemInfo?.networkInfo.isNotEmpty == t
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '椤圭洰缁熻',
+          l10n.projectStats,
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.w700,
@@ -282,7 +283,7 @@ _systemInfo?.networkInfo != '未知' && _systemInfo?.networkInfo.isNotEmpty == t
             Expanded(
               child: _buildStatCard(
                 theme: theme,
-                title: '椤圭洰鎬绘暟',
+                title: l10n.totalProjects,
                 value: '${_systemInfo?.totalProjects ?? 0}',
                 icon: Bootstrap.folder,
                 gradientColors: [Colors.blue.shade400, Colors.blue.shade600],
@@ -292,7 +293,7 @@ _systemInfo?.networkInfo != '未知' && _systemInfo?.networkInfo.isNotEmpty == t
             Expanded(
               child: _buildStatCard(
                 theme: theme,
-                title: '姝ｅ湪杩愯',
+                title: l10n.runningProjects,
                 value: '${_systemInfo?.runningProjects ?? 0}',
                 icon: Bootstrap.play_circle,
                 gradientColors: [Colors.green.shade400, Colors.green.shade600],
@@ -302,7 +303,7 @@ _systemInfo?.networkInfo != '未知' && _systemInfo?.networkInfo.isNotEmpty == t
             Expanded(
               child: _buildStatCard(
                 theme: theme,
-                title: '宸插畨瑁呯紪杈戝櫒',
+                title: l10n.codeEditors,
                 value: '${_systemInfo?.installedEditors.length ?? 0}',
                 icon: Bootstrap.code_slash,
                 gradientColors: [Colors.purple.shade400, Colors.purple.shade600],
@@ -312,7 +313,7 @@ _systemInfo?.networkInfo != '未知' && _systemInfo?.networkInfo.isNotEmpty == t
             Expanded(
               child: _buildStatCard(
                 theme: theme,
-                title: '宸插畨瑁呮祻瑙堝櫒',
+                title: l10n.browsers,
                 value: '${_systemInfo?.installedBrowsers.length ?? 0}',
                 icon: Bootstrap.globe,
                 gradientColors: [Colors.orange.shade400, Colors.orange.shade600],
@@ -329,7 +330,7 @@ _systemInfo?.networkInfo != '未知' && _systemInfo?.networkInfo.isNotEmpty == t
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-'开发环境',
+          l10n.developmentEnvironment,
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.w700,
@@ -344,20 +345,20 @@ _systemInfo?.networkInfo != '未知' && _systemInfo?.networkInfo.isNotEmpty == t
               child: _buildInfoCard(
                 theme: theme,
                 title: 'Node.js',
-subtitle: _systemInfo?.nodeVersion ?? '未安装',
+                subtitle: _systemInfo?.nodeVersion ?? l10n.notInstalled,
                 icon: Bootstrap.terminal,
                 iconColor: Colors.green,
-status: _systemInfo?.nodeVersion != '未安装' ? 'installed' : 'not_installed',
+                status: _systemInfo?.nodeVersion != l10n.notInstalled ? 'installed' : 'not_installed',
               ),
             ),
             const SizedBox(width: 16),
             Expanded(
               child: _buildInfoCard(
                 theme: theme,
-                title: '鐗堟湰绠＄悊',
-subtitle: _systemInfo?.hasNodeVersionManager == true 
+                title: l10n.versionManager,
+                subtitle: _systemInfo?.hasNodeVersionManager == true 
                     ? _systemInfo!.nodeVersionManager 
-                    : '未安装',
+                    : l10n.notInstalled,
                 icon: Bootstrap.arrow_repeat,
                 iconColor: Colors.blue,
                 status: _systemInfo?.hasNodeVersionManager == true ? 'installed' : 'not_installed',
@@ -368,9 +369,9 @@ subtitle: _systemInfo?.hasNodeVersionManager == true
               child: _buildInfoCard(
                 theme: theme,
                 title: 'Git',
-subtitle: _systemInfo?.hasGit == true 
+                subtitle: _systemInfo?.hasGit == true 
                     ? _systemInfo!.gitVersion.replaceAll('git version ', '') 
-                    : '未安装',
+                    : l10n.notInstalled,
                 icon: Bootstrap.git,
                 iconColor: Colors.orange,
                 status: _systemInfo?.hasGit == true ? 'installed' : 'not_installed',
@@ -387,7 +388,7 @@ subtitle: _systemInfo?.hasGit == true
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '绯荤粺淇℃伅',
+          l10n.systemInformation,
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.w700,
@@ -416,32 +417,32 @@ subtitle: _systemInfo?.hasGit == true
               _buildSystemInfoRow(
                 theme: theme,
                 icon: Bootstrap.pc,
-                title: 'CPU',
-value: _systemInfo?.cpuInfo ?? '未知',
+                title: l10n.cpu,
+                value: _systemInfo?.cpuInfo ?? l10n.unknown,
                 iconColor: Colors.blue,
               ),
               const SizedBox(height: 16),
               _buildSystemInfoRow(
                 theme: theme,
                 icon: Bootstrap.cpu,
-                title: '鍐呭瓨',
-value: _systemInfo?.memoryInfo ?? '未知',
+                title: l10n.battery,
+                value: _systemInfo?.memoryInfo ?? l10n.unknown,
                 iconColor: Colors.green,
               ),
               const SizedBox(height: 16),
               _buildSystemInfoRow(
                 theme: theme,
                 icon: Bootstrap.device_hdd,
-                title: '纾佺洏',
-value: _systemInfo?.diskInfo ?? '未知',
+                title: l10n.storage,
+                value: _systemInfo?.diskInfo ?? l10n.unknown,
                 iconColor: Colors.orange,
               ),
               const SizedBox(height: 16),
               _buildSystemInfoRow(
                 theme: theme,
                 icon: Bootstrap.wifi,
-                title: '网络',
-                value: _systemInfo?.networkInfo ?? '未知',
+                title: l10n.network,
+                value: _systemInfo?.networkInfo ?? l10n.unknown,
                 iconColor: Colors.purple,
               ),
             ],
@@ -456,7 +457,7 @@ value: _systemInfo?.diskInfo ?? '未知',
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '已安装软件',
+          l10n.installedSoftware,
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.w700,
@@ -471,20 +472,20 @@ value: _systemInfo?.diskInfo ?? '未知',
             Expanded(
               child: _buildSoftwareCard(
                 theme: theme,
-                title: '代码编辑器',
+                title: l10n.codeEditors,
                 items: _systemInfo?.installedEditors ?? [],
                 icon: Bootstrap.code_slash,
-                emptyMessage: '未检测到代码编辑器',
+                emptyMessage: l10n.noEditorsDetected,
               ),
             ),
             const SizedBox(width: 16),
             Expanded(
               child: _buildSoftwareCard(
                 theme: theme,
-                title: '浏览器',
+                title: l10n.browsers,
                 items: _systemInfo?.installedBrowsers ?? [],
                 icon: Bootstrap.globe,
-                emptyMessage: '未检测到浏览器',
+                emptyMessage: l10n.noBrowsersDetected,
               ),
             ),
           ],

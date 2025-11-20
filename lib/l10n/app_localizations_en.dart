@@ -439,4 +439,319 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get versionFormatHint => 'Examples: 18.17.0, 20.x, lts';
+
+  @override
+  String get uninstall => 'Uninstall';
+
+  @override
+  String get update => 'Update';
+
+  @override
+  String get viewWebsite => 'View Website';
+
+  @override
+  String get installCommand => 'Install Command';
+
+  @override
+  String get confirmUninstall => 'Confirm Uninstall';
+
+  @override
+  String confirmUninstallMessage(String version) {
+    return 'Are you sure you want to uninstall Node.js $version?';
+  }
+
+  @override
+  String confirmInstallManager(String name) {
+    return 'Install $name';
+  }
+
+  @override
+  String confirmInstallManagerMessage(String name) {
+    return 'Are you sure you want to install $name?';
+  }
+
+  @override
+  String confirmUpdateManager(String name) {
+    return 'Update $name';
+  }
+
+  @override
+  String confirmUpdateManagerMessage(String name) {
+    return 'Are you sure you want to update $name to the latest version?';
+  }
+
+  @override
+  String switchedToManager(String name) {
+    return 'Switched to $name';
+  }
+
+  @override
+  String get switchFailed => 'Switch failed';
+
+  @override
+  String switchedToNodeVersion(String version) {
+    return 'Switched to Node.js $version';
+  }
+
+  @override
+  String nodeVersionInstalled(String version) {
+    return 'Node.js $version installed successfully';
+  }
+
+  @override
+  String get installFailed => 'Installation failed';
+
+  @override
+  String nodeVersionUninstalled(String version) {
+    return 'Node.js $version uninstalled successfully';
+  }
+
+  @override
+  String get uninstallFailed => 'Uninstall failed';
+
+  @override
+  String managerInstalled(String name) {
+    return '$name installed successfully';
+  }
+
+  @override
+  String managerUpdated(String name) {
+    return '$name updated successfully';
+  }
+
+  @override
+  String get updateFailed => 'Update failed';
+
+  @override
+  String get uninstallComplete => 'Uninstall Complete';
+
+  @override
+  String get uninstallFailedTitle => 'Uninstall Failed';
+
+  @override
+  String preparingUninstall(String name) {
+    return 'Preparing to uninstall $name...';
+  }
+
+  @override
+  String uninstalling(String name) {
+    return 'Uninstalling $name';
+  }
+
+  @override
+  String get failedToOpenFolderWithError =>
+      'Error occurred while opening folder';
+
+  @override
+  String get currentEnvironmentVersion => 'Current Environment Version';
+
+  @override
+  String get notInstalled => 'Not Installed';
+
+  @override
+  String get installed => 'Installed';
+
+  @override
+  String get active => 'Active';
+
+  @override
+  String get uninstallWarning =>
+      'After uninstalling, all Node.js versions installed with this tool will also be removed. This action cannot be undone.';
+
+  @override
+  String get uninstallLog => 'Uninstall Log';
+
+  @override
+  String get systemInfoOverview => 'System Information Overview';
+
+  @override
+  String get realtimeMonitoring =>
+      'Real-time monitoring of your development environment and system status';
+
+  @override
+  String get online => 'Online';
+
+  @override
+  String get offline => 'Offline';
+
+  @override
+  String get projectStats => 'Project Statistics';
+
+  @override
+  String get runningProjects => 'Running Projects';
+
+  @override
+  String get developmentEnvironment => 'Development Environment';
+
+  @override
+  String get versionManager => 'Version Manager';
+
+  @override
+  String get systemInformation => 'System Information';
+
+  @override
+  String get cpu => 'CPU';
+
+  @override
+  String get battery => 'Battery';
+
+  @override
+  String get storage => 'Storage';
+
+  @override
+  String get network => 'Network';
+
+  @override
+  String get installedSoftware => 'Installed Software';
+
+  @override
+  String get codeEditors => 'Code Editors';
+
+  @override
+  String get browsers => 'Browsers';
+
+  @override
+  String get noEditorsDetected => 'No code editors detected';
+
+  @override
+  String get noBrowsersDetected => 'No browsers detected';
+
+  @override
+  String get debugTools => 'Debug Tools';
+
+  @override
+  String get storageDebugInfo => 'Storage Debug Info';
+
+  @override
+  String get view => 'View';
+
+  @override
+  String get clearCorruptedData => 'Clear Corrupted Data';
+
+  @override
+  String get clear => 'Clear';
+
+  @override
+  String get confirmClear => 'Confirm Clear';
+
+  @override
+  String get clearDataWarning =>
+      'This operation will clear all cached data in SharedPreferences and reset all settings to default values.\n\nProject data will not be affected (stored in files).\n\nContinue?';
+
+  @override
+  String get clearingData => 'Clearing data...';
+
+  @override
+  String get clearSuccess =>
+      'Cleared successfully, settings have been reset to default values.';
+
+  @override
+  String get clearFailed => 'Clear failed';
+
+  @override
+  String notInstalledMessage(String name) {
+    return '$name is not installed';
+  }
+
+  @override
+  String get installFirstMessage =>
+      'Please install this tool first before managing its versions.';
+
+  @override
+  String get toolInfo => 'Tool Information';
+
+  @override
+  String get name => 'Name';
+
+  @override
+  String get version => 'Version';
+
+  @override
+  String get installPath => 'Install Path';
+
+  @override
+  String get description => 'Description';
+
+  @override
+  String get visitWebsite => 'Visit Website';
+
+  @override
+  String switchedToNode(String version) {
+    return 'Switched to Node.js $version';
+  }
+
+  @override
+  String get switchToNodeFailed => 'Switch failed';
+
+  @override
+  String nodeInstalled(String version) {
+    return 'Node.js $version installed successfully';
+  }
+
+  @override
+  String get nodeInstallFailed => 'Installation failed';
+
+  @override
+  String nodeUninstalled(String version) {
+    return 'Node.js $version uninstalled successfully';
+  }
+
+  @override
+  String get nodeUninstallFailed => 'Uninstallation failed';
+
+  @override
+  String confirmUninstallNode(String version) {
+    return 'Are you sure you want to uninstall Node.js $version?';
+  }
+
+  @override
+  String get developmentEnv => 'Development';
+
+  @override
+  String get stagingEnv => 'Staging';
+
+  @override
+  String get productionEnv => 'Production';
+
+  @override
+  String get building => 'Building...';
+
+  @override
+  String get startBuild => 'Start Build';
+
+  @override
+  String get retry => 'Retry';
+
+  @override
+  String get stopping => 'Stopping...';
+
+  @override
+  String get starting => 'Starting...';
+
+  @override
+  String get previewing => 'Previewing...';
+
+  @override
+  String get processing => 'Processing...';
+
+  @override
+  String get stopService => 'Stop Service';
+
+  @override
+  String get startDevServer => 'Start Dev Server';
+
+  @override
+  String get startPreviewServer => 'Start Preview Server';
+
+  @override
+  String get start => 'Start';
+
+  @override
+  String get serviceUrl => 'Service URL';
+
+  @override
+  String get details => 'Details';
+
+  @override
+  String get inUse => 'Use';
 }

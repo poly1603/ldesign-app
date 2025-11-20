@@ -181,5 +181,222 @@
   "installNewVersion": "Install New Version",
   "enterVersionNumber": "Enter version number, e.g., 18.17.0",
   "install": "Install",
-  "versionFormatHint": "Examples: 18.17.0, 20.x, lts"
+  "versionFormatHint": "Examples: 18.17.0, 20.x, lts",
+  "uninstall": "Uninstall",
+  "update": "Update",
+  "viewWebsite": "View Website",
+  "installCommand": "Install Command",
+  "confirmUninstall": "Confirm Uninstall",
+  "confirmUninstallMessage": "Are you sure you want to uninstall Node.js {version}?",
+  "@confirmUninstallMessage": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "confirmInstallManager": "Install {name}",
+  "@confirmInstallManager": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "confirmInstallManagerMessage": "Are you sure you want to install {name}?",
+  "@confirmInstallManagerMessage": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "confirmUpdateManager": "Update {name}",
+  "@confirmUpdateManager": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "confirmUpdateManagerMessage": "Are you sure you want to update {name} to the latest version?",
+  "@confirmUpdateManagerMessage": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "switchedToManager": "Switched to {name}",
+  "@switchedToManager": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "switchFailed": "Switch failed",
+  "switchedToNodeVersion": "Switched to Node.js {version}",
+  "@switchedToNodeVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "nodeVersionInstalled": "Node.js {version} installed successfully",
+  "@nodeVersionInstalled": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "installFailed": "Installation failed",
+  "nodeVersionUninstalled": "Node.js {version} uninstalled successfully",
+  "@nodeVersionUninstalled": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "uninstallFailed": "Uninstall failed",
+  "managerInstalled": "{name} installed successfully",
+  "@managerInstalled": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "managerUpdated": "{name} updated successfully",
+  "@managerUpdated": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "updateFailed": "Update failed",
+  "uninstallComplete": "Uninstall Complete",
+  "uninstallFailedTitle": "Uninstall Failed",
+  "preparingUninstall": "Preparing to uninstall {name}...",
+  "@preparingUninstall": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "uninstalling": "Uninstalling {name}",
+  "@uninstalling": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "failedToOpenFolderWithError": "Error occurred while opening folder",
+  "currentEnvironmentVersion": "Current Environment Version",
+  "notInstalled": "Not Installed",
+  "installed": "Installed",
+  "active": "Active",
+  "uninstallWarning": "After uninstalling, all Node.js versions installed with this tool will also be removed. This action cannot be undone.",
+  "uninstallLog": "Uninstall Log",
+  "systemInfoOverview": "System Information Overview",
+  "realtimeMonitoring": "Real-time monitoring of your development environment and system status",
+  "online": "Online",
+  "offline": "Offline",
+  "projectStats": "Project Statistics",
+  "runningProjects": "Running Projects",
+  "developmentEnvironment": "Development Environment",
+  "versionManager": "Version Manager",
+  "systemInformation": "System Information",
+  "cpu": "CPU",
+  "battery": "Battery",
+  "storage": "Storage",
+  "network": "Network",
+  "installedSoftware": "Installed Software",
+  "codeEditors": "Code Editors",
+  "browsers": "Browsers",
+  "noEditorsDetected": "No code editors detected",
+  "noBrowsersDetected": "No browsers detected",
+  "debugTools": "Debug Tools",
+  "storageDebugInfo": "Storage Debug Info",
+  "view": "View",
+  "clearCorruptedData": "Clear Corrupted Data",
+  "clear": "Clear",
+  "confirmClear": "Confirm Clear",
+  "clearDataWarning": "This operation will clear all cached data in SharedPreferences and reset all settings to default values.\n\nProject data will not be affected (stored in files).\n\nContinue?",
+  "clearingData": "Clearing data...",
+  "clearSuccess": "Cleared successfully, settings have been reset to default values.",
+  "clearFailed": "Clear failed",
+  "notInstalledMessage": "{name} is not installed",
+  "@notInstalledMessage": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "installFirstMessage": "Please install this tool first before managing its versions.",
+  "toolInfo": "Tool Information",
+  "name": "Name",
+  "version": "Version",
+  "installPath": "Install Path",
+  "description": "Description",
+  "visitWebsite": "Visit Website",
+  "switchedToNode": "Switched to Node.js {version}",
+  "@switchedToNode": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "switchToNodeFailed": "Switch failed",
+  "nodeInstalled": "Node.js {version} installed successfully",
+  "@nodeInstalled": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "nodeInstallFailed": "Installation failed",
+  "nodeUninstalled": "Node.js {version} uninstalled successfully",
+  "@nodeUninstalled": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "nodeUninstallFailed": "Uninstallation failed",
+  "confirmUninstallNode": "Are you sure you want to uninstall Node.js {version}?",
+  "@confirmUninstallNode": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "developmentEnv": "Development",
+  "stagingEnv": "Staging",
+  "productionEnv": "Production",
+  "building": "Building...",
+  "startBuild": "Start Build",
+  "retry": "Retry",
+  "stopping": "Stopping...",
+  "starting": "Starting...",
+  "previewing": "Previewing...",
+  "processing": "Processing...",
+  "stopService": "Stop Service",
+  "startDevServer": "Start Dev Server",
+  "startPreviewServer": "Start Preview Server",
+  "start": "Start",
+  "serviceUrl": "Service URL",
+  "details": "Details",
+  "inUse": "Use"
 }

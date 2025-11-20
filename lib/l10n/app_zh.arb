@@ -181,5 +181,222 @@
   "installNewVersion": "安装新版本",
   "enterVersionNumber": "输入版本号，如 18.17.0",
   "install": "安装",
-  "versionFormatHint": "示例：18.17.0, 20.x, lts"
+  "versionFormatHint": "示例：18.17.0, 20.x, lts",
+  "uninstall": "卸载",
+  "update": "更新",
+  "viewWebsite": "查看官网",
+  "installCommand": "安装命令",
+  "confirmUninstall": "确认卸载",
+  "confirmUninstallMessage": "确定要卸载 Node.js {version} 吗？",
+  "@confirmUninstallMessage": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "confirmInstallManager": "安装 {name}",
+  "@confirmInstallManager": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "confirmInstallManagerMessage": "确定要安装 {name} 吗？",
+  "@confirmInstallManagerMessage": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "confirmUpdateManager": "更新 {name}",
+  "@confirmUpdateManager": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "confirmUpdateManagerMessage": "确定要将 {name} 更新到最新版本吗？",
+  "@confirmUpdateManagerMessage": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "switchedToManager": "已切换到 {name}",
+  "@switchedToManager": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "switchFailed": "切换失败",
+  "switchedToNodeVersion": "已切换到 Node.js {version}",
+  "@switchedToNodeVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "nodeVersionInstalled": "Node.js {version} 安装成功",
+  "@nodeVersionInstalled": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "installFailed": "安装失败",
+  "nodeVersionUninstalled": "Node.js {version} 卸载成功",
+  "@nodeVersionUninstalled": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "uninstallFailed": "卸载失败",
+  "managerInstalled": "{name} 安装成功",
+  "@managerInstalled": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "managerUpdated": "{name} 更新成功",
+  "@managerUpdated": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "updateFailed": "更新失败",
+  "uninstallComplete": "卸载完成",
+  "uninstallFailedTitle": "卸载失败",
+  "preparingUninstall": "准备卸载 {name}...",
+  "@preparingUninstall": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "uninstalling": "正在卸载 {name}",
+  "@uninstalling": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "failedToOpenFolderWithError": "打开文件夹时发生错误",
+  "currentEnvironmentVersion": "当前环境版本",
+  "notInstalled": "未安装",
+  "installed": "已安装",
+  "active": "当前使用",
+  "uninstallWarning": "卸载后，使用此工具安装的所有 Node.js 版本也会被删除，此操作不可撤除。",
+  "uninstallLog": "卸载日志",
+  "systemInfoOverview": "系统信息总览",
+  "realtimeMonitoring": "实时监控你的开发环境和系统状态",
+  "online": "在线",
+  "offline": "离线",
+  "projectStats": "移动目统计窗口",
+  "runningProjects": "运行中项目",
+  "developmentEnvironment": "开发环境",
+  "versionManager": "版本管理器",
+  "systemInformation": "系统信息统计窗口",
+  "cpu": "CPU",
+  "battery": "电池",
+  "storage": "存储",
+  "network": "网络",
+  "installedSoftware": "已安装软件",
+  "codeEditors": "代码编辑器",
+  "browsers": "浏览器",
+  "noEditorsDetected": "未检测到代码编辑器",
+  "noBrowsersDetected": "未检测到浏览器",
+  "debugTools": "调试工具",
+  "storageDebugInfo": "存储调试信息",
+  "view": "查看",
+  "clearCorruptedData": "清理损坏数据",
+  "clear": "清理",
+  "confirmClear": "确认清理",
+  "clearDataWarning": "本操作将清理所有 SharedPreferences 中的缓存数据，并重置所有设置为默认值。\n\n项目数据不会受影响（保存在文件中）。\n\n是否继续？",
+  "clearingData": "正在清理数据...",
+  "clearSuccess": "清理成功，设置已重置为默认值。",
+  "clearFailed": "清理失败",
+  "notInstalledMessage": "{name} 未安装",
+  "@notInstalledMessage": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "installFirstMessage": "请先安装此工具后再管理其版本。",
+  "toolInfo": "工具信息",
+  "name": "名称",
+  "version": "版本",
+  "installPath": "安装路径",
+  "description": "描述",
+  "visitWebsite": "访问官网",
+  "switchedToNode": "已切换到 Node.js {version}",
+  "@switchedToNode": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "switchToNodeFailed": "切换失败",
+  "nodeInstalled": "Node.js {version} 安装成功",
+  "@nodeInstalled": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "nodeInstallFailed": "安装失败",
+  "nodeUninstalled": "Node.js {version} 卸载成功",
+  "@nodeUninstalled": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "nodeUninstallFailed": "卸载失败",
+  "confirmUninstallNode": "确定要卸载 Node.js {version} 吗？",
+  "@confirmUninstallNode": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "developmentEnv": "开发环境",
+  "stagingEnv": "测试环境",
+  "productionEnv": "生产环境",
+  "building": "构建中...",
+  "startBuild": "开始构建",
+  "retry": "重试",
+  "stopping": "停止中...",
+  "starting": "启动中...",
+  "previewing": "预览中...",
+  "processing": "处理中...",
+  "stopService": "停止服务",
+  "startDevServer": "启动开发服务器",
+  "startPreviewServer": "启动预览服务器",
+  "start": "开始",
+  "serviceUrl": "服务地址",
+  "details": "详情",
+  "inUse": "使用"
 }

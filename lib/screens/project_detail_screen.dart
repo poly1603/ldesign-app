@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
 import 'package:icons_plus/icons_plus.dart';
@@ -6,6 +6,7 @@ import '../l10n/app_localizations.dart';
 import '../models/project.dart';
 import '../providers/app_provider.dart';
 import '../utils/file_utils.dart';
+import '../utils/dialog_utils.dart';
 
 class ProjectDetailScreen extends StatelessWidget {
   final String projectId;
@@ -447,36 +448,23 @@ class ProjectDetailScreen extends StatelessWidget {
     AppProvider appProvider,
   ) async {
     final l10n = AppLocalizations.of(context)!;
-    final confirmed = await showDialog<bool>(
+    
+    final confirmed = await DialogUtils.showConfirmDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text(l10n.delete),
-        content: Text(l10n.confirmRemoveFromList(project.name)),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: Text(l10n.cancel),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: Text(
-              l10n.delete,
-              style: const TextStyle(color: Colors.red),
-            ),
-          ),
-        ],
-      ),
+      title: l10n.delete,
+      content: l10n.confirmRemoveFromList(project.name),
+      confirmText: l10n.delete,
+      isDangerous: true,
     );
 
-    if (confirmed == true && context.mounted) {
+    if (confirmed && context.mounted) {
       await appProvider.removeProject(project.id);
       appProvider.setCurrentRoute('/projects');
       
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(l10n.projectRemoved(project.name)),
-          ),
+        DialogUtils.showInfoSnackBar(
+          context: context,
+          message: l10n.projectRemoved(project.name),
         );
       }
     }
@@ -497,12 +485,9 @@ class ProjectDetailScreen extends StatelessWidget {
       }
       
       if (!success && context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(l10n.failedToOpenFolder ?? '无法打开文件夹'),
-            backgroundColor: Colors.red,
-            duration: const Duration(seconds: 3),
-          ),
+        DialogUtils.showErrorSnackBar(
+          context: context,
+          message: l10n.failedToOpenFolder,
         );
       }
     } catch (e) {
@@ -511,12 +496,10 @@ class ProjectDetailScreen extends StatelessWidget {
       }
       
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('${l10n.failedToOpenFolder ?? '打开文件夹时发生错误'}: $e'),
-            backgroundColor: Colors.red,
-            duration: const Duration(seconds: 4),
-          ),
+        DialogUtils.showErrorSnackBar(
+          context: context,
+          message: '${l10n.failedToOpenFolderWithError}: $e',
+          duration: const Duration(seconds: 4),
         );
       }
     }

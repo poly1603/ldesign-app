@@ -309,15 +309,16 @@ class _ProjectActionScreenState extends State<ProjectActionScreen> with TickerPr
     );
   }
 
-  // 鑾峰彇鐜鏍囩
+  // 获取环境标签
   String _getEnvironmentLabel(Environment env) {
+    final l10n = AppLocalizations.of(context)!;
     switch (env) {
       case Environment.development:
-        return '开发环境';
+        return l10n.developmentEnv;
       case Environment.staging:
-        return '测试环境';
+        return l10n.stagingEnv;
       case Environment.production:
-        return '生产环境';
+        return l10n.productionEnv;
     }
   }
 
@@ -330,15 +331,16 @@ class _ProjectActionScreenState extends State<ProjectActionScreen> with TickerPr
     Project project,
     ProjectServiceManager serviceManager,
   ) {
+    final l10n = AppLocalizations.of(context)!;
     final isRunning = serviceInfo?.status == ServiceStatus.running;
     final isStarting = serviceInfo?.status == ServiceStatus.starting;
     final isStopping = serviceInfo?.status == ServiceStatus.stopping;
     final hasError = serviceInfo?.status == ServiceStatus.error;
 
-    // 瀵逛簬鏋勫缓鎿嶄綔锛屼笉闇€瑕佸仠姝㈡寜閽?
+    // 对于构建操作，不需要停止按钮
     if (widget.action == 'build') {
       return SizedBox(
-        height: 36, // 鍑忓皬楂樺害
+        height: 36, // 减小高度
         child: ElevatedButton.icon(
           onPressed: isStarting ? null : () => _startAction(serviceManager, project),
           icon: isStarting
@@ -348,7 +350,7 @@ class _ProjectActionScreenState extends State<ProjectActionScreen> with TickerPr
                   child: CircularProgressIndicator(strokeWidth: 2),
                 )
               : Icon(actionInfo.icon, size: 18),
-          label: Text(isStarting ? '构建中...' : '开始构建'),
+          label: Text(isStarting ? l10n.building : l10n.startBuild),
           style: ElevatedButton.styleFrom(
             backgroundColor: actionInfo.color,
             foregroundColor: Colors.white,
@@ -393,29 +395,30 @@ class _ProjectActionScreenState extends State<ProjectActionScreen> with TickerPr
     );
   }
 
-  // 鑾峰彇鎸夐挳鏍囩
+  // 获取按钮标签
   String _getButtonLabel(bool isRunning, bool isStarting, bool isStopping, bool hasError) {
-    if (hasError) return '重试';
-    if (isStopping) return '停止中...';
+    final l10n = AppLocalizations.of(context)!;
+    if (hasError) return l10n.retry;
+    if (isStopping) return l10n.stopping;
     if (isStarting) {
       switch (widget.action) {
         case 'start':
-          return '启动中...';
+          return l10n.starting;
         case 'preview':
-          return '预览中...';
+          return l10n.previewing;
         default:
-          return '处理中...';
+          return l10n.processing;
       }
     }
-    if (isRunning) return '停止服务';
+    if (isRunning) return l10n.stopService;
     
     switch (widget.action) {
       case 'start':
-        return '启动开发服务器';
+        return l10n.startDevServer;
       case 'preview':
-        return '启动预览服务器';
+        return l10n.startPreviewServer;
       default:
-        return '开始';
+        return l10n.start;
     }
   }
 
@@ -458,9 +461,9 @@ class _ProjectActionScreenState extends State<ProjectActionScreen> with TickerPr
                   color: Colors.white,
                 ),
                 const SizedBox(width: 6),
-                const Text(
-                  '服务地址',
-                  style: TextStyle(
+                Text(
+                  AppLocalizations.of(context)!.serviceUrl,
+                  style: const TextStyle(
                     fontSize: 13,
                     color: Colors.white,
                     fontWeight: FontWeight.w600,

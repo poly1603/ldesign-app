@@ -932,6 +932,552 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Examples: 18.17.0, 20.x, lts'**
   String get versionFormatHint;
+
+  /// No description provided for @uninstall.
+  ///
+  /// In en, this message translates to:
+  /// **'Uninstall'**
+  String get uninstall;
+
+  /// No description provided for @update.
+  ///
+  /// In en, this message translates to:
+  /// **'Update'**
+  String get update;
+
+  /// No description provided for @viewWebsite.
+  ///
+  /// In en, this message translates to:
+  /// **'View Website'**
+  String get viewWebsite;
+
+  /// No description provided for @installCommand.
+  ///
+  /// In en, this message translates to:
+  /// **'Install Command'**
+  String get installCommand;
+
+  /// No description provided for @confirmUninstall.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Uninstall'**
+  String get confirmUninstall;
+
+  /// No description provided for @confirmUninstallMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to uninstall Node.js {version}?'**
+  String confirmUninstallMessage(String version);
+
+  /// No description provided for @confirmInstallManager.
+  ///
+  /// In en, this message translates to:
+  /// **'Install {name}'**
+  String confirmInstallManager(String name);
+
+  /// No description provided for @confirmInstallManagerMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to install {name}?'**
+  String confirmInstallManagerMessage(String name);
+
+  /// No description provided for @confirmUpdateManager.
+  ///
+  /// In en, this message translates to:
+  /// **'Update {name}'**
+  String confirmUpdateManager(String name);
+
+  /// No description provided for @confirmUpdateManagerMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to update {name} to the latest version?'**
+  String confirmUpdateManagerMessage(String name);
+
+  /// No description provided for @switchedToManager.
+  ///
+  /// In en, this message translates to:
+  /// **'Switched to {name}'**
+  String switchedToManager(String name);
+
+  /// No description provided for @switchFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Switch failed'**
+  String get switchFailed;
+
+  /// No description provided for @switchedToNodeVersion.
+  ///
+  /// In en, this message translates to:
+  /// **'Switched to Node.js {version}'**
+  String switchedToNodeVersion(String version);
+
+  /// No description provided for @nodeVersionInstalled.
+  ///
+  /// In en, this message translates to:
+  /// **'Node.js {version} installed successfully'**
+  String nodeVersionInstalled(String version);
+
+  /// No description provided for @installFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Installation failed'**
+  String get installFailed;
+
+  /// No description provided for @nodeVersionUninstalled.
+  ///
+  /// In en, this message translates to:
+  /// **'Node.js {version} uninstalled successfully'**
+  String nodeVersionUninstalled(String version);
+
+  /// No description provided for @uninstallFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Uninstall failed'**
+  String get uninstallFailed;
+
+  /// No description provided for @managerInstalled.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} installed successfully'**
+  String managerInstalled(String name);
+
+  /// No description provided for @managerUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} updated successfully'**
+  String managerUpdated(String name);
+
+  /// No description provided for @updateFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Update failed'**
+  String get updateFailed;
+
+  /// No description provided for @uninstallComplete.
+  ///
+  /// In en, this message translates to:
+  /// **'Uninstall Complete'**
+  String get uninstallComplete;
+
+  /// No description provided for @uninstallFailedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Uninstall Failed'**
+  String get uninstallFailedTitle;
+
+  /// No description provided for @preparingUninstall.
+  ///
+  /// In en, this message translates to:
+  /// **'Preparing to uninstall {name}...'**
+  String preparingUninstall(String name);
+
+  /// No description provided for @uninstalling.
+  ///
+  /// In en, this message translates to:
+  /// **'Uninstalling {name}'**
+  String uninstalling(String name);
+
+  /// No description provided for @failedToOpenFolderWithError.
+  ///
+  /// In en, this message translates to:
+  /// **'Error occurred while opening folder'**
+  String get failedToOpenFolderWithError;
+
+  /// No description provided for @currentEnvironmentVersion.
+  ///
+  /// In en, this message translates to:
+  /// **'Current Environment Version'**
+  String get currentEnvironmentVersion;
+
+  /// No description provided for @notInstalled.
+  ///
+  /// In en, this message translates to:
+  /// **'Not Installed'**
+  String get notInstalled;
+
+  /// No description provided for @installed.
+  ///
+  /// In en, this message translates to:
+  /// **'Installed'**
+  String get installed;
+
+  /// No description provided for @active.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get active;
+
+  /// No description provided for @uninstallWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'After uninstalling, all Node.js versions installed with this tool will also be removed. This action cannot be undone.'**
+  String get uninstallWarning;
+
+  /// No description provided for @uninstallLog.
+  ///
+  /// In en, this message translates to:
+  /// **'Uninstall Log'**
+  String get uninstallLog;
+
+  /// No description provided for @systemInfoOverview.
+  ///
+  /// In en, this message translates to:
+  /// **'System Information Overview'**
+  String get systemInfoOverview;
+
+  /// No description provided for @realtimeMonitoring.
+  ///
+  /// In en, this message translates to:
+  /// **'Real-time monitoring of your development environment and system status'**
+  String get realtimeMonitoring;
+
+  /// No description provided for @online.
+  ///
+  /// In en, this message translates to:
+  /// **'Online'**
+  String get online;
+
+  /// No description provided for @offline.
+  ///
+  /// In en, this message translates to:
+  /// **'Offline'**
+  String get offline;
+
+  /// No description provided for @projectStats.
+  ///
+  /// In en, this message translates to:
+  /// **'Project Statistics'**
+  String get projectStats;
+
+  /// No description provided for @runningProjects.
+  ///
+  /// In en, this message translates to:
+  /// **'Running Projects'**
+  String get runningProjects;
+
+  /// No description provided for @developmentEnvironment.
+  ///
+  /// In en, this message translates to:
+  /// **'Development Environment'**
+  String get developmentEnvironment;
+
+  /// No description provided for @versionManager.
+  ///
+  /// In en, this message translates to:
+  /// **'Version Manager'**
+  String get versionManager;
+
+  /// No description provided for @systemInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'System Information'**
+  String get systemInformation;
+
+  /// No description provided for @cpu.
+  ///
+  /// In en, this message translates to:
+  /// **'CPU'**
+  String get cpu;
+
+  /// No description provided for @battery.
+  ///
+  /// In en, this message translates to:
+  /// **'Battery'**
+  String get battery;
+
+  /// No description provided for @storage.
+  ///
+  /// In en, this message translates to:
+  /// **'Storage'**
+  String get storage;
+
+  /// No description provided for @network.
+  ///
+  /// In en, this message translates to:
+  /// **'Network'**
+  String get network;
+
+  /// No description provided for @installedSoftware.
+  ///
+  /// In en, this message translates to:
+  /// **'Installed Software'**
+  String get installedSoftware;
+
+  /// No description provided for @codeEditors.
+  ///
+  /// In en, this message translates to:
+  /// **'Code Editors'**
+  String get codeEditors;
+
+  /// No description provided for @browsers.
+  ///
+  /// In en, this message translates to:
+  /// **'Browsers'**
+  String get browsers;
+
+  /// No description provided for @noEditorsDetected.
+  ///
+  /// In en, this message translates to:
+  /// **'No code editors detected'**
+  String get noEditorsDetected;
+
+  /// No description provided for @noBrowsersDetected.
+  ///
+  /// In en, this message translates to:
+  /// **'No browsers detected'**
+  String get noBrowsersDetected;
+
+  /// No description provided for @debugTools.
+  ///
+  /// In en, this message translates to:
+  /// **'Debug Tools'**
+  String get debugTools;
+
+  /// No description provided for @storageDebugInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Storage Debug Info'**
+  String get storageDebugInfo;
+
+  /// No description provided for @view.
+  ///
+  /// In en, this message translates to:
+  /// **'View'**
+  String get view;
+
+  /// No description provided for @clearCorruptedData.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear Corrupted Data'**
+  String get clearCorruptedData;
+
+  /// No description provided for @clear.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get clear;
+
+  /// No description provided for @confirmClear.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Clear'**
+  String get confirmClear;
+
+  /// No description provided for @clearDataWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'This operation will clear all cached data in SharedPreferences and reset all settings to default values.\n\nProject data will not be affected (stored in files).\n\nContinue?'**
+  String get clearDataWarning;
+
+  /// No description provided for @clearingData.
+  ///
+  /// In en, this message translates to:
+  /// **'Clearing data...'**
+  String get clearingData;
+
+  /// No description provided for @clearSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Cleared successfully, settings have been reset to default values.'**
+  String get clearSuccess;
+
+  /// No description provided for @clearFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear failed'**
+  String get clearFailed;
+
+  /// No description provided for @notInstalledMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} is not installed'**
+  String notInstalledMessage(String name);
+
+  /// No description provided for @installFirstMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Please install this tool first before managing its versions.'**
+  String get installFirstMessage;
+
+  /// No description provided for @toolInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Tool Information'**
+  String get toolInfo;
+
+  /// No description provided for @name.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get name;
+
+  /// No description provided for @version.
+  ///
+  /// In en, this message translates to:
+  /// **'Version'**
+  String get version;
+
+  /// No description provided for @installPath.
+  ///
+  /// In en, this message translates to:
+  /// **'Install Path'**
+  String get installPath;
+
+  /// No description provided for @description.
+  ///
+  /// In en, this message translates to:
+  /// **'Description'**
+  String get description;
+
+  /// No description provided for @visitWebsite.
+  ///
+  /// In en, this message translates to:
+  /// **'Visit Website'**
+  String get visitWebsite;
+
+  /// No description provided for @switchedToNode.
+  ///
+  /// In en, this message translates to:
+  /// **'Switched to Node.js {version}'**
+  String switchedToNode(String version);
+
+  /// No description provided for @switchToNodeFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Switch failed'**
+  String get switchToNodeFailed;
+
+  /// No description provided for @nodeInstalled.
+  ///
+  /// In en, this message translates to:
+  /// **'Node.js {version} installed successfully'**
+  String nodeInstalled(String version);
+
+  /// No description provided for @nodeInstallFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Installation failed'**
+  String get nodeInstallFailed;
+
+  /// No description provided for @nodeUninstalled.
+  ///
+  /// In en, this message translates to:
+  /// **'Node.js {version} uninstalled successfully'**
+  String nodeUninstalled(String version);
+
+  /// No description provided for @nodeUninstallFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Uninstallation failed'**
+  String get nodeUninstallFailed;
+
+  /// No description provided for @confirmUninstallNode.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to uninstall Node.js {version}?'**
+  String confirmUninstallNode(String version);
+
+  /// No description provided for @developmentEnv.
+  ///
+  /// In en, this message translates to:
+  /// **'Development'**
+  String get developmentEnv;
+
+  /// No description provided for @stagingEnv.
+  ///
+  /// In en, this message translates to:
+  /// **'Staging'**
+  String get stagingEnv;
+
+  /// No description provided for @productionEnv.
+  ///
+  /// In en, this message translates to:
+  /// **'Production'**
+  String get productionEnv;
+
+  /// No description provided for @building.
+  ///
+  /// In en, this message translates to:
+  /// **'Building...'**
+  String get building;
+
+  /// No description provided for @startBuild.
+  ///
+  /// In en, this message translates to:
+  /// **'Start Build'**
+  String get startBuild;
+
+  /// No description provided for @retry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get retry;
+
+  /// No description provided for @stopping.
+  ///
+  /// In en, this message translates to:
+  /// **'Stopping...'**
+  String get stopping;
+
+  /// No description provided for @starting.
+  ///
+  /// In en, this message translates to:
+  /// **'Starting...'**
+  String get starting;
+
+  /// No description provided for @previewing.
+  ///
+  /// In en, this message translates to:
+  /// **'Previewing...'**
+  String get previewing;
+
+  /// No description provided for @processing.
+  ///
+  /// In en, this message translates to:
+  /// **'Processing...'**
+  String get processing;
+
+  /// No description provided for @stopService.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop Service'**
+  String get stopService;
+
+  /// No description provided for @startDevServer.
+  ///
+  /// In en, this message translates to:
+  /// **'Start Dev Server'**
+  String get startDevServer;
+
+  /// No description provided for @startPreviewServer.
+  ///
+  /// In en, this message translates to:
+  /// **'Start Preview Server'**
+  String get startPreviewServer;
+
+  /// No description provided for @start.
+  ///
+  /// In en, this message translates to:
+  /// **'Start'**
+  String get start;
+
+  /// No description provided for @serviceUrl.
+  ///
+  /// In en, this message translates to:
+  /// **'Service URL'**
+  String get serviceUrl;
+
+  /// No description provided for @details.
+  ///
+  /// In en, this message translates to:
+  /// **'Details'**
+  String get details;
+
+  /// No description provided for @inUse.
+  ///
+  /// In en, this message translates to:
+  /// **'Use'**
+  String get inUse;
 }
 
 class _AppLocalizationsDelegate

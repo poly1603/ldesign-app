@@ -436,6 +436,316 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get versionFormatHint => '示例：18.17.0, 20.x, lts';
+
+  @override
+  String get uninstall => '卸载';
+
+  @override
+  String get update => '更新';
+
+  @override
+  String get viewWebsite => '查看官网';
+
+  @override
+  String get installCommand => '安装命令';
+
+  @override
+  String get confirmUninstall => '确认卸载';
+
+  @override
+  String confirmUninstallMessage(String version) {
+    return '确定要卸载 Node.js $version 吗？';
+  }
+
+  @override
+  String confirmInstallManager(String name) {
+    return '安装 $name';
+  }
+
+  @override
+  String confirmInstallManagerMessage(String name) {
+    return '确定要安装 $name 吗？';
+  }
+
+  @override
+  String confirmUpdateManager(String name) {
+    return '更新 $name';
+  }
+
+  @override
+  String confirmUpdateManagerMessage(String name) {
+    return '确定要将 $name 更新到最新版本吗？';
+  }
+
+  @override
+  String switchedToManager(String name) {
+    return '已切换到 $name';
+  }
+
+  @override
+  String get switchFailed => '切换失败';
+
+  @override
+  String switchedToNodeVersion(String version) {
+    return '已切换到 Node.js $version';
+  }
+
+  @override
+  String nodeVersionInstalled(String version) {
+    return 'Node.js $version 安装成功';
+  }
+
+  @override
+  String get installFailed => '安装失败';
+
+  @override
+  String nodeVersionUninstalled(String version) {
+    return 'Node.js $version 卸载成功';
+  }
+
+  @override
+  String get uninstallFailed => '卸载失败';
+
+  @override
+  String managerInstalled(String name) {
+    return '$name 安装成功';
+  }
+
+  @override
+  String managerUpdated(String name) {
+    return '$name 更新成功';
+  }
+
+  @override
+  String get updateFailed => '更新失败';
+
+  @override
+  String get uninstallComplete => '卸载完成';
+
+  @override
+  String get uninstallFailedTitle => '卸载失败';
+
+  @override
+  String preparingUninstall(String name) {
+    return '准备卸载 $name...';
+  }
+
+  @override
+  String uninstalling(String name) {
+    return '正在卸载 $name';
+  }
+
+  @override
+  String get failedToOpenFolderWithError => '打开文件夹时发生错误';
+
+  @override
+  String get currentEnvironmentVersion => '当前环境版本';
+
+  @override
+  String get notInstalled => '未安装';
+
+  @override
+  String get installed => '已安装';
+
+  @override
+  String get active => '当前使用';
+
+  @override
+  String get uninstallWarning => '卸载后，使用此工具安装的所有 Node.js 版本也会被删除，此操作不可撤除。';
+
+  @override
+  String get uninstallLog => '卸载日志';
+
+  @override
+  String get systemInfoOverview => '系统信息总览';
+
+  @override
+  String get realtimeMonitoring => '实时监控你的开发环境和系统状态';
+
+  @override
+  String get online => '在线';
+
+  @override
+  String get offline => '离线';
+
+  @override
+  String get projectStats => '移动目统计窗口';
+
+  @override
+  String get runningProjects => '运行中项目';
+
+  @override
+  String get developmentEnvironment => '开发环境';
+
+  @override
+  String get versionManager => '版本管理器';
+
+  @override
+  String get systemInformation => '系统信息统计窗口';
+
+  @override
+  String get cpu => 'CPU';
+
+  @override
+  String get battery => '电池';
+
+  @override
+  String get storage => '存储';
+
+  @override
+  String get network => '网络';
+
+  @override
+  String get installedSoftware => '已安装软件';
+
+  @override
+  String get codeEditors => '代码编辑器';
+
+  @override
+  String get browsers => '浏览器';
+
+  @override
+  String get noEditorsDetected => '未检测到代码编辑器';
+
+  @override
+  String get noBrowsersDetected => '未检测到浏览器';
+
+  @override
+  String get debugTools => '调试工具';
+
+  @override
+  String get storageDebugInfo => '存储调试信息';
+
+  @override
+  String get view => '查看';
+
+  @override
+  String get clearCorruptedData => '清理损坏数据';
+
+  @override
+  String get clear => '清理';
+
+  @override
+  String get confirmClear => '确认清理';
+
+  @override
+  String get clearDataWarning =>
+      '本操作将清理所有 SharedPreferences 中的缓存数据，并重置所有设置为默认值。\n\n项目数据不会受影响（保存在文件中）。\n\n是否继续？';
+
+  @override
+  String get clearingData => '正在清理数据...';
+
+  @override
+  String get clearSuccess => '清理成功，设置已重置为默认值。';
+
+  @override
+  String get clearFailed => '清理失败';
+
+  @override
+  String notInstalledMessage(String name) {
+    return '$name 未安装';
+  }
+
+  @override
+  String get installFirstMessage => '请先安装此工具后再管理其版本。';
+
+  @override
+  String get toolInfo => '工具信息';
+
+  @override
+  String get name => '名称';
+
+  @override
+  String get version => '版本';
+
+  @override
+  String get installPath => '安装路径';
+
+  @override
+  String get description => '描述';
+
+  @override
+  String get visitWebsite => '访问官网';
+
+  @override
+  String switchedToNode(String version) {
+    return '已切换到 Node.js $version';
+  }
+
+  @override
+  String get switchToNodeFailed => '切换失败';
+
+  @override
+  String nodeInstalled(String version) {
+    return 'Node.js $version 安装成功';
+  }
+
+  @override
+  String get nodeInstallFailed => '安装失败';
+
+  @override
+  String nodeUninstalled(String version) {
+    return 'Node.js $version 卸载成功';
+  }
+
+  @override
+  String get nodeUninstallFailed => '卸载失败';
+
+  @override
+  String confirmUninstallNode(String version) {
+    return '确定要卸载 Node.js $version 吗？';
+  }
+
+  @override
+  String get developmentEnv => '开发环境';
+
+  @override
+  String get stagingEnv => '测试环境';
+
+  @override
+  String get productionEnv => '生产环境';
+
+  @override
+  String get building => '构建中...';
+
+  @override
+  String get startBuild => '开始构建';
+
+  @override
+  String get retry => '重试';
+
+  @override
+  String get stopping => '停止中...';
+
+  @override
+  String get starting => '启动中...';
+
+  @override
+  String get previewing => '预览中...';
+
+  @override
+  String get processing => '处理中...';
+
+  @override
+  String get stopService => '停止服务';
+
+  @override
+  String get startDevServer => '启动开发服务器';
+
+  @override
+  String get startPreviewServer => '启动预览服务器';
+
+  @override
+  String get start => '开始';
+
+  @override
+  String get serviceUrl => '服务地址';
+
+  @override
+  String get details => '详情';
+
+  @override
+  String get inUse => '使用';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hant`).
@@ -870,4 +1180,314 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get versionFormatHint => '示例：18.17.0, 20.x, lts';
+
+  @override
+  String get uninstall => '卸載';
+
+  @override
+  String get update => '更新';
+
+  @override
+  String get viewWebsite => '查看官網';
+
+  @override
+  String get installCommand => '安裝命令';
+
+  @override
+  String get confirmUninstall => '確認卸載';
+
+  @override
+  String confirmUninstallMessage(String version) {
+    return '確定要卸載 Node.js $version 嗎？';
+  }
+
+  @override
+  String confirmInstallManager(String name) {
+    return '安裝 $name';
+  }
+
+  @override
+  String confirmInstallManagerMessage(String name) {
+    return '確定要安裝 $name 嗎？';
+  }
+
+  @override
+  String confirmUpdateManager(String name) {
+    return '更新 $name';
+  }
+
+  @override
+  String confirmUpdateManagerMessage(String name) {
+    return '確定要將 $name 更新到最新版本嗎？';
+  }
+
+  @override
+  String switchedToManager(String name) {
+    return '已切換到 $name';
+  }
+
+  @override
+  String get switchFailed => '切換失敗';
+
+  @override
+  String switchedToNodeVersion(String version) {
+    return '已切換到 Node.js $version';
+  }
+
+  @override
+  String nodeVersionInstalled(String version) {
+    return 'Node.js $version 安裝成功';
+  }
+
+  @override
+  String get installFailed => '安裝失敗';
+
+  @override
+  String nodeVersionUninstalled(String version) {
+    return 'Node.js $version 卸載成功';
+  }
+
+  @override
+  String get uninstallFailed => '卸載失敗';
+
+  @override
+  String managerInstalled(String name) {
+    return '$name 安裝成功';
+  }
+
+  @override
+  String managerUpdated(String name) {
+    return '$name 更新成功';
+  }
+
+  @override
+  String get updateFailed => '更新失敗';
+
+  @override
+  String get uninstallComplete => '卸載完成';
+
+  @override
+  String get uninstallFailedTitle => '卸載失敗';
+
+  @override
+  String preparingUninstall(String name) {
+    return '準備卸載 $name...';
+  }
+
+  @override
+  String uninstalling(String name) {
+    return '正在卸載 $name';
+  }
+
+  @override
+  String get failedToOpenFolderWithError => '打開文件夾時發生錯誤';
+
+  @override
+  String get currentEnvironmentVersion => '當前環境版本';
+
+  @override
+  String get notInstalled => '未安裝';
+
+  @override
+  String get installed => '已安裝';
+
+  @override
+  String get active => '當前使用';
+
+  @override
+  String get uninstallWarning => '卸載後，使用此工具安裝的所有 Node.js 版本也會被刪除，此操作不可撤銷。';
+
+  @override
+  String get uninstallLog => '卸載日誌';
+
+  @override
+  String get systemInfoOverview => '系統信息總覽';
+
+  @override
+  String get realtimeMonitoring => '實時監控你的開發環境和系統狀態';
+
+  @override
+  String get online => '在線';
+
+  @override
+  String get offline => '離線';
+
+  @override
+  String get projectStats => '項目統計';
+
+  @override
+  String get runningProjects => '運行中項目';
+
+  @override
+  String get developmentEnvironment => '開發環境';
+
+  @override
+  String get versionManager => '版本管理器';
+
+  @override
+  String get systemInformation => '系統信息';
+
+  @override
+  String get cpu => 'CPU';
+
+  @override
+  String get battery => '電池';
+
+  @override
+  String get storage => '存储';
+
+  @override
+  String get network => '網絡';
+
+  @override
+  String get installedSoftware => '已安裝軟件';
+
+  @override
+  String get codeEditors => '代碼編輯器';
+
+  @override
+  String get browsers => '瀏覽器';
+
+  @override
+  String get noEditorsDetected => '未檢測到代碼編輯器';
+
+  @override
+  String get noBrowsersDetected => '未檢測到瀏覽器';
+
+  @override
+  String get debugTools => '調試工具';
+
+  @override
+  String get storageDebugInfo => '存儲調試信息';
+
+  @override
+  String get view => '查看';
+
+  @override
+  String get clearCorruptedData => '清理損壞數據';
+
+  @override
+  String get clear => '清理';
+
+  @override
+  String get confirmClear => '確認清理';
+
+  @override
+  String get clearDataWarning =>
+      '本操作將清理所有 SharedPreferences 中的緩存數據，並重置所有設置為默認值。\n\n項目數據不會受影響（保存在文件中）。\n\n是否繼續？';
+
+  @override
+  String get clearingData => '正在清理數據...';
+
+  @override
+  String get clearSuccess => '清理成功，設置已重置為默認值。';
+
+  @override
+  String get clearFailed => '清理失敗';
+
+  @override
+  String notInstalledMessage(String name) {
+    return '$name 未安裝';
+  }
+
+  @override
+  String get installFirstMessage => '請先安裝此工具後再管理其版本。';
+
+  @override
+  String get toolInfo => '工具信息';
+
+  @override
+  String get name => '名稱';
+
+  @override
+  String get version => '版本';
+
+  @override
+  String get installPath => '安裝路徑';
+
+  @override
+  String get description => '描述';
+
+  @override
+  String get visitWebsite => '訪問官網';
+
+  @override
+  String switchedToNode(String version) {
+    return '已切換到 Node.js $version';
+  }
+
+  @override
+  String get switchToNodeFailed => '切換失敗';
+
+  @override
+  String nodeInstalled(String version) {
+    return 'Node.js $version 安裝成功';
+  }
+
+  @override
+  String get nodeInstallFailed => '安裝失敗';
+
+  @override
+  String nodeUninstalled(String version) {
+    return 'Node.js $version 卸載成功';
+  }
+
+  @override
+  String get nodeUninstallFailed => '卸載失敗';
+
+  @override
+  String confirmUninstallNode(String version) {
+    return '確定要卸載 Node.js $version 嗎？';
+  }
+
+  @override
+  String get developmentEnv => '開發環境';
+
+  @override
+  String get stagingEnv => '測試環境';
+
+  @override
+  String get productionEnv => '生產環境';
+
+  @override
+  String get building => '構建中...';
+
+  @override
+  String get startBuild => '開始構建';
+
+  @override
+  String get retry => '重試';
+
+  @override
+  String get stopping => '停止中...';
+
+  @override
+  String get starting => '启动中...';
+
+  @override
+  String get previewing => '預覽中...';
+
+  @override
+  String get processing => '處理中...';
+
+  @override
+  String get stopService => '停止服務';
+
+  @override
+  String get startDevServer => '启动開發服務器';
+
+  @override
+  String get startPreviewServer => '启动預覽服務器';
+
+  @override
+  String get start => '開始';
+
+  @override
+  String get serviceUrl => '服務地址';
+
+  @override
+  String get details => '詳情';
+
+  @override
+  String get inUse => '使用';
 }
