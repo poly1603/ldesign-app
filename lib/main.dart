@@ -174,6 +174,18 @@ class AppNavigator extends StatelessWidget {
       case '/node-manager':
         screen = const node_manager.NodeManagerScreen();
         break;
+      case '/node-manager-detail':
+        final managerType = routeParams['managerType'] as String?;
+        if (managerType != null) {
+          screen = node_manager.NodeManagerDetailScreenWrapper(managerType: managerType);
+        } else {
+          // 如果没有 managerType，回到 node-manager
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            appProvider.setCurrentRoute('/node-manager');
+          });
+          screen = const node_manager.NodeManagerScreen();
+        }
+        break;
       default:
         // 检查是否是项目操作路由
         if (currentRoute.startsWith('/project/') && currentRoute.contains('/')) {

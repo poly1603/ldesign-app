@@ -8,12 +8,58 @@ import '../services/node_version_manager_service.dart';
 import '../l10n/app_localizations.dart';
 import 'node_manager_detail_screen.dart';
 import '../utils/dialog_utils.dart';
+import '../providers/app_provider.dart';
 
 class NodeManagerScreen extends StatefulWidget {
   const NodeManagerScreen({super.key});
 
   @override
   State<NodeManagerScreen> createState() => _NodeManagerScreenState();
+}
+
+// Wrapper 用于根据 managerType 获取对应的 manager
+class NodeManagerDetailScreenWrapper extends StatefulWidget {
+  final String managerType;
+
+  const NodeManagerDetailScreenWrapper({super.key, required this.managerType});
+
+  @override
+  State<NodeManagerDetailScreenWrapper> createState() => _NodeManagerDetailScreenWrapperState();
+}
+
+class _NodeManagerDetailScreenWrapperState extends State<NodeManagerDetailScreenWrapper> {
+  late NodeVersionManagerService _service;
+  NodeVersionManager? _manager;
+
+  @override
+  void initState() {
+    super.initState();
+    _service = NodeVersionManagerService();
+    _initializeService();
+  }
+
+  Future<void> _initializeService() async {
+    await _service.initialize();
+    // 根据 type 字符串找到对应的 manager
+    final type = NodeVersionManagerType.values.firstWhere(
+      (t) => t.name == widget.managerType,
+      orElse: () => NodeVersionManagerType.nvm,
+    );
+    setState(() {
+      _manager = _service.managers.firstWhere((m) => m.type == type);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_manager == null) {
+      return const Center(child: CircularProgressIndicator());
+    }
+    return NodeManagerDetailScreen(
+      manager: _manager!,
+      service: _service,
+    );
+  }
 }
 
 class _NodeManagerScreenState extends State<NodeManagerScreen> {
@@ -494,7 +540,7 @@ class _NodeManagerScreenState extends State<NodeManagerScreen> {
                     SizedBox(
                       height: 28,
                       child: OutlinedButton(
-                        onPressed: () => _navigateToManagerDetail(manager, service),
+                        onPressed: () => _navigateToManagerDetail(manager),
                         style: OutlinedButton.styleFrom(
                           foregroundColor: theme.colorScheme.primary,
                           side: BorderSide(color: theme.colorScheme.primary),
@@ -871,14 +917,11 @@ class _NodeManagerScreenState extends State<NodeManagerScreen> {
     return card;
   }
 
-  void _navigateToManagerDetail(NodeVersionManager manager, NodeVersionManagerService service) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => NodeManagerDetailScreen(
-          manager: manager,
-          service: service,
-        ),
-      ),
+  void _navigateToManagerDetail(NodeVersionManager manager) {
+    final appProvider = context.read<AppProvider>();
+    appProvider.setCurrentRoute(
+      '/node-manager-detail',
+      params: {'managerType': manager.type.name},
     );
   }
 

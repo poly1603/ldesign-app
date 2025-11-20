@@ -44,51 +44,7 @@ class _NodeManagerDetailScreenState extends State<NodeManagerDetailScreen> {
     return ChangeNotifierProvider.value(
       value: widget.service,
       child: Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          elevation: 0,
-          leading: IconButton(
-            icon: const Icon(Bootstrap.arrow_left),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
-          title: Row(
-            children: [
-              Container(
-                width: 32,
-                height: 32,
-                decoration: BoxDecoration(
-                  color: _getManagerColor().withValues(alpha: 0.15),
-                  borderRadius: BorderRadius.circular(6),
-                ),
-                child: Icon(
-                  Bootstrap.terminal,
-                  color: _getManagerColor(),
-                  size: 16,
-                ),
-              ),
-              const SizedBox(width: 12),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    widget.manager.displayName,
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  if (widget.manager.version != null)
-                    Text(
-                      'v${widget.manager.version}',
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.colorScheme.onSurface.withValues(alpha: 0.15),
-                      ),
-                    ),
-                ],
-              ),
-            ],
-          ),
-        ),
+        backgroundColor: theme.colorScheme.surfaceContainerLowest,
         body: Consumer<NodeVersionManagerService>(
           builder: (context, service, child) {
             if (!widget.manager.isInstalled) {
@@ -96,7 +52,7 @@ class _NodeManagerDetailScreenState extends State<NodeManagerDetailScreen> {
             }
 
             return SingleChildScrollView(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.all(24),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
