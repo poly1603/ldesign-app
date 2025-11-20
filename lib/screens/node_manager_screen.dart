@@ -9,6 +9,7 @@ import '../l10n/app_localizations.dart';
 import 'node_manager_detail_screen.dart';
 import '../utils/dialog_utils.dart';
 import '../providers/app_provider.dart';
+import '../widgets/number_text.dart';
 
 class NodeManagerScreen extends StatefulWidget {
   const NodeManagerScreen({super.key});
@@ -166,7 +167,7 @@ class _NodeManagerScreenState extends State<NodeManagerScreen> {
         Text(
           l10n.nodeManager,
           style: theme.textTheme.headlineSmall?.copyWith(
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.w600,
             color: theme.colorScheme.onSurface,
           ),
         ),
@@ -276,12 +277,11 @@ class _NodeManagerScreenState extends State<NodeManagerScreen> {
             ],
           ),
           const SizedBox(height: 8),
-          Text(
+          VersionText(
             version,
-            style: theme.textTheme.titleSmall?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: theme.colorScheme.onSurface,
-            ),
+            fontSize: theme.textTheme.titleSmall?.fontSize,
+            fontWeight: FontWeight.w600,
+            color: theme.colorScheme.onSurface,
           ),
         ],
       ),
@@ -471,20 +471,17 @@ class _NodeManagerScreenState extends State<NodeManagerScreen> {
                             Text(
                               manager.name.toUpperCase(),
                               style: theme.textTheme.titleSmall?.copyWith(
-                                fontWeight: FontWeight.bold,
+                                fontWeight: FontWeight.w600,
                                 fontSize: 13,
                                 color: theme.colorScheme.onSurface,
                               ),
                             ),
                             if (isInstalled && manager.version != null) ...[
                               const SizedBox(width: 6),
-                              Text(
+                              VersionText(
                                 'v${manager.version}',
-                                style: theme.textTheme.bodySmall?.copyWith(
-                                  fontSize: 10,
-                                  color: theme.colorScheme.onSurface.withValues(alpha: 0.15),
-                                  fontFamily: 'monospace',
-                                ),
+                                fontSize: 10,
+                                color: theme.colorScheme.onSurface.withValues(alpha: 0.15),
                               ),
                             ],
                           ],
@@ -1091,7 +1088,7 @@ class _NodeManagerScreenState extends State<NodeManagerScreen> {
               manager.displayName,
               style: const TextStyle(
                 fontSize: 18,
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w600,
               ),
             ),
             const SizedBox(height: 16),
@@ -1307,7 +1304,7 @@ class _UninstallProgressDialogState extends State<_UninstallProgressDialog> {
                         Text(
                           widget.manager.displayName,
                           style: theme.textTheme.titleSmall?.copyWith(
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                         Text(
@@ -1398,7 +1395,7 @@ class _UninstallProgressDialogState extends State<_UninstallProgressDialog> {
               Text(
                 l10n.uninstallLog,
                 style: theme.textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
               const SizedBox(height: 8),
@@ -1460,7 +1457,7 @@ class _UninstallProgressDialogState extends State<_UninstallProgressDialog> {
                           '卸载失败',
                           style: theme.textTheme.titleSmall?.copyWith(
                             color: Colors.red.shade700,
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                       ],
@@ -1703,7 +1700,7 @@ class _InstallProgressDialogState extends State<_InstallProgressDialog> {
                         Text(
                           widget.manager.displayName,
                           style: theme.textTheme.titleSmall?.copyWith(
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                         Text(
@@ -1763,7 +1760,7 @@ class _InstallProgressDialogState extends State<_InstallProgressDialog> {
             Text(
               '安装日志',
               style: theme.textTheme.titleSmall?.copyWith(
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w600,
               ),
             ),
             const SizedBox(height: 8),
@@ -1824,7 +1821,7 @@ class _InstallProgressDialogState extends State<_InstallProgressDialog> {
                           '安装失败',
                           style: theme.textTheme.titleSmall?.copyWith(
                             color: Colors.red.shade700,
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                       ],

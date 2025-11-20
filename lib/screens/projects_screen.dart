@@ -52,7 +52,7 @@ class ProjectsScreen extends StatelessWidget {
                             Text(
                               l10n.projects,
                               style: theme.textTheme.headlineSmall?.copyWith(
-                                fontWeight: FontWeight.w700,
+                                fontWeight: FontWeight.w600,
                               ),
                             ),
                             Text(
@@ -140,7 +140,7 @@ class ProjectsScreen extends StatelessWidget {
                         Text(
                           l10n.projects,
                           style: theme.textTheme.headlineSmall?.copyWith(
-                            fontWeight: FontWeight.w700,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                         Text(
@@ -447,7 +447,7 @@ class ProjectsScreen extends StatelessWidget {
                 Text(
                   project.name,
                   style: theme.textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.w700,
+                    fontWeight: FontWeight.w600,
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,

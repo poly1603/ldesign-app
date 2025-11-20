@@ -90,7 +90,7 @@ class _ProjectActionScreenState extends State<ProjectActionScreen> with TickerPr
                           Text(
                             project.name,
                             style: theme.textTheme.titleLarge?.copyWith(
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w600,
                             ),
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -519,7 +519,7 @@ class _ProjectActionScreenState extends State<ProjectActionScreen> with TickerPr
                     '服务地址',
                     style: TextStyle(
                       fontSize: 20,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                   const Spacer(),
@@ -604,10 +604,10 @@ class _ProjectActionScreenState extends State<ProjectActionScreen> with TickerPr
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            '鏈嶅姟鍦板潃',
+            '服务地址',
             style: TextStyle(
               fontSize: 16,
-              fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.w600,
               color: Colors.grey.shade800,
             ),
           ),

@@ -7,6 +7,7 @@ import '../services/system_info_service.dart';
 import '../services/project_service_manager.dart';
 import '../providers/app_provider.dart';
 import '../widgets/skeleton_loader.dart';
+import '../widgets/number_text.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -171,7 +172,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   l10n.systemInfoOverview,
                   style: TextStyle(
                     fontSize: 32,
-                    fontWeight: FontWeight.w800,
+                    fontWeight: FontWeight.w600,
                     color: Colors.white,
                     letterSpacing: -1,
                   ),
@@ -272,7 +273,7 @@ class _HomeScreenState extends State<HomeScreen> {
           l10n.projectStats,
           style: TextStyle(
             fontSize: 20,
-            fontWeight: FontWeight.w700,
+            fontWeight: FontWeight.w600,
             color: theme.colorScheme.onSurface,
             letterSpacing: -0.5,
           ),
@@ -333,7 +334,7 @@ class _HomeScreenState extends State<HomeScreen> {
           l10n.developmentEnvironment,
           style: TextStyle(
             fontSize: 20,
-            fontWeight: FontWeight.w700,
+            fontWeight: FontWeight.w600,
             color: theme.colorScheme.onSurface,
             letterSpacing: -0.5,
           ),
@@ -391,7 +392,7 @@ class _HomeScreenState extends State<HomeScreen> {
           l10n.systemInformation,
           style: TextStyle(
             fontSize: 20,
-            fontWeight: FontWeight.w700,
+            fontWeight: FontWeight.w600,
             color: theme.colorScheme.onSurface,
             letterSpacing: -0.5,
           ),
@@ -460,7 +461,7 @@ class _HomeScreenState extends State<HomeScreen> {
           l10n.installedSoftware,
           style: TextStyle(
             fontSize: 20,
-            fontWeight: FontWeight.w700,
+            fontWeight: FontWeight.w600,
             color: theme.colorScheme.onSurface,
             letterSpacing: -0.5,
           ),
@@ -539,11 +540,11 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           const SizedBox(height: 16),
-          Text(
+          NumberText(
             value,
             style: TextStyle(
               fontSize: 32,
-              fontWeight: FontWeight.w800,
+              fontWeight: FontWeight.w600,
               color: theme.colorScheme.onSurface,
               letterSpacing: -1,
             ),

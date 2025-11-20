@@ -371,7 +371,7 @@ class _ImportProjectDialogState extends State<ImportProjectDialog> with SingleTi
                     Text(
                       project.name,
                       style: theme.textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w600,
                         fontSize: 20,
                       ),
                       maxLines: 1,

@@ -28,7 +28,7 @@ class SettingsScreen extends StatelessWidget {
             l10n.settings,
             style: TextStyle(
               fontSize: 28,
-              fontWeight: FontWeight.w800,
+              fontWeight: FontWeight.w600,
               color: theme.colorScheme.onSurface,
               letterSpacing: -1,
             ),
@@ -354,7 +354,7 @@ class SettingsScreen extends StatelessWidget {
                   title,
                   style: TextStyle(
                     fontSize: 18,
-                    fontWeight: FontWeight.w700,
+                    fontWeight: FontWeight.w600,
                     color: theme.colorScheme.onSurface,
                     letterSpacing: -0.5,
                   ),

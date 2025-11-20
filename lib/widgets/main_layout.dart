@@ -94,7 +94,7 @@ class _MainLayoutState extends State<MainLayout> {
                 Text(
                   l10n.appTitle,
                   style: theme.textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.w700,
+                    fontWeight: FontWeight.w600,
                     letterSpacing: -0.3,
                     color: theme.colorScheme.onSurface.withValues(alpha: 0.9),
                   ),

@@ -105,7 +105,7 @@ class ProjectDetailScreen extends StatelessWidget {
                     Text(
                       project.name,
                       style: theme.textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -331,7 +331,7 @@ class ProjectDetailScreen extends StatelessWidget {
               Text(
                 title,
                 style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ],
@@ -586,7 +586,7 @@ class ProjectDetailScreen extends StatelessWidget {
               Text(
                 l10n.projectActions,
                 style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ],

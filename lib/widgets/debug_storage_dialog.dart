@@ -90,7 +90,7 @@ class _DebugStorageDialogState extends State<DebugStorageDialog> {
                 Text(
                   '存储调试信息',
                   style: theme.textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
                 const Spacer(),

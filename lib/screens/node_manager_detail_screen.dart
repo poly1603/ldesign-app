@@ -6,6 +6,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../services/node_version_manager_service.dart';
 import '../l10n/app_localizations.dart';
+import '../widgets/number_text.dart';
 
 class NodeManagerDetailScreen extends StatefulWidget {
   final NodeVersionManager manager;
@@ -286,12 +287,10 @@ class _NodeManagerDetailScreenState extends State<NodeManagerDetailScreen> {
                 children: [
                   Row(
                     children: [
-                      Text(
+                      VersionText(
                         version.version,
-                        style: theme.textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'monospace',
-                        ),
+                        fontSize: theme.textTheme.titleSmall?.fontSize,
+                        fontWeight: FontWeight.w600,
                       ),
                       if (version.isLts) ...{
                         const SizedBox(width: 8),
@@ -305,7 +304,7 @@ class _NodeManagerDetailScreenState extends State<NodeManagerDetailScreen> {
                             'LTS',
                             style: TextStyle(
                               fontSize: 10,
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w600,
                               color: Colors.green.shade700,
                             ),
                           ),
@@ -323,7 +322,7 @@ class _NodeManagerDetailScreenState extends State<NodeManagerDetailScreen> {
                             l10n.current,
                             style: const TextStyle(
                               fontSize: 10,
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w600,
                               color: Colors.white,
                             ),
                           ),
