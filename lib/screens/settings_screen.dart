@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:icons_plus/icons_plus.dart';
 
 import 'package:provider/provider.dart';
@@ -88,7 +88,7 @@ class SettingsScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8),
                     boxShadow: [
                       BoxShadow(
-                        color: theme.colorScheme.primary.withOpacity(0.3),
+                        color: theme.colorScheme.primary.withValues(alpha: 0.3),
                         blurRadius: 8,
                         offset: const Offset(0, 2),
                       ),
@@ -258,12 +258,12 @@ class SettingsScreen extends StatelessWidget {
           if (const bool.fromEnvironment('dart.vm.product') == false)
             _buildSettingsCard(
               theme: theme,
-              title: '调试工具',
+              title: '璋冭瘯宸ュ叿',
               icon: Bootstrap.bug,
               children: [
                 _buildSettingItem(
                   theme: theme,
-                  title: '存储调试信息',
+                  title: '瀛樺偍璋冭瘯淇℃伅',
                   icon: Bootstrap.database,
                   trailing: ElevatedButton.icon(
                     onPressed: () {
@@ -273,18 +273,18 @@ class SettingsScreen extends StatelessWidget {
                       );
                     },
                     icon: const Icon(Bootstrap.bug, size: 14),
-                    label: const Text('查看'),
+                    label: const Text('鏌ョ湅'),
                   ),
                 ),
                 const SizedBox(height: 16),
                 _buildSettingItem(
                   theme: theme,
-                  title: '清理损坏数据',
+                  title: '娓呯悊鎹熷潖鏁版嵁',
                   icon: Bootstrap.trash,
                   trailing: ElevatedButton.icon(
                     onPressed: () => _showClearDataDialog(context),
                     icon: const Icon(Bootstrap.trash, size: 14),
-                    label: const Text('清理'),
+                    label: const Text('娓呯悊'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: theme.colorScheme.error,
                       foregroundColor: theme.colorScheme.onError,
@@ -312,7 +312,7 @@ class SettingsScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -331,13 +331,13 @@ class SettingsScreen extends StatelessWidget {
                     gradient: LinearGradient(
                       colors: [
                         theme.colorScheme.primary,
-                        theme.colorScheme.primary.withOpacity(0.8),
+                        theme.colorScheme.primary.withValues(alpha: 0.2),
                       ],
                     ),
                     borderRadius: BorderRadius.circular(10),
                     boxShadow: [
                       BoxShadow(
-                        color: theme.colorScheme.primary.withOpacity(0.3),
+                        color: theme.colorScheme.primary.withValues(alpha: 0.25),
                         blurRadius: 8,
                         offset: const Offset(0, 2),
                       ),
@@ -383,7 +383,7 @@ class SettingsScreen extends StatelessWidget {
             Icon(
               icon,
               size: 18,
-              color: theme.colorScheme.onSurface.withOpacity(0.6),
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
             ),
             const SizedBox(width: 12),
             Text(
@@ -391,7 +391,7 @@ class SettingsScreen extends StatelessWidget {
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
-                color: theme.colorScheme.onSurface.withOpacity(0.8),
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                 letterSpacing: -0.2,
               ),
             ),
@@ -411,11 +411,11 @@ class SettingsScreen extends StatelessWidget {
           children: [
             Icon(Bootstrap.exclamation_triangle, color: theme.colorScheme.error),
             const SizedBox(width: 12),
-            const Text('确认清理'),
+            const Text('纭娓呯悊'),
           ],
         ),
         content: const Text(
-          '此操作将清理所有 SharedPreferences 中的损坏数据，并重置所有设置为默认值。\n\n'
+          '本操作将清理所有 SharedPreferences 中的缓存数据，并重置所有设置为默认值。\n\n'
           '项目数据不会受影响（保存在文件中）。\n\n'
           '是否继续？',
         ),
@@ -445,7 +445,7 @@ class SettingsScreen extends StatelessWidget {
     final messenger = ScaffoldMessenger.of(context);
     
     try {
-      // 显示加载提示
+      // 鏄剧ず鍔犺浇鎻愮ず
       messenger.showSnackBar(
         SnackBar(
           content: Row(
@@ -466,15 +466,15 @@ class SettingsScreen extends StatelessWidget {
         ),
       );
 
-      // 执行清理
+      // 鎵ц娓呯悊
       await StorageUtil.resetAllPreferences();
 
-      // 重新加载设置
+      // 閲嶆柊鍔犺浇璁剧疆
       if (context.mounted) {
         await context.read<AppProvider>().initialize();
       }
 
-      // 显示成功消息
+      // 鏄剧ず鎴愬姛娑堟伅
       messenger.clearSnackBars();
       messenger.showSnackBar(
         SnackBar(
@@ -482,7 +482,7 @@ class SettingsScreen extends StatelessWidget {
             children: [
               Icon(Bootstrap.check_circle, color: theme.colorScheme.onPrimary, size: 18),
               const SizedBox(width: 12),
-              const Text('清理成功！设置已重置为默认值'),
+              const Text('清理成功，设置已重置为默认值。'),
             ],
           ),
           backgroundColor: theme.colorScheme.primary,

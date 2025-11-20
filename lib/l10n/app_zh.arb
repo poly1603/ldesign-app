@@ -169,5 +169,17 @@
   "slideUpTransition": "向上滑动",
   "slideDownTransition": "向下滑动",
   "scaleTransition": "缩放",
-  "rotationTransition": "旋转"
+  "rotationTransition": "旋转",
+  "nodeManager": "Node 版本管理",
+  "nodeManagerDescription": "管理 Node.js 版本和版本管理工具",
+  "versionManagers": "版本管理器",
+  "refresh": "刷新",
+  "installedVersions": "已安装版本",
+  "noVersionsInstalled": "暂无已安装的 Node.js 版本",
+  "use": "使用",
+  "current": "当前",
+  "installNewVersion": "安装新版本",
+  "enterVersionNumber": "输入版本号，如 18.17.0",
+  "install": "安装",
+  "versionFormatHint": "示例：18.17.0, 20.x, lts"
 }

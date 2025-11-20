@@ -11,6 +11,7 @@ import 'screens/projects_screen.dart';
 import 'screens/project_detail_screen.dart';
 import 'screens/project_action_screen.dart';
 import 'screens/settings_screen.dart';
+import 'screens/node_manager_screen.dart' as node_manager;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -169,6 +170,9 @@ class AppNavigator extends StatelessWidget {
         break;
       case '/settings':
         screen = const SettingsScreen();
+        break;
+      case '/node-manager':
+        screen = const node_manager.NodeManagerScreen();
         break;
       default:
         // 检查是否是项目操作路由

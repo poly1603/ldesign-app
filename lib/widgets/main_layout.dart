@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:icons_plus/icons_plus.dart';
 import '../providers/app_provider.dart';
@@ -34,6 +34,12 @@ class _MainLayoutState extends State<MainLayout> {
       route: '/projects',
     ),
     MenuItem(
+      id: 'node_manager',
+      titleKey: 'nodeManager',
+      icon: Bootstrap.tools,
+      route: '/node-manager',
+    ),
+    MenuItem(
       id: 'settings',
       titleKey: 'settings',
       icon: Bootstrap.gear,
@@ -66,13 +72,13 @@ class _MainLayoutState extends State<MainLayout> {
                     gradient: LinearGradient(
                       colors: [
                         theme.colorScheme.primary,
-                        theme.colorScheme.primary.withOpacity(0.8),
+                        theme.colorScheme.primary.withValues(alpha: 0.8),
                       ],
                     ),
                     borderRadius: BorderRadius.circular(8),
                     boxShadow: [
                       BoxShadow(
-                        color: theme.colorScheme.primary.withOpacity(0.3),
+                        color: theme.colorScheme.primary.withValues(alpha: 0.3),
                         blurRadius: 8,
                         offset: const Offset(0, 2),
                       ),
@@ -90,7 +96,7 @@ class _MainLayoutState extends State<MainLayout> {
                   style: theme.textTheme.titleSmall?.copyWith(
                     fontWeight: FontWeight.w700,
                     letterSpacing: -0.3,
-                    color: theme.colorScheme.onSurface.withOpacity(0.9),
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.9),
                   ),
                 ),
               ],
@@ -99,16 +105,16 @@ class _MainLayoutState extends State<MainLayout> {
           Expanded(
             child: LayoutBuilder(
               builder: (context, constraints) {
-                // 当窗口宽度小于1000px时自动收起侧边栏
+                // 褰撶獥鍙ｅ搴﹀皬浜?000px鏃惰嚜鍔ㄦ敹璧蜂晶杈规爮
                 final shouldAutoCollapse = constraints.maxWidth < 1000;
                 final appProvider = context.read<AppProvider>();
                 
-                // 如果需要自动收起且当前是展开状态，则自动收起
+                // 濡傛灉闇€瑕佽嚜鍔ㄦ敹璧蜂笖褰撳墠鏄睍寮€鐘舵€侊紝鍒欒嚜鍔ㄦ敹璧?
                 WidgetsBinding.instance.addPostFrameCallback((_) {
                   if (shouldAutoCollapse && !appProvider.sidebarCollapsed) {
                     appProvider.setSidebarCollapsed(true);
                   } else if (!shouldAutoCollapse && appProvider.sidebarCollapsed && constraints.maxWidth > 1100) {
-                    // 当窗口足够大时（1100px以上）可以考虑自动展开，但这里我们保持用户的选择
+                    // 褰撶獥鍙ｈ冻澶熷ぇ鏃讹紙1100px浠ヤ笂锛夊彲浠ヨ€冭檻鑷姩灞曞紑锛屼絾杩欓噷鎴戜滑淇濇寔鐢ㄦ埛鐨勯€夋嫨
                     // appProvider.setSidebarCollapsed(false);
                   }
                 });

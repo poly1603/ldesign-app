@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+﻿import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:icons_plus/icons_plus.dart';
@@ -33,15 +33,15 @@ class ProjectsScreen extends StatelessWidget {
           ),
           child: LayoutBuilder(
             builder: (context, constraints) {
-              // 根据屏幕宽度决定布局方式
+              // 鏍规嵁灞忓箷瀹藉害鍐冲畾甯冨眬鏂瑰紡
               final isSmallScreen = constraints.maxWidth < 800;
               
               if (isSmallScreen) {
-                // 小屏幕：垂直布局
+                // 灏忓睆骞曪細鍨傜洿甯冨眬
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // 标题行
+                    // 鏍囬琛?
                     Row(
                       children: [
                         Column(
@@ -57,13 +57,13 @@ class ProjectsScreen extends StatelessWidget {
                             Text(
                               l10n.projectList,
                               style: theme.textTheme.bodySmall?.copyWith(
-                                color: theme.colorScheme.onSurface.withOpacity(0.6),
+                                color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                               ),
                             ),
                           ],
                         ),
                         const Spacer(),
-                        // 导入按钮
+                        // 瀵煎叆鎸夐挳
                         SizedBox(
                           height: 40,
                           child: ElevatedButton.icon(
@@ -85,10 +85,10 @@ class ProjectsScreen extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 12),
-                    // 控件行
+                    // 鎺т欢琛?
                     Row(
                       children: [
-                        // 搜索框
+                        // 鎼滅储妗?
                         Expanded(
                           child: SizedBox(
                             height: 40,
@@ -128,7 +128,7 @@ class ProjectsScreen extends StatelessWidget {
                   ],
                 );
               } else {
-                // 大屏幕：水平布局
+                // 澶у睆骞曪細姘村钩甯冨眬
                 return Row(
                   children: [
                     // Title section
@@ -145,7 +145,7 @@ class ProjectsScreen extends StatelessWidget {
                         Text(
                           l10n.projectList,
                           style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.onSurface.withOpacity(0.6),
+                            color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                           ),
                         ),
                       ],
@@ -227,32 +227,32 @@ class ProjectsScreen extends StatelessWidget {
                         child: LayoutBuilder(
                           key: ValueKey(appProvider.sidebarCollapsed),
                           builder: (context, constraints) {
-                          // 计算响应式列数，考虑更精确的断点
+                          // 璁＄畻鍝嶅簲寮忓垪鏁帮紝鑰冭檻鏇寸簿纭殑鏂偣
                           int crossAxisCount;
                           final availableWidth = constraints.maxWidth;
                     
-                    // 每个卡片的最小宽度约为280px（包括间距）
+                    // 姣忎釜鍗＄墖鐨勬渶灏忓搴︾害涓?80px锛堝寘鎷棿璺濓級
                     const minCardWidth = 280.0;
                     const cardSpacing = 16.0;
-                    const horizontalPadding = 48.0; // 左右各24px
+                    const horizontalPadding = 48.0; // 宸﹀彸鍚?4px
                     
-                    // 计算可以容纳的列数
+                    // 璁＄畻鍙互瀹圭撼鐨勫垪鏁?
                     final maxPossibleColumns = ((availableWidth - horizontalPadding + cardSpacing) / (minCardWidth + cardSpacing)).floor();
                     
-                    // 设置合理的列数范围
+                    // 璁剧疆鍚堢悊鐨勫垪鏁拌寖鍥?
                     if (maxPossibleColumns <= 1 || availableWidth < 400) {
-                      crossAxisCount = 1; // 非常小的屏幕：1列
+                      crossAxisCount = 1; // 闈炲父灏忕殑灞忓箷锛?鍒?
                     } else if (maxPossibleColumns == 2 || availableWidth < 700) {
-                      crossAxisCount = 2; // 小屏幕：2列
+                      crossAxisCount = 2; // 灏忓睆骞曪細2鍒?
                     } else if (maxPossibleColumns == 3 || availableWidth < 1000) {
-                      crossAxisCount = 3; // 中等屏幕：3列
+                      crossAxisCount = 3; // 涓瓑灞忓箷锛?鍒?
                     } else if (maxPossibleColumns == 4 || availableWidth < 1300) {
-                      crossAxisCount = 4; // 大屏幕：4列
+                      crossAxisCount = 4; // 澶у睆骞曪細4鍒?
                     } else {
-                      crossAxisCount = 5; // 超大屏幕：5列
+                      crossAxisCount = 5; // 瓒呭ぇ灞忓箷锛?鍒?
                     }
 
-                    // 调试信息（可选）
+                    // 璋冭瘯淇℃伅锛堝彲閫夛級
                     if (kDebugMode) {
                       print('Available width: $availableWidth, Columns: $crossAxisCount, Max possible: $maxPossibleColumns');
                     }
@@ -301,7 +301,7 @@ class ProjectsScreen extends StatelessWidget {
           Icon(
             Bootstrap.folder_plus,
             size: 64,
-            color: theme.colorScheme.onSurface.withOpacity(0.3),
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
           ),
           const SizedBox(height: 16),
           Text(
@@ -312,7 +312,7 @@ class ProjectsScreen extends StatelessWidget {
           Text(
             l10n.importFirstProject,
             style: theme.textTheme.bodyMedium?.copyWith(
-              color: theme.colorScheme.onSurface.withOpacity(0.6),
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
             ),
           ),
         ],
@@ -364,7 +364,7 @@ class ProjectsScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -391,13 +391,13 @@ class ProjectsScreen extends StatelessWidget {
                         gradient: LinearGradient(
                           colors: [
                             color,
-                            color.withOpacity(0.8),
+                            color.withValues(alpha: 0.8),
                           ],
                         ),
                         borderRadius: BorderRadius.circular(12),
                         boxShadow: [
                           BoxShadow(
-                            color: color.withOpacity(0.3),
+                            color: color.withValues(alpha: 0.3),
                             blurRadius: 8,
                             offset: const Offset(0, 4),
                           ),
@@ -457,7 +457,7 @@ class ProjectsScreen extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
-                        color: color.withOpacity(0.1),
+                        color: color.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: Text(
@@ -490,7 +490,7 @@ class ProjectsScreen extends StatelessWidget {
                   Text(
                     project.description!,
                     style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onSurface.withOpacity(0.6),
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                     ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
@@ -501,13 +501,13 @@ class ProjectsScreen extends StatelessWidget {
                     Icon(
                       Bootstrap.clock,
                       size: 14,
-                      color: theme.colorScheme.onSurface.withOpacity(0.5),
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                     ),
                     const SizedBox(width: 4),
                     Text(
                       _formatDate(context, project.lastModified),
                       style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.colorScheme.onSurface.withOpacity(0.5),
+                        color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                       ),
                     ),
                   ],
@@ -539,7 +539,7 @@ class ProjectsScreen extends StatelessWidget {
   }
 
   Future<void> _importProject(BuildContext context, AppProvider appProvider) async {
-    // 确保新导入的项目不会被现有筛选/搜索隐藏
+    // 纭繚鏂板鍏ョ殑椤圭洰涓嶄細琚幇鏈夌瓫閫?鎼滅储闅愯棌
     appProvider.setFilterType(null);
     appProvider.setSearchQuery('');
 
@@ -551,10 +551,10 @@ class ProjectsScreen extends StatelessWidget {
     if (project != null) {
       if (!context.mounted) return;
 
-      // 添加项目（重复校验已在弹窗内处理）
+      // 娣诲姞椤圭洰锛堥噸澶嶆牎楠屽凡鍦ㄥ脊绐楀唴澶勭悊锛?
       await appProvider.addProject(project);
 
-      // 可选：切换按名称排序以稳定展示
+      // 鍙€夛細鍒囨崲鎸夊悕绉版帓搴忎互绋冲畾灞曠ず
       // appProvider.setSortBy('name');
 
       if (context.mounted) {
@@ -643,7 +643,7 @@ class ProjectsScreen extends StatelessWidget {
       offset: const Offset(0, 4),
       elevation: 12,
       color: Colors.white,
-      shadowColor: Colors.black.withOpacity(0.15),
+      shadowColor: Colors.black.withValues(alpha: 0.15),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       splashRadius: 20,
       itemBuilder: (context) => [
@@ -655,7 +655,7 @@ class ProjectsScreen extends StatelessWidget {
             child: Text(
               l10n.filterBy,
               style: theme.textTheme.labelSmall?.copyWith(
-                color: theme.colorScheme.onSurface.withOpacity(0.6),
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                 fontWeight: FontWeight.w600,
                 letterSpacing: 0.5,
               ),
@@ -671,7 +671,7 @@ class ProjectsScreen extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 4),
             child: Row(
               children: [
-                Icon(Bootstrap.funnel, size: 16, color: theme.colorScheme.onSurface.withOpacity(0.7)),
+                Icon(Bootstrap.funnel, size: 16, color: theme.colorScheme.onSurface.withValues(alpha: 0.7)),
                 const SizedBox(width: 12),
                 Text(
                   l10n.all,
@@ -874,7 +874,7 @@ class ProjectsScreen extends StatelessWidget {
           border: Border.all(color: theme.dividerColor),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.02),
+              color: Colors.black.withValues(alpha: 0.02),
               blurRadius: 2,
               offset: const Offset(0, 1),
             ),
@@ -883,16 +883,16 @@ class ProjectsScreen extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Bootstrap.funnel, size: 16, color: theme.colorScheme.onSurface.withOpacity(0.7)),
+            Icon(Bootstrap.funnel, size: 16, color: theme.colorScheme.onSurface.withValues(alpha: 0.7)),
             const SizedBox(width: 8),
             Text(
               _typeLabel(appProvider.filterType, l10n),
               style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.onSurface.withOpacity(0.8),
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
               ),
             ),
             const SizedBox(width: 8),
-            Icon(Bootstrap.chevron_down, size: 14, color: theme.colorScheme.onSurface.withOpacity(0.5)),
+            Icon(Bootstrap.chevron_down, size: 14, color: theme.colorScheme.onSurface.withValues(alpha: 0.5)),
           ],
         ),
       ),
@@ -906,7 +906,7 @@ class ProjectsScreen extends StatelessWidget {
       offset: const Offset(0, 4),
       elevation: 12,
       color: Colors.white,
-      shadowColor: Colors.black.withOpacity(0.15),
+      shadowColor: Colors.black.withValues(alpha: 0.15),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       splashRadius: 20,
       itemBuilder: (context) => [
@@ -918,7 +918,7 @@ class ProjectsScreen extends StatelessWidget {
             child: Text(
               l10n.sortBy,
               style: theme.textTheme.labelSmall?.copyWith(
-                color: theme.colorScheme.onSurface.withOpacity(0.6),
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                 fontWeight: FontWeight.w600,
                 letterSpacing: 0.5,
               ),
@@ -934,7 +934,7 @@ class ProjectsScreen extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 4),
             child: Row(
               children: [
-                Icon(Bootstrap.sort_alpha_down, size: 16, color: theme.colorScheme.onSurface.withOpacity(0.7)),
+                Icon(Bootstrap.sort_alpha_down, size: 16, color: theme.colorScheme.onSurface.withValues(alpha: 0.7)),
                 const SizedBox(width: 12),
                 Text(
                   l10n.sortByName,
@@ -954,7 +954,7 @@ class ProjectsScreen extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 4),
             child: Row(
               children: [
-                Icon(Bootstrap.calendar_event, size: 16, color: theme.colorScheme.onSurface.withOpacity(0.7)),
+                Icon(Bootstrap.calendar_event, size: 16, color: theme.colorScheme.onSurface.withValues(alpha: 0.7)),
                 const SizedBox(width: 12),
                 Text(
                   l10n.sortByDate,
@@ -974,7 +974,7 @@ class ProjectsScreen extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 4),
             child: Row(
               children: [
-                Icon(Bootstrap.list_ul, size: 16, color: theme.colorScheme.onSurface.withOpacity(0.7)),
+                Icon(Bootstrap.list_ul, size: 16, color: theme.colorScheme.onSurface.withValues(alpha: 0.7)),
                 const SizedBox(width: 12),
                 Text(
                   l10n.sortByType,
@@ -996,7 +996,7 @@ class ProjectsScreen extends StatelessWidget {
           border: Border.all(color: theme.dividerColor),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.02),
+              color: Colors.black.withValues(alpha: 0.02),
               blurRadius: 2,
               offset: const Offset(0, 1),
             ),
@@ -1005,16 +1005,16 @@ class ProjectsScreen extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Bootstrap.sort_down, size: 16, color: theme.colorScheme.onSurface.withOpacity(0.7)),
+            Icon(Bootstrap.sort_down, size: 16, color: theme.colorScheme.onSurface.withValues(alpha: 0.7)),
             const SizedBox(width: 8),
             Text(
               _sortLabel(appProvider.sortBy, l10n),
               style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.onSurface.withOpacity(0.8),
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
               ),
             ),
             const SizedBox(width: 8),
-            Icon(Bootstrap.chevron_down, size: 14, color: theme.colorScheme.onSurface.withOpacity(0.5)),
+            Icon(Bootstrap.chevron_down, size: 14, color: theme.colorScheme.onSurface.withValues(alpha: 0.5)),
           ],
         ),
       ),
@@ -1031,7 +1031,7 @@ class ProjectsScreen extends StatelessWidget {
         border: Border.all(color: theme.dividerColor),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.02),
+            color: Colors.black.withValues(alpha: 0.02),
             blurRadius: 2,
             offset: const Offset(0, 1),
           ),
@@ -1043,7 +1043,7 @@ class ProjectsScreen extends StatelessWidget {
               ? Bootstrap.sort_up 
               : Bootstrap.sort_down,
           size: 16,
-          color: theme.colorScheme.onSurface.withOpacity(0.7),
+          color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
         ),
         onPressed: () => appProvider.toggleSortOrder(),
         tooltip: appProvider.sortAscending ? l10n.ascending : l10n.descending,

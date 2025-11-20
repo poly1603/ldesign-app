@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/app_provider.dart';
 import '../config/theme_config.dart';
@@ -50,7 +50,7 @@ class Breadcrumb extends StatelessWidget {
                 child: Icon(
                   Icons.chevron_right,
                   size: ThemeConfig.getIconSize(size) - 4,
-                  color: theme.colorScheme.onSurface.withOpacity(0.5),
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                 ),
               ),
             _BreadcrumbButton(
@@ -81,7 +81,7 @@ class Breadcrumb extends StatelessWidget {
       return items;
     }
 
-    // 特殊处理项目详情页面
+    // 鐗规畩澶勭悊椤圭洰璇︽儏椤甸潰
     if (route == '/project-detail') {
       items.add(BreadcrumbItem(
         label: l10n.projects,
@@ -89,7 +89,7 @@ class Breadcrumb extends StatelessWidget {
         icon: Icons.folder,
       ));
       
-      // 尝试获取项目名称
+      // 灏濊瘯鑾峰彇椤圭洰鍚嶇О
       final projectId = appProvider.routeParams['projectId'] as String?;
       if (projectId != null) {
         try {
@@ -98,10 +98,10 @@ class Breadcrumb extends StatelessWidget {
           );
           items.add(BreadcrumbItem(
             label: project.name,
-            route: null, // 当前页面，不可点击
+            route: null, // 褰撳墠椤甸潰锛屼笉鍙偣鍑?
           ));
         } catch (e) {
-          // 如果找不到项目，显示项目详情
+          // 濡傛灉鎵句笉鍒伴」鐩紝鏄剧ず椤圭洰璇︽儏
           items.add(BreadcrumbItem(
             label: l10n.projectDetails,
             route: null,
@@ -117,7 +117,7 @@ class Breadcrumb extends StatelessWidget {
       return items;
     }
 
-    // 特殊处理项目操作页面
+    // 鐗规畩澶勭悊椤圭洰鎿嶄綔椤甸潰
     if (route.startsWith('/project/') && route.split('/').length >= 4) {
       final parts = route.split('/');
       final projectId = parts[2];
@@ -129,42 +129,42 @@ class Breadcrumb extends StatelessWidget {
         icon: Icons.folder,
       ));
       
-      // 尝试获取项目名称
+      // 灏濊瘯鑾峰彇椤圭洰鍚嶇О
       try {
         final project = appProvider.allProjects.firstWhere(
           (p) => p.id == projectId,
         );
         items.add(BreadcrumbItem(
           label: project.name,
-          route: null, // 需要特殊处理，因为需要传递projectId参数
+          route: null, // 闇€瑕佺壒娈婂鐞嗭紝鍥犱负闇€瑕佷紶閫抪rojectId鍙傛暟
         ));
       } catch (e) {
         items.add(BreadcrumbItem(
-          label: '项目详情',
+          label: '椤圭洰璇︽儏',
           route: '/project-detail',
         ));
       }
       
-      // 添加操作名称
+      // 娣诲姞鎿嶄綔鍚嶇О
       String actionLabel;
       switch (action) {
         case 'start':
-          actionLabel = '启动';
+          actionLabel = '鍚姩';
           break;
         case 'build':
-          actionLabel = '构建';
+          actionLabel = '鏋勫缓';
           break;
         case 'preview':
-          actionLabel = '预览';
+          actionLabel = '棰勮';
           break;
         case 'deploy':
-          actionLabel = '部署';
+          actionLabel = '閮ㄧ讲';
           break;
         case 'publish':
-          actionLabel = '发布';
+          actionLabel = '鍙戝竷';
           break;
         case 'test':
-          actionLabel = '测试';
+          actionLabel = '娴嬭瘯';
           break;
         default:
           actionLabel = action;
@@ -172,7 +172,7 @@ class Breadcrumb extends StatelessWidget {
       
       items.add(BreadcrumbItem(
         label: actionLabel,
-        route: null, // 当前页面，不可点击
+        route: null, // 褰撳墠椤甸潰锛屼笉鍙偣鍑?
       ));
       
       return items;
@@ -191,6 +191,10 @@ class Breadcrumb extends StatelessWidget {
         case 'projects':
           label = l10n.projects;
           icon = Icons.folder;
+          break;
+        case 'node-manager':
+          label = l10n.nodeManager;
+          icon = Icons.terminal;
           break;
         case 'settings':
           label = l10n.settings;
@@ -232,7 +236,7 @@ class _BreadcrumbButton extends StatelessWidget {
     final textStyle = theme.textTheme.bodyMedium?.copyWith(
       color: isLast
           ? theme.colorScheme.primary
-          : theme.colorScheme.onSurface.withOpacity(0.7),
+          : theme.colorScheme.onSurface.withValues(alpha: 0.7),
       fontWeight: isLast ? FontWeight.w600 : FontWeight.normal,
     );
 
@@ -268,7 +272,7 @@ class _BreadcrumbButton extends StatelessWidget {
               Icon(
                 item.icon,
                 size: ThemeConfig.getIconSize(size) - 4,
-                color: theme.colorScheme.onSurface.withOpacity(0.7),
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
               ),
               SizedBox(width: spacing / 2),
             ],

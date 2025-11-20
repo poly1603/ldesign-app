@@ -169,5 +169,17 @@
   "slideUpTransition": "Slide Up",
   "slideDownTransition": "Slide Down",
   "scaleTransition": "Scale",
-  "rotationTransition": "Rotation"
+  "rotationTransition": "Rotation",
+  "nodeManager": "Node Version Manager",
+  "nodeManagerDescription": "Manage Node.js versions and version management tools",
+  "versionManagers": "Version Managers",
+  "refresh": "Refresh",
+  "installedVersions": "Installed Versions",
+  "noVersionsInstalled": "No Node.js versions installed yet",
+  "use": "Use",
+  "current": "Current",
+  "installNewVersion": "Install New Version",
+  "enterVersionNumber": "Enter version number, e.g., 18.17.0",
+  "install": "Install",
+  "versionFormatHint": "Examples: 18.17.0, 20.x, lts"
 }

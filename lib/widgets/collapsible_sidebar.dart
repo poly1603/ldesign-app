@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/app_provider.dart';
@@ -36,19 +36,19 @@ class CollapsibleSidebar extends StatefulWidget {
 class _CollapsibleSidebarState extends State<CollapsibleSidebar> {
   String? _hoveredItemId;
 
-  /// 判断路由是否处于活动状态
-  /// 支持子路由匹配，例如 /project-detail 和 /project/{id}/{action} 应该匹配 /projects
+  /// 鍒ゆ柇璺敱鏄惁澶勪簬娲诲姩鐘舵€?
+  /// 鏀寔瀛愯矾鐢卞尮閰嶏紝渚嬪 /project-detail 鍜?/project/{id}/{action} 搴旇鍖归厤 /projects
   bool _isRouteActive(String currentRoute, String? itemRoute) {
     if (itemRoute == null) return false;
     
-    // 精确匹配
+    // 绮剧‘鍖归厤
     if (currentRoute == itemRoute) return true;
     
-    // 项目相关路由的特殊处理
+    // 椤圭洰鐩稿叧璺敱鐨勭壒娈婂鐞?
     if (itemRoute == '/projects') {
       return currentRoute == '/projects' || 
              currentRoute == '/project-detail' ||
-             currentRoute.startsWith('/project/');  // 匹配所有项目操作路由
+             currentRoute.startsWith('/project/');  // 鍖归厤鎵€鏈夐」鐩搷浣滆矾鐢?
     }
     
     return false;
@@ -74,7 +74,7 @@ class _CollapsibleSidebarState extends State<CollapsibleSidebar> {
         color: Colors.white,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.08),
+            color: Colors.black.withValues(alpha: 0.08),
             blurRadius: 12,
             offset: const Offset(2, 0),
           ),
@@ -124,14 +124,14 @@ class _CollapsibleSidebarState extends State<CollapsibleSidebar> {
                 ? LinearGradient(
                     colors: [
                       theme.colorScheme.primary,
-                      theme.colorScheme.primary.withOpacity(0.85),
+                      theme.colorScheme.primary.withValues(alpha: 0.85),
                     ],
                   )
                 : isHovered
                     ? LinearGradient(
                         colors: [
-                          theme.colorScheme.primary.withOpacity(0.12),
-                          theme.colorScheme.primary.withOpacity(0.08),
+                          theme.colorScheme.primary.withValues(alpha: 0.12),
+                          theme.colorScheme.primary.withValues(alpha: 0.08),
                         ],
                       )
                     : null,
@@ -139,7 +139,7 @@ class _CollapsibleSidebarState extends State<CollapsibleSidebar> {
             boxShadow: isActive
                 ? [
                     BoxShadow(
-                      color: theme.colorScheme.primary.withOpacity(0.3),
+                      color: theme.colorScheme.primary.withValues(alpha: 0.3),
                       blurRadius: 8,
                       offset: const Offset(0, 2),
                     ),
@@ -173,7 +173,7 @@ class _CollapsibleSidebarState extends State<CollapsibleSidebar> {
                           size: 20,
                           color: isActive
                               ? Colors.white
-                              : theme.colorScheme.onSurface.withOpacity(0.7),
+                              : theme.colorScheme.onSurface.withValues(alpha: 0.7),
                         )
                       else ...[
                         Icon(
@@ -181,7 +181,7 @@ class _CollapsibleSidebarState extends State<CollapsibleSidebar> {
                           size: 20,
                           color: isActive
                               ? Colors.white
-                              : theme.colorScheme.onSurface.withOpacity(0.7),
+                              : theme.colorScheme.onSurface.withValues(alpha: 0.7),
                         ),
                         const SizedBox(width: 12),
                         Flexible(
@@ -192,7 +192,7 @@ class _CollapsibleSidebarState extends State<CollapsibleSidebar> {
                               fontWeight: isActive ? FontWeight.w600 : FontWeight.w500,
                               color: isActive
                                   ? Colors.white
-                                  : theme.colorScheme.onSurface.withOpacity(0.85),
+                                  : theme.colorScheme.onSurface.withValues(alpha: 0.85),
                               letterSpacing: -0.2,
                             ),
                             overflow: TextOverflow.ellipsis,

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
 import 'package:icons_plus/icons_plus.dart';
@@ -21,7 +21,7 @@ class ProjectDetailScreen extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     final appProvider = context.watch<AppProvider>();
     
-    // 查找项目
+    // 鏌ユ壘椤圭洰
     final project = appProvider.allProjects.firstWhere(
       (p) => p.id == projectId,
       orElse: () => throw Exception('Project not found'),
@@ -67,21 +67,21 @@ class ProjectDetailScreen extends StatelessWidget {
             color: Colors.white,
             border: Border(
               bottom: BorderSide(
-                color: theme.dividerColor.withOpacity(0.3),
+                color: theme.dividerColor.withValues(alpha: 0.3),
                 width: 1,
               ),
             ),
           ),
           child: Row(
             children: [
-              // 返回按钮
+              // 杩斿洖鎸夐挳
               IconButton(
                 icon: const Icon(Bootstrap.arrow_left, size: 20),
                 onPressed: () => appProvider.setCurrentRoute('/projects'),
                 tooltip: l10n.back,
               ),
               const SizedBox(width: 8),
-              // 项目图标
+              // 椤圭洰鍥炬爣
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
@@ -95,7 +95,7 @@ class ProjectDetailScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 12),
-              // 项目信息
+              // 椤圭洰淇℃伅
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -116,7 +116,7 @@ class ProjectDetailScreen extends StatelessWidget {
                             vertical: 3,
                           ),
                           decoration: BoxDecoration(
-                            color: color.withOpacity(0.1),
+                            color: color.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(5),
                           ),
                           child: Text(
@@ -152,7 +152,7 @@ class ProjectDetailScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              // 操作按钮
+              // 鎿嶄綔鎸夐挳
               OutlinedButton.icon(
                 onPressed: () => _confirmDelete(context, project, appProvider),
                 icon: const Icon(Bootstrap.trash, size: 16),
@@ -166,29 +166,29 @@ class ProjectDetailScreen extends StatelessWidget {
             ],
           ),
         ),
-        // 内容区域
+        // 鍐呭鍖哄煙
         Expanded(
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // 操作按钮区域
+                // 鎿嶄綔鎸夐挳鍖哄煙
                 _buildActionButtons(context, theme, l10n, project),
                 const SizedBox(height: 16),
-                // 基本信息卡片
+                // 鍩烘湰淇℃伅鍗＄墖
                 _buildInfoCard(
                   theme,
                   l10n.projectInfo,
                   Bootstrap.info_circle,
                   [
                     _buildInfoRow(theme, l10n.projectName, project.name, Bootstrap.text_left),
-                    // 第一行：项目类型和框架
+                    // 绗竴琛岋細椤圭洰绫诲瀷鍜屾鏋?
                     _buildMultiColumnRow(theme, [
                       _InfoItem(l10n.projectType, project.getTypeDisplayName(), Bootstrap.grid),
                       _InfoItem(l10n.framework, project.getFrameworkDisplayName(), Bootstrap.code_slash),
                     ]),
-                    // 第二行：语言和版本（如果存在）
+                    // 绗簩琛岋細璇█鍜岀増鏈紙濡傛灉瀛樺湪锛?
                     if (project.language != null || project.version != null)
                       _buildMultiColumnRow(theme, [
                         if (project.language != null)
@@ -199,7 +199,7 @@ class ProjectDetailScreen extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 16),
-                // 路径信息卡片
+                // 璺緞淇℃伅鍗＄墖
                 _buildInfoCard(
                   theme,
                   l10n.projectPath,
@@ -209,7 +209,7 @@ class ProjectDetailScreen extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 16),
-                // 描述卡片
+                // 鎻忚堪鍗＄墖
                 if (project.description != null)
                   _buildInfoCard(
                     theme,
@@ -228,7 +228,7 @@ class ProjectDetailScreen extends StatelessWidget {
                     ],
                   ),
                 const SizedBox(height: 16),
-                // 标签卡片
+                // 鏍囩鍗＄墖
                 if (project.tags.isNotEmpty)
                   _buildInfoCard(
                     theme,
@@ -247,10 +247,10 @@ class ProjectDetailScreen extends StatelessWidget {
                                 vertical: 8,
                               ),
                               decoration: BoxDecoration(
-                                color: theme.colorScheme.primary.withOpacity(0.12),
+                                color: theme.colorScheme.primary.withValues(alpha: 0.12),
                                 borderRadius: BorderRadius.circular(20),
                                 border: Border.all(
-                                  color: theme.colorScheme.primary.withOpacity(0.3),
+                                  color: theme.colorScheme.primary.withValues(alpha: 0.3),
                                   width: 1.5,
                                 ),
                               ),
@@ -280,7 +280,7 @@ class ProjectDetailScreen extends StatelessWidget {
                     ],
                   ),
                 const SizedBox(height: 16),
-                // 时间信息卡片
+                // 鏃堕棿淇℃伅鍗＄墖
                 _buildInfoCard(
                   theme,
                   l10n.timeInfo,
@@ -356,7 +356,7 @@ class ProjectDetailScreen extends StatelessWidget {
           Icon(
             icon,
             size: 18,
-            color: theme.colorScheme.onSurface.withOpacity(0.6),
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
           ),
           const SizedBox(width: 10),
           Expanded(
@@ -366,7 +366,7 @@ class ProjectDetailScreen extends StatelessWidget {
                 Text(
                   label,
                   style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onSurface.withOpacity(0.6),
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                   ),
                 ),
                 const SizedBox(height: 2),
@@ -398,7 +398,7 @@ class ProjectDetailScreen extends StatelessWidget {
             Icon(
               Bootstrap.folder,
               size: 18,
-              color: theme.colorScheme.onSurface.withOpacity(0.6),
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
             ),
             const SizedBox(width: 10),
             Expanded(
@@ -411,14 +411,14 @@ class ProjectDetailScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 8),
-            // 打开文件夹按钮
+            // 鎵撳紑鏂囦欢澶规寜閽?
             InkWell(
               onTap: () => _openProjectFolder(context, path),
               borderRadius: BorderRadius.circular(6),
               child: Container(
                 padding: const EdgeInsets.all(6),
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.primary.withOpacity(0.1),
+                  color: theme.colorScheme.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(6),
                 ),
                 child: Icon(
@@ -538,7 +538,7 @@ class ProjectDetailScreen extends StatelessWidget {
                 Icon(
                   item.icon,
                   size: 18,
-                  color: theme.colorScheme.onSurface.withOpacity(0.6),
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                 ),
                 const SizedBox(width: 10),
                 Expanded(
@@ -548,7 +548,7 @@ class ProjectDetailScreen extends StatelessWidget {
                       Text(
                         item.label,
                         style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.onSurface.withOpacity(0.6),
+                          color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                         ),
                       ),
                       const SizedBox(height: 2),
@@ -561,7 +561,7 @@ class ProjectDetailScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-                // 添加列之间的间距，除了最后一列
+                // 娣诲姞鍒椾箣闂寸殑闂磋窛锛岄櫎浜嗘渶鍚庝竴鍒?
                 if (index < items.length - 1) const SizedBox(width: 20),
               ],
             ),
@@ -571,7 +571,7 @@ class ProjectDetailScreen extends StatelessWidget {
     );
   }
 
-  // 构建操作按钮区域
+  // 鏋勫缓鎿嶄綔鎸夐挳鍖哄煙
   Widget _buildActionButtons(BuildContext context, ThemeData theme, AppLocalizations l10n, Project project) {
     final actions = _getActionsForProject(project, l10n);
     
@@ -585,7 +585,7 @@ class ProjectDetailScreen extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: theme.dividerColor.withOpacity(0.3),
+          color: theme.dividerColor.withValues(alpha: 0.3),
           width: 1,
         ),
       ),
@@ -636,7 +636,7 @@ class ProjectDetailScreen extends StatelessWidget {
     );
   }
 
-  // 根据项目类型获取可用操作
+  // 鏍规嵁椤圭洰绫诲瀷鑾峰彇鍙敤鎿嶄綔
   List<_ProjectAction> _getActionsForProject(Project project, AppLocalizations l10n) {
     final actions = <_ProjectAction>[];
 
@@ -644,7 +644,7 @@ class ProjectDetailScreen extends StatelessWidget {
       case ProjectType.webApp:
       case ProjectType.mobileApp:
       case ProjectType.desktopApp:
-        // 应用类项目的操作
+        // 搴旂敤绫婚」鐩殑鎿嶄綔
         actions.addAll([
           _ProjectAction(_ActionType.start, l10n.startProject, Bootstrap.play_fill, Colors.green),
           _ProjectAction(_ActionType.build, l10n.buildProject, Bootstrap.hammer, Colors.blue),
@@ -654,7 +654,7 @@ class ProjectDetailScreen extends StatelessWidget {
         break;
       
       case ProjectType.backendApp:
-        // 后端应用的操作
+        // 鍚庣搴旂敤鐨勬搷浣?
         actions.addAll([
           _ProjectAction(_ActionType.start, l10n.startProject, Bootstrap.play_fill, Colors.green),
           _ProjectAction(_ActionType.build, l10n.buildProject, Bootstrap.hammer, Colors.blue),
@@ -666,7 +666,7 @@ class ProjectDetailScreen extends StatelessWidget {
       case ProjectType.utilityLibrary:
       case ProjectType.frameworkLibrary:
       case ProjectType.nodeLibrary:
-        // 库类项目的操作
+        // 搴撶被椤圭洰鐨勬搷浣?
         actions.addAll([
           _ProjectAction(_ActionType.build, l10n.buildProject, Bootstrap.hammer, Colors.blue),
           _ProjectAction(_ActionType.publish, l10n.publishProject, Bootstrap.box_arrow_up, Colors.teal),
@@ -674,7 +674,7 @@ class ProjectDetailScreen extends StatelessWidget {
         break;
 
       case ProjectType.cliTool:
-        // CLI工具的操作
+        // CLI宸ュ叿鐨勬搷浣?
         actions.addAll([
           _ProjectAction(_ActionType.build, l10n.buildProject, Bootstrap.hammer, Colors.blue),
           _ProjectAction(_ActionType.publish, l10n.publishProject, Bootstrap.box_arrow_up, Colors.teal),
@@ -683,7 +683,7 @@ class ProjectDetailScreen extends StatelessWidget {
         break;
 
       case ProjectType.monorepo:
-        // Monorepo的操作
+        // Monorepo鐨勬搷浣?
         actions.addAll([
           _ProjectAction(_ActionType.build, l10n.buildProject, Bootstrap.hammer, Colors.blue),
           _ProjectAction(_ActionType.test, l10n.testProject, Bootstrap.check_circle, Colors.green),
@@ -692,7 +692,7 @@ class ProjectDetailScreen extends StatelessWidget {
         break;
 
       case ProjectType.unknown:
-        // 未知类型项目的基本操作
+        // 鏈煡绫诲瀷椤圭洰鐨勫熀鏈搷浣?
         actions.addAll([
           _ProjectAction(_ActionType.build, l10n.buildProject, Bootstrap.hammer, Colors.blue),
         ]);
@@ -702,40 +702,40 @@ class ProjectDetailScreen extends StatelessWidget {
     return actions;
   }
 
-  // 处理操作按钮点击
+  // 澶勭悊鎿嶄綔鎸夐挳鐐瑰嚮
   void _handleAction(BuildContext context, _ActionType actionType, Project project) {
     final appProvider = context.read<AppProvider>();
     
     switch (actionType) {
       case _ActionType.start:
-        // 导航到启动页面
+        // 瀵艰埅鍒板惎鍔ㄩ〉闈?
         appProvider.setCurrentRoute('/project/${project.id}/start');
         break;
       case _ActionType.build:
-        // 导航到构建页面
+        // 瀵艰埅鍒版瀯寤洪〉闈?
         appProvider.setCurrentRoute('/project/${project.id}/build');
         break;
       case _ActionType.preview:
-        // 导航到预览页面
+        // 瀵艰埅鍒伴瑙堥〉闈?
         appProvider.setCurrentRoute('/project/${project.id}/preview');
         break;
       case _ActionType.deploy:
-        // 导航到部署页面
+        // 瀵艰埅鍒伴儴缃查〉闈?
         appProvider.setCurrentRoute('/project/${project.id}/deploy');
         break;
       case _ActionType.publish:
-        // 导航到发布页面
+        // 瀵艰埅鍒板彂甯冮〉闈?
         appProvider.setCurrentRoute('/project/${project.id}/publish');
         break;
       case _ActionType.test:
-        // 导航到测试页面
+        // 瀵艰埅鍒版祴璇曢〉闈?
         appProvider.setCurrentRoute('/project/${project.id}/test');
         break;
     }
   }
 }
 
-// 项目操作类型枚举
+// 椤圭洰鎿嶄綔绫诲瀷鏋氫妇
 enum _ActionType {
   start,
   build,
@@ -745,7 +745,7 @@ enum _ActionType {
   test,
 }
 
-// 项目操作数据类
+// 椤圭洰鎿嶄綔鏁版嵁绫?
 class _ProjectAction {
   final _ActionType type;
   final String label;

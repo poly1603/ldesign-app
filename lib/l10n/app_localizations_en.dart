@@ -402,4 +402,41 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get rotationTransition => 'Rotation';
+
+  @override
+  String get nodeManager => 'Node Version Manager';
+
+  @override
+  String get nodeManagerDescription =>
+      'Manage Node.js versions and version management tools';
+
+  @override
+  String get versionManagers => 'Version Managers';
+
+  @override
+  String get refresh => 'Refresh';
+
+  @override
+  String get installedVersions => 'Installed Versions';
+
+  @override
+  String get noVersionsInstalled => 'No Node.js versions installed yet';
+
+  @override
+  String get use => 'Use';
+
+  @override
+  String get current => 'Current';
+
+  @override
+  String get installNewVersion => 'Install New Version';
+
+  @override
+  String get enterVersionNumber => 'Enter version number, e.g., 18.17.0';
+
+  @override
+  String get install => 'Install';
+
+  @override
+  String get versionFormatHint => 'Examples: 18.17.0, 20.x, lts';
 }

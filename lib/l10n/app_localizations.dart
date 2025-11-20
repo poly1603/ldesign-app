@@ -860,6 +860,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Rotation'**
   String get rotationTransition;
+
+  /// No description provided for @nodeManager.
+  ///
+  /// In en, this message translates to:
+  /// **'Node Version Manager'**
+  String get nodeManager;
+
+  /// No description provided for @nodeManagerDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage Node.js versions and version management tools'**
+  String get nodeManagerDescription;
+
+  /// No description provided for @versionManagers.
+  ///
+  /// In en, this message translates to:
+  /// **'Version Managers'**
+  String get versionManagers;
+
+  /// No description provided for @refresh.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh'**
+  String get refresh;
+
+  /// No description provided for @installedVersions.
+  ///
+  /// In en, this message translates to:
+  /// **'Installed Versions'**
+  String get installedVersions;
+
+  /// No description provided for @noVersionsInstalled.
+  ///
+  /// In en, this message translates to:
+  /// **'No Node.js versions installed yet'**
+  String get noVersionsInstalled;
+
+  /// No description provided for @use.
+  ///
+  /// In en, this message translates to:
+  /// **'Use'**
+  String get use;
+
+  /// No description provided for @current.
+  ///
+  /// In en, this message translates to:
+  /// **'Current'**
+  String get current;
+
+  /// No description provided for @installNewVersion.
+  ///
+  /// In en, this message translates to:
+  /// **'Install New Version'**
+  String get installNewVersion;
+
+  /// No description provided for @enterVersionNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter version number, e.g., 18.17.0'**
+  String get enterVersionNumber;
+
+  /// No description provided for @install.
+  ///
+  /// In en, this message translates to:
+  /// **'Install'**
+  String get install;
+
+  /// No description provided for @versionFormatHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Examples: 18.17.0, 20.x, lts'**
+  String get versionFormatHint;
 }
 
 class _AppLocalizationsDelegate

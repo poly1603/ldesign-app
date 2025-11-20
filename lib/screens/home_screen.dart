@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:provider/provider.dart';
 
@@ -31,24 +31,24 @@ class _HomeScreenState extends State<HomeScreen> {
       final serviceManager = context.read<ProjectServiceManager>();
       final systemInfoService = SystemInfoService.instance;
       
-      print('HomeScreen: 开始获取系统信息...');
+      print('HomeScreen: 寮€濮嬭幏鍙栫郴缁熶俊鎭?..');
       final systemInfo = await systemInfoService.getSystemInfo();
-      print('HomeScreen: 系统信息获取完成');
-      print('HomeScreen: Node版本: ${systemInfo.nodeVersion}');
-      print('HomeScreen: Git版本: ${systemInfo.gitVersion}');
-      print('HomeScreen: 编辑器数量: ${systemInfo.installedEditors.length}');
-      print('HomeScreen: 浏览器数量: ${systemInfo.installedBrowsers.length}');
+      print('HomeScreen: 绯荤粺淇℃伅鑾峰彇瀹屾垚');
+      print('HomeScreen: Node鐗堟湰: ${systemInfo.nodeVersion}');
+      print('HomeScreen: Git鐗堟湰: ${systemInfo.gitVersion}');
+      print('HomeScreen: 缂栬緫鍣ㄦ暟閲? ${systemInfo.installedEditors.length}');
+      print('HomeScreen: 娴忚鍣ㄦ暟閲? ${systemInfo.installedBrowsers.length}');
       
-      // 获取项目统计信息
+      // 鑾峰彇椤圭洰缁熻淇℃伅
       final projects = appProvider.allProjects;
-      print('HomeScreen: 项目总数: ${projects.length}');
+      print('HomeScreen: 椤圭洰鎬绘暟: ${projects.length}');
       final runningProjects = projects.where((project) {
         final startInfo = serviceManager.getServiceInfo(project.id, 'start');
         final previewInfo = serviceManager.getServiceInfo(project.id, 'preview');
         return startInfo?.status == ServiceStatus.running || 
                previewInfo?.status == ServiceStatus.running;
       }).length;
-      print('HomeScreen: 运行中项目: $runningProjects');
+      print('HomeScreen: 杩愯涓」鐩? $runningProjects');
 
       setState(() {
         _systemInfo = SystemInfo(
@@ -70,7 +70,7 @@ class _HomeScreenState extends State<HomeScreen> {
         _isLoading = false;
       });
     } catch (e) {
-      print('HomeScreen: 获取系统信息时发生错误: $e');
+      print('HomeScreen: 鑾峰彇绯荤粺淇℃伅鏃跺彂鐢熼敊璇? $e');
       setState(() {
         _systemInfo = SystemInfo(
           nodeVersion: '未安装',
@@ -148,13 +148,13 @@ class _HomeScreenState extends State<HomeScreen> {
           end: Alignment.bottomRight,
           colors: [
             theme.colorScheme.primary,
-            theme.colorScheme.primary.withOpacity(0.8),
+            theme.colorScheme.primary.withValues(alpha: 0.8),
           ],
         ),
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: theme.colorScheme.primary.withOpacity(0.3),
+            color: theme.colorScheme.primary.withValues(alpha: 0.3),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
@@ -167,7 +167,7 @@ class _HomeScreenState extends State<HomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '系统信息仪表板',
+'系统信息总览',
                   style: TextStyle(
                     fontSize: 32,
                     fontWeight: FontWeight.w800,
@@ -177,11 +177,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  '实时监控您的开发环境和系统状态',
+'实时监控你的开发环境和系统状态',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w400,
-                    color: Colors.white.withOpacity(0.9),
+                    color: Colors.white.withValues(alpha: 0.9),
                     letterSpacing: -0.2,
                   ),
                 ),
@@ -191,7 +191,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
+                        color: Colors.white.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Row(
@@ -204,7 +204,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           const SizedBox(width: 6),
                           Text(
-                            _systemInfo?.osVersion ?? '未知系统',
+                            _systemInfo?.osVersion ?? '鏈煡绯荤粺',
                             style: TextStyle(
                               fontSize: 12,
                               color: Colors.white,
@@ -218,7 +218,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
+                        color: Colors.white.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Row(
@@ -231,7 +231,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           const SizedBox(width: 6),
                           Text(
-                            _systemInfo?.networkInfo != '未知' && _systemInfo?.networkInfo.isNotEmpty == true ? '在线' : '离线',
+_systemInfo?.networkInfo != '未知' && _systemInfo?.networkInfo.isNotEmpty == true ? '在线' : '离线',
                             style: TextStyle(
                               fontSize: 12,
                               color: Colors.white,
@@ -249,7 +249,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.2),
+              color: Colors.white.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(16),
             ),
             child: Icon(
@@ -268,7 +268,7 @@ class _HomeScreenState extends State<HomeScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '项目统计',
+          '椤圭洰缁熻',
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.w700,
@@ -282,7 +282,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Expanded(
               child: _buildStatCard(
                 theme: theme,
-                title: '项目总数',
+                title: '椤圭洰鎬绘暟',
                 value: '${_systemInfo?.totalProjects ?? 0}',
                 icon: Bootstrap.folder,
                 gradientColors: [Colors.blue.shade400, Colors.blue.shade600],
@@ -292,7 +292,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Expanded(
               child: _buildStatCard(
                 theme: theme,
-                title: '正在运行',
+                title: '姝ｅ湪杩愯',
                 value: '${_systemInfo?.runningProjects ?? 0}',
                 icon: Bootstrap.play_circle,
                 gradientColors: [Colors.green.shade400, Colors.green.shade600],
@@ -302,7 +302,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Expanded(
               child: _buildStatCard(
                 theme: theme,
-                title: '已安装编辑器',
+                title: '宸插畨瑁呯紪杈戝櫒',
                 value: '${_systemInfo?.installedEditors.length ?? 0}',
                 icon: Bootstrap.code_slash,
                 gradientColors: [Colors.purple.shade400, Colors.purple.shade600],
@@ -312,7 +312,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Expanded(
               child: _buildStatCard(
                 theme: theme,
-                title: '已安装浏览器',
+                title: '宸插畨瑁呮祻瑙堝櫒',
                 value: '${_systemInfo?.installedBrowsers.length ?? 0}',
                 icon: Bootstrap.globe,
                 gradientColors: [Colors.orange.shade400, Colors.orange.shade600],
@@ -329,7 +329,7 @@ class _HomeScreenState extends State<HomeScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '开发环境',
+'开发环境',
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.w700,
@@ -344,18 +344,18 @@ class _HomeScreenState extends State<HomeScreen> {
               child: _buildInfoCard(
                 theme: theme,
                 title: 'Node.js',
-                subtitle: _systemInfo?.nodeVersion ?? '未安装',
+subtitle: _systemInfo?.nodeVersion ?? '未安装',
                 icon: Bootstrap.terminal,
                 iconColor: Colors.green,
-                status: _systemInfo?.nodeVersion != '未安装' ? 'installed' : 'not_installed',
+status: _systemInfo?.nodeVersion != '未安装' ? 'installed' : 'not_installed',
               ),
             ),
             const SizedBox(width: 16),
             Expanded(
               child: _buildInfoCard(
                 theme: theme,
-                title: '版本管理',
-                subtitle: _systemInfo?.hasNodeVersionManager == true 
+                title: '鐗堟湰绠＄悊',
+subtitle: _systemInfo?.hasNodeVersionManager == true 
                     ? _systemInfo!.nodeVersionManager 
                     : '未安装',
                 icon: Bootstrap.arrow_repeat,
@@ -368,7 +368,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: _buildInfoCard(
                 theme: theme,
                 title: 'Git',
-                subtitle: _systemInfo?.hasGit == true 
+subtitle: _systemInfo?.hasGit == true 
                     ? _systemInfo!.gitVersion.replaceAll('git version ', '') 
                     : '未安装',
                 icon: Bootstrap.git,
@@ -387,7 +387,7 @@ class _HomeScreenState extends State<HomeScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '系统信息',
+          '绯荤粺淇℃伅',
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.w700,
@@ -405,7 +405,7 @@ class _HomeScreenState extends State<HomeScreen> {
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.05),
+                color: Colors.black.withValues(alpha: 0.05),
                 blurRadius: 10,
                 offset: const Offset(0, 4),
               ),
@@ -417,23 +417,23 @@ class _HomeScreenState extends State<HomeScreen> {
                 theme: theme,
                 icon: Bootstrap.pc,
                 title: 'CPU',
-                value: _systemInfo?.cpuInfo ?? '未知',
+value: _systemInfo?.cpuInfo ?? '未知',
                 iconColor: Colors.blue,
               ),
               const SizedBox(height: 16),
               _buildSystemInfoRow(
                 theme: theme,
                 icon: Bootstrap.cpu,
-                title: '内存',
-                value: _systemInfo?.memoryInfo ?? '未知',
+                title: '鍐呭瓨',
+value: _systemInfo?.memoryInfo ?? '未知',
                 iconColor: Colors.green,
               ),
               const SizedBox(height: 16),
               _buildSystemInfoRow(
                 theme: theme,
                 icon: Bootstrap.device_hdd,
-                title: '磁盘',
-                value: _systemInfo?.diskInfo ?? '未知',
+                title: '纾佺洏',
+value: _systemInfo?.diskInfo ?? '未知',
                 iconColor: Colors.orange,
               ),
               const SizedBox(height: 16),
@@ -509,7 +509,7 @@ class _HomeScreenState extends State<HomeScreen> {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -525,7 +525,7 @@ class _HomeScreenState extends State<HomeScreen> {
               borderRadius: BorderRadius.circular(12),
               boxShadow: [
                 BoxShadow(
-                  color: gradientColors.first.withOpacity(0.3),
+                  color: gradientColors.first.withValues(alpha: 0.3),
                   blurRadius: 8,
                   offset: const Offset(0, 4),
                 ),
@@ -553,7 +553,7 @@ class _HomeScreenState extends State<HomeScreen> {
             style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w500,
-              color: theme.colorScheme.onSurface.withOpacity(0.6),
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
               letterSpacing: -0.2,
             ),
           ),
@@ -579,13 +579,13 @@ class _HomeScreenState extends State<HomeScreen> {
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: status == 'installed' 
-              ? Colors.green.withOpacity(0.3)
-              : Colors.red.withOpacity(0.3),
+              ? Colors.green.withValues(alpha: 0.3)
+              : Colors.red.withValues(alpha: 0.3),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -599,7 +599,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: iconColor.withOpacity(0.1),
+                  color: iconColor.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(
@@ -613,8 +613,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
                   color: status == 'installed' 
-                      ? Colors.green.withOpacity(0.1)
-                      : Colors.red.withOpacity(0.1),
+                      ? Colors.green.withValues(alpha: 0.1)
+                      : Colors.red.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Row(
@@ -629,7 +629,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     const SizedBox(width: 4),
                     Text(
-                      status == 'installed' ? '已安装' : '未安装',
+status == 'installed' ? '已安装' : '未安装',
                       style: TextStyle(
                         fontSize: 10,
                         fontWeight: FontWeight.w500,
@@ -656,7 +656,7 @@ class _HomeScreenState extends State<HomeScreen> {
             style: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w400,
-              color: theme.colorScheme.onSurface.withOpacity(0.6),
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
             ),
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
@@ -678,7 +678,7 @@ class _HomeScreenState extends State<HomeScreen> {
         Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: iconColor.withOpacity(0.1),
+            color: iconColor.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Icon(
@@ -706,7 +706,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w400,
-                  color: theme.colorScheme.onSurface.withOpacity(0.7),
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
                 ),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
@@ -734,7 +734,7 @@ class _HomeScreenState extends State<HomeScreen> {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -763,7 +763,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.primary.withOpacity(0.1),
+                  color: theme.colorScheme.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
@@ -782,7 +782,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: theme.colorScheme.onSurface.withOpacity(0.05),
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.05),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Row(
@@ -790,14 +790,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   Icon(
                     Bootstrap.info_circle,
                     size: 16,
-                    color: theme.colorScheme.onSurface.withOpacity(0.5),
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                   ),
                   const SizedBox(width: 8),
                   Text(
                     emptyMessage,
                     style: TextStyle(
                       fontSize: 13,
-                      color: theme.colorScheme.onSurface.withOpacity(0.5),
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                     ),
                   ),
                 ],
@@ -824,7 +824,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w400,
-                          color: theme.colorScheme.onSurface.withOpacity(0.8),
+                          color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
                         ),
                       ),
                     ),

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:provider/provider.dart';
@@ -71,7 +71,7 @@ class _ImportProjectDialogState extends State<ImportProjectDialog> with SingleTi
               color: Colors.white,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
+                  color: Colors.black.withValues(alpha: 0.06),
                   blurRadius: 24,
                   offset: const Offset(0, 8),
                 ),
@@ -90,7 +90,7 @@ class _ImportProjectDialogState extends State<ImportProjectDialog> with SingleTi
                       color: Colors.white,
                       border: Border(
                         bottom: BorderSide(
-                          color: theme.dividerColor.withOpacity(0.3),
+                          color: theme.dividerColor.withValues(alpha: 0.08),
                           width: 1,
                         ),
                       ),
@@ -100,7 +100,7 @@ class _ImportProjectDialogState extends State<ImportProjectDialog> with SingleTi
                         Container(
                           padding: const EdgeInsets.all(8),
                           decoration: BoxDecoration(
-                            color: theme.colorScheme.primary.withOpacity(0.1),
+                            color: theme.colorScheme.primary.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Icon(
@@ -151,19 +151,19 @@ class _ImportProjectDialogState extends State<ImportProjectDialog> with SingleTi
                               padding: const EdgeInsets.all(20),
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: theme.colorScheme.primary.withOpacity(0.08),
+                                color: theme.colorScheme.primary.withValues(alpha: 0.1),
                               ),
                               child: Icon(
                                 Bootstrap.folder,
                                 size: 48,
-                                color: theme.colorScheme.primary.withOpacity(0.7),
+                                color: theme.colorScheme.primary.withValues(alpha: 0.2),
                               ),
                             ),
                             const SizedBox(height: 24),
                             Text(
                               '选择项目目录开始导入',
                               style: theme.textTheme.titleMedium?.copyWith(
-                                color: theme.colorScheme.onSurface.withOpacity(0.7),
+                                color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                               ),
                             ),
                             const SizedBox(height: 20),
@@ -231,7 +231,7 @@ class _ImportProjectDialogState extends State<ImportProjectDialog> with SingleTi
                             Text(
                               '正在扫描项目结构...',
                               style: theme.textTheme.bodySmall?.copyWith(
-                                color: theme.colorScheme.onSurface.withOpacity(0.6),
+                                color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                               ),
                             ),
                             const SizedBox(height: 32),
@@ -257,10 +257,10 @@ class _ImportProjectDialogState extends State<ImportProjectDialog> with SingleTi
                                       margin: const EdgeInsets.only(bottom: 20),
                                       padding: const EdgeInsets.all(14),
                                       decoration: BoxDecoration(
-                                        color: Colors.orange.withOpacity(0.1),
+                                        color: Colors.orange.withValues(alpha: 0.15),
                                         borderRadius: BorderRadius.circular(12),
                                         border: Border.all(
-                                          color: Colors.orange.withOpacity(0.3),
+                                          color: Colors.orange.withValues(alpha: 0.3),
                                           width: 1.5,
                                         ),
                                       ),
@@ -274,7 +274,7 @@ class _ImportProjectDialogState extends State<ImportProjectDialog> with SingleTi
                                           const SizedBox(width: 12),
                                           Expanded(
                                             child: Text(
-                                              '此项目已存在，导入将覆盖现有记录',
+'该项目已存在，导入将覆盖当前记录',
                                               style: TextStyle(
                                                 color: Colors.orange.shade700,
                                                 fontWeight: FontWeight.w600,
@@ -336,7 +336,7 @@ class _ImportProjectDialogState extends State<ImportProjectDialog> with SingleTi
         color: Colors.grey.shade50,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: theme.dividerColor.withOpacity(0.3),
+          color: theme.dividerColor.withValues(alpha: 0.08),
           width: 1,
         ),
       ),
@@ -352,7 +352,7 @@ class _ImportProjectDialogState extends State<ImportProjectDialog> with SingleTi
                   gradient: LinearGradient(
                     colors: [
                       color,
-                      color.withOpacity(0.8),
+                      color.withValues(alpha: 0.7),
                     ],
                   ),
                   borderRadius: BorderRadius.circular(12),
@@ -381,7 +381,7 @@ class _ImportProjectDialogState extends State<ImportProjectDialog> with SingleTi
                     Text(
                       project.path,
                       style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.colorScheme.onSurface.withOpacity(0.6),
+                        color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                         fontSize: 12,
                       ),
                       maxLines: 1,
@@ -456,7 +456,7 @@ class _ImportProjectDialogState extends State<ImportProjectDialog> with SingleTi
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
-                  color: theme.dividerColor.withOpacity(0.2),
+                  color: theme.dividerColor.withValues(alpha: 0.08),
                   width: 1,
                 ),
               ),
@@ -466,7 +466,7 @@ class _ImportProjectDialogState extends State<ImportProjectDialog> with SingleTi
                   Icon(
                     Icons.description,
                     size: 18,
-                    color: theme.colorScheme.onSurface.withOpacity(0.6),
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
@@ -493,10 +493,10 @@ class _ImportProjectDialogState extends State<ImportProjectDialog> with SingleTi
                     vertical: 6,
                   ),
                   decoration: BoxDecoration(
-                    color: theme.colorScheme.primary.withOpacity(0.12),
+                    color: theme.colorScheme.primary.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(
-                      color: theme.colorScheme.primary.withOpacity(0.3),
+                      color: theme.colorScheme.primary.withValues(alpha: 0.2),
                       width: 1,
                     ),
                   ),
@@ -542,7 +542,7 @@ class _ImportProjectDialogState extends State<ImportProjectDialog> with SingleTi
         color: Colors.white,
         borderRadius: BorderRadius.circular(8),
         border: Border.all(
-          color: theme.dividerColor.withOpacity(0.2),
+          color: theme.dividerColor.withValues(alpha: 0.08),
           width: 1,
         ),
       ),
@@ -554,13 +554,13 @@ class _ImportProjectDialogState extends State<ImportProjectDialog> with SingleTi
               Icon(
                 icon,
                 size: 16,
-                color: accentColor ?? theme.colorScheme.onSurface.withOpacity(0.6),
+                color: accentColor ?? theme.colorScheme.onSurface.withValues(alpha: 0.6),
               ),
               const SizedBox(width: 6),
               Text(
                 label,
                 style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.onSurface.withOpacity(0.6),
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                   fontSize: 11,
                 ),
               ),
@@ -588,7 +588,7 @@ class _ImportProjectDialogState extends State<ImportProjectDialog> with SingleTi
         color: Colors.white,
         border: Border(
           top: BorderSide(
-            color: theme.dividerColor.withOpacity(0.3),
+            color: theme.dividerColor.withValues(alpha: 0.08),
             width: 1,
           ),
         ),
@@ -606,7 +606,7 @@ class _ImportProjectDialogState extends State<ImportProjectDialog> with SingleTi
                 style: OutlinedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   side: BorderSide(
-                    color: theme.colorScheme.primary.withOpacity(0.3),
+                    color: theme.colorScheme.primary.withValues(alpha: 0.1),
                     width: 2,
                   ),
                   shape: RoundedRectangleBorder(
@@ -628,7 +628,7 @@ class _ImportProjectDialogState extends State<ImportProjectDialog> with SingleTi
                     style: OutlinedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       side: BorderSide(
-                        color: theme.colorScheme.primary.withOpacity(0.3),
+                        color: theme.colorScheme.primary.withValues(alpha: 0.1),
                         width: 2,
                       ),
                       shape: RoundedRectangleBorder(

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:window_manager/window_manager.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
@@ -18,7 +18,7 @@ class _CustomTitleBarState extends State<CustomTitleBar> with WindowListener {
   @override
   void initState() {
     super.initState();
-    // 仅在桌面平台添加窗口事件监听（Windows/macOS/Linux）
+    // 浠呭湪妗岄潰骞冲彴娣诲姞绐楀彛浜嬩欢鐩戝惉锛圵indows/macOS/Linux锛?
     final bool isDesktop = !kIsWeb && (
       defaultTargetPlatform == TargetPlatform.windows ||
       defaultTargetPlatform == TargetPlatform.macOS ||
@@ -82,13 +82,13 @@ class _CustomTitleBarState extends State<CustomTitleBar> with WindowListener {
         color: Colors.white,
         border: Border(
           bottom: BorderSide(
-            color: theme.dividerColor.withOpacity(0.3),
+            color: theme.dividerColor.withValues(alpha: 0.3),
             width: 1,
           ),
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             offset: const Offset(0, 1),
             blurRadius: 3,
           ),
@@ -96,16 +96,16 @@ class _CustomTitleBarState extends State<CustomTitleBar> with WindowListener {
       ),
       child: Row(
         children: [
-          // macOS 左侧交通灯按钮占位
+          // macOS 宸︿晶浜ら€氱伅鎸夐挳鍗犱綅
           if (isMacOS) const SizedBox(width: 70),
           
-          // 应用名称 - 左侧对齐
+          // 搴旂敤鍚嶇О - 宸︿晶瀵归綈
           Padding(
             padding: const EdgeInsets.only(left: 16),
             child: widget.title ?? const SizedBox.shrink(),
           ),
           
-          // 可拖拽区域
+          // 鍙嫋鎷藉尯鍩?
           Expanded(
             child: GestureDetector(
               behavior: HitTestBehavior.translucent,
@@ -127,9 +127,9 @@ class _CustomTitleBarState extends State<CustomTitleBar> with WindowListener {
             ),
           ),
           
-          // Windows/Linux 窗口控制按钮 - 右侧
+          // Windows/Linux 绐楀彛鎺у埗鎸夐挳 - 鍙充晶
           if (!isMacOS) ...[
-            // 最小化按钮：使用官方 FluentUI 图标
+            // 鏈€灏忓寲鎸夐挳锛氫娇鐢ㄥ畼鏂?FluentUI 鍥炬爣
             _WindowButton(
               iconBuilder: (color) => Icon(
                 FluentIcons.subtract_20_regular,
@@ -142,13 +142,13 @@ class _CustomTitleBarState extends State<CustomTitleBar> with WindowListener {
                 }
               },
             ),
-            const SizedBox(width: 2), // 窗口控制按钮间距，保持一致性
-            // 最大化/还原按钮：使用官方 FluentUI 图标
+            const SizedBox(width: 2), // 绐楀彛鎺у埗鎸夐挳闂磋窛锛屼繚鎸佷竴鑷存€?
+            // 鏈€澶у寲/杩樺師鎸夐挳锛氫娇鐢ㄥ畼鏂?FluentUI 鍥炬爣
             _WindowButton(
               iconBuilder: (color) => Icon(
                 _isMaximized 
-                  ? FluentIcons.square_multiple_20_regular // 还原图标
-                  : FluentIcons.maximize_20_regular, // 最大化图标
+                  ? FluentIcons.square_multiple_20_regular // 杩樺師鍥炬爣
+                  : FluentIcons.maximize_20_regular, // 鏈€澶у寲鍥炬爣
                 size: 20,
                 color: color,
               ),
@@ -186,7 +186,7 @@ class _CustomTitleBarState extends State<CustomTitleBar> with WindowListener {
 class _WindowButton extends StatefulWidget {
   final VoidCallback onPressed;
   final bool isClose;
-  // 自定义图标构建器，用于支持 Windows 风格的图标（可根据颜色自适应）
+  // 鑷畾涔夊浘鏍囨瀯寤哄櫒锛岀敤浜庢敮鎸?Windows 椋庢牸鐨勫浘鏍囷紙鍙牴鎹鑹茶嚜閫傚簲锛?
   final Widget Function(Color color) iconBuilder;
 
   const _WindowButton({
@@ -207,19 +207,19 @@ class _WindowButtonState extends State<_WindowButton> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     
-    // 定义悬停和按下状态的颜色
+    // 瀹氫箟鎮仠鍜屾寜涓嬬姸鎬佺殑棰滆壊
     Color getBackgroundColor() {
       if (_isPressed) {
         if (widget.isClose) {
-          return const Color(0xFFE81123).withOpacity(0.9);
+          return const Color(0xFFE81123).withValues(alpha: 0.9);
         }
-        return theme.colorScheme.surfaceContainerHighest.withOpacity(0.8);
+        return theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.8);
       }
       if (_isHovering) {
         if (widget.isClose) {
           return const Color(0xFFE81123);
         }
-        return theme.colorScheme.surfaceContainerHighest.withOpacity(0.5);
+        return theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5);
       }
       return Colors.transparent;
     }
@@ -229,10 +229,10 @@ class _WindowButtonState extends State<_WindowButton> {
         return Colors.white;
       }
       if (_isHovering || _isPressed) {
-        // 非关闭按钮在 hover/active 时提升对比度
+        // 闈炲叧闂寜閽湪 hover/active 鏃舵彁鍗囧姣斿害
         return theme.colorScheme.onSurface;
       }
-      return theme.colorScheme.onSurface.withOpacity(0.8);
+      return theme.colorScheme.onSurface.withValues(alpha: 0.8);
     }
     
     return MouseRegion(
@@ -254,7 +254,7 @@ class _WindowButtonState extends State<_WindowButton> {
           decoration: BoxDecoration(
             color: getBackgroundColor(),
           ),
-          // 使用居中布局确保图标在垂直与水平上完美居中
+          // 浣跨敤灞呬腑甯冨眬纭繚鍥炬爣鍦ㄥ瀭鐩翠笌姘村钩涓婂畬缇庡眳涓?
           child: Center(
             child: widget.iconBuilder(getIconColor()),
           ),

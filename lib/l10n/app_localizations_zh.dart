@@ -400,6 +400,42 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get rotationTransition => '旋转';
+
+  @override
+  String get nodeManager => 'Node 版本管理';
+
+  @override
+  String get nodeManagerDescription => '管理 Node.js 版本和版本管理工具';
+
+  @override
+  String get versionManagers => '版本管理器';
+
+  @override
+  String get refresh => '刷新';
+
+  @override
+  String get installedVersions => '已安装版本';
+
+  @override
+  String get noVersionsInstalled => '暂无已安装的 Node.js 版本';
+
+  @override
+  String get use => '使用';
+
+  @override
+  String get current => '当前';
+
+  @override
+  String get installNewVersion => '安装新版本';
+
+  @override
+  String get enterVersionNumber => '输入版本号，如 18.17.0';
+
+  @override
+  String get install => '安装';
+
+  @override
+  String get versionFormatHint => '示例：18.17.0, 20.x, lts';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hant`).
@@ -798,4 +834,40 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get rotationTransition => '旋轉';
+
+  @override
+  String get nodeManager => 'Node 版本管理';
+
+  @override
+  String get nodeManagerDescription => '管理 Node.js 版本和版本管理工具';
+
+  @override
+  String get versionManagers => '版本管理器';
+
+  @override
+  String get refresh => '刷新';
+
+  @override
+  String get installedVersions => '已安裝版本';
+
+  @override
+  String get noVersionsInstalled => '暫無已安裝的 Node.js 版本';
+
+  @override
+  String get use => '使用';
+
+  @override
+  String get current => '當前';
+
+  @override
+  String get installNewVersion => '安裝新版本';
+
+  @override
+  String get enterVersionNumber => '輸入版本號，如 18.17.0';
+
+  @override
+  String get install => '安裝';
+
+  @override
+  String get versionFormatHint => '示例：18.17.0, 20.x, lts';
 }
