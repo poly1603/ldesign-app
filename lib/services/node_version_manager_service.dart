@@ -2052,6 +2052,48 @@ class NodeVersionManagerService extends ChangeNotifier {
   Future<void> refresh() async {
     await initialize();
   }
+  
+  /// 刷新指定工具的版本列表
+  Future<void> refreshManagerVersions(NodeVersionManager manager) async {
+    if (!manager.isInstalled) {
+      if (kDebugMode) {
+        print('工具 ${manager.displayName} 未安装，跳过刷新');
+      }
+      return;
+    }
+    
+    try {
+      if (kDebugMode) {
+        print('🔄 刷新 ${manager.displayName} 的版本列表...');
+      }
+      
+      // 获取最新的版本列表
+      final versions = await _getInstalledVersions(manager);
+      
+      // 找到并更新对应的 manager
+      final index = _managers.indexWhere((m) => m.type == manager.type);
+      if (index != -1) {
+        _managers[index] = _managers[index].copyWith(
+          installedVersions: versions,
+        );
+        
+        if (kDebugMode) {
+          print('✅ ${manager.displayName} 版本列表已更新，共 ${versions.length} 个版本');
+        }
+        
+        // 如果这是当前激活的工具，也更新全局的 installedVersions
+        if (_activeManager?.type == manager.type) {
+          _installedVersions = versions;
+        }
+        
+        notifyListeners();
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('刷新 ${manager.displayName} 版本列表失败: $e');
+      }
+    }
+  }
 
   void _setLoading(bool loading) {
     _isLoading = loading;

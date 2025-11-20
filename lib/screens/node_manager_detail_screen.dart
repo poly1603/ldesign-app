@@ -32,13 +32,8 @@ class _NodeManagerDetailScreenState extends State<NodeManagerDetailScreen> {
   @override
   void initState() {
     super.initState();
-    _loadVersions();
-  }
-
-  Future<void> _loadVersions() async {
-    if (widget.manager.isInstalled) {
-      await widget.service.setActiveManager(widget.manager);
-    }
+    // 不需要在这里加载版本，因为 manager 已经包含了版本列表
+    // 查看详情不应该改变“当前激活的工具”
   }
 
   @override
@@ -67,6 +62,11 @@ class _NodeManagerDetailScreenState extends State<NodeManagerDetailScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        // 如果当前查看的不是系统激活的工具，显示提示
+                        if (service.activeManager?.type != widget.manager.type)
+                          _buildInactiveWarning(theme, l10n, service),
+                        if (service.activeManager?.type != widget.manager.type)
+                          const SizedBox(height: 24),
                         _buildInfoCard(theme, l10n),
                         const SizedBox(height: 24),
                         _buildInstalledVersionsSection(theme, l10n, service),
@@ -211,6 +211,72 @@ class _NodeManagerDetailScreenState extends State<NodeManagerDetailScreen> {
     );
   }
 
+  Widget _buildInactiveWarning(ThemeData theme, AppLocalizations l10n, NodeVersionManagerService service) {
+    final activeManagerName = service.activeManager?.displayName ?? '未知';
+    
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.orange.shade50,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.orange.shade200),
+      ),
+      child: Row(
+        children: [
+          Icon(
+            Bootstrap.info_circle,
+            color: Colors.orange.shade700,
+            size: 24,
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '当前系统使用的是 $activeManagerName',
+                  style: theme.textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: Colors.orange.shade900,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  '在此管理的 ${widget.manager.displayName} 版本仅在切换到该工具后生效。',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: Colors.orange.shade800,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 12),
+          ElevatedButton.icon(
+            onPressed: () async {
+              await service.setActiveManager(widget.manager);
+              if (mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('已切换到 ${widget.manager.displayName}'),
+                    backgroundColor: Colors.green,
+                    behavior: SnackBarBehavior.floating,
+                  ),
+                );
+              }
+            },
+            icon: const Icon(Bootstrap.arrow_repeat, size: 16),
+            label: const Text('切换到此工具'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.orange.shade600,
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildInfoCard(ThemeData theme, AppLocalizations l10n) {
     return Card(
       color: Colors.white,
@@ -304,14 +370,17 @@ class _NodeManagerDetailScreenState extends State<NodeManagerDetailScreen> {
                 ),
                 const Spacer(),
                 TextButton.icon(
-                  onPressed: () => service.refresh(),
+                  onPressed: () async {
+                    // 只刷新当前工具的版本列表
+                    await service.refreshManagerVersions(widget.manager);
+                  },
                   icon: const Icon(Bootstrap.arrow_clockwise, size: 16),
                   label: Text(l10n.refresh),
                 ),
               ],
             ),
             const SizedBox(height: 16),
-            if (service.installedVersions.isEmpty)
+            if (widget.manager.installedVersions.isEmpty)
               Center(
                 child: Padding(
                   padding: const EdgeInsets.all(32),
@@ -330,7 +399,7 @@ class _NodeManagerDetailScreenState extends State<NodeManagerDetailScreen> {
                 ),
               )
             else
-              ...service.installedVersions.map((version) => _buildVersionCard(theme, l10n, version, service)),
+              ...widget.manager.installedVersions.map((version) => _buildVersionCard(theme, l10n, version, service)),
           ],
         ),
       ),
@@ -343,13 +412,18 @@ class _NodeManagerDetailScreenState extends State<NodeManagerDetailScreen> {
     NodeVersion version,
     NodeVersionManagerService service,
   ) {
+    // 只有当前工具是 activeManager 时，才显示“当前使用”状态
+    final isCurrentlyActive = service.activeManager?.type == widget.manager.type && version.isActive;
+    
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       decoration: BoxDecoration(
-        color: version.isActive ? theme.colorScheme.primary.withValues(alpha: 0.15) : Colors.grey.shade50,
+        color: isCurrentlyActive ? theme.colorScheme.primary.withValues(alpha: 0.15) : 
+               version.isActive ? Colors.blue.shade50 : Colors.grey.shade50,
         borderRadius: BorderRadius.circular(8),
         border: Border.all(
-          color: version.isActive ? theme.colorScheme.primary : Colors.grey.shade200,
+          color: isCurrentlyActive ? theme.colorScheme.primary : 
+                 version.isActive ? Colors.blue.shade200 : Colors.grey.shade200,
         ),
       ),
       child: Padding(
@@ -360,7 +434,8 @@ class _NodeManagerDetailScreenState extends State<NodeManagerDetailScreen> {
               width: 32,
               height: 32,
               decoration: BoxDecoration(
-                color: version.isActive ? theme.colorScheme.primary : Colors.grey.shade400,
+                color: isCurrentlyActive ? theme.colorScheme.primary : 
+                       version.isActive ? Colors.blue.shade400 : Colors.grey.shade400,
                 borderRadius: BorderRadius.circular(6),
               ),
               child: const Icon(
@@ -399,7 +474,8 @@ class _NodeManagerDetailScreenState extends State<NodeManagerDetailScreen> {
                           ),
                         ),
                       },
-                      if (version.isActive) ...{
+                      // 只有当这个工具是系统激活的工具时，才显示“当前”
+                      if (isCurrentlyActive) ...{
                         const SizedBox(width: 8),
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
@@ -413,6 +489,24 @@ class _NodeManagerDetailScreenState extends State<NodeManagerDetailScreen> {
                               fontSize: 10,
                               fontWeight: FontWeight.w600,
                               color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      } else if (version.isActive) ...{
+                        // 如果是该工具的默认版本，但不是系统当前使用的
+                        const SizedBox(width: 8),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: Colors.blue.shade100,
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: Text(
+                            '默认',
+                            style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.blue.shade700,
                             ),
                           ),
                         ),

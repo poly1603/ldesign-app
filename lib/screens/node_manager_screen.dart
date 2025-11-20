@@ -293,8 +293,8 @@ class _NodeManagerScreenState extends State<NodeManagerScreen> {
     AppLocalizations l10n,
     NodeVersionManagerService service,
   ) {
-    // 鍙樉绀哄綋鍓嶇郴缁熸敮鎸佺殑绠＄悊宸ュ叿
-    final supportedManagers = service.managers.where((manager) {
+    // 先获取当前系统支持的管理工具
+    var supportedManagers = service.managers.where((manager) {
       return manager.supportedPlatforms.any((platform) {
         if (Platform.isWindows) return platform == 'Windows';
         if (Platform.isMacOS) return platform == 'macOS';
@@ -302,6 +302,12 @@ class _NodeManagerScreenState extends State<NodeManagerScreen> {
         return false;
       });
     }).toList();
+    
+    // 单工具策略：如果已经有工具安装，只显示已安装的工具
+    final installedManagers = supportedManagers.where((m) => m.isInstalled).toList();
+    if (installedManagers.isNotEmpty) {
+      supportedManagers = installedManagers;
+    }
     
     // 璋冭瘯锛氭墦鍗?UI 灞傜湅鍒扮殑鐘舵€?
     print('UI 层看到的工具状态:');
@@ -322,6 +328,36 @@ class _NodeManagerScreenState extends State<NodeManagerScreen> {
                 fontWeight: FontWeight.w600,
               ),
             ),
+            // 如果有工具已安装，显示提示
+            if (installedManagers.isNotEmpty) ...[
+              const SizedBox(width: 8),
+              Tooltip(
+                message: '已隐藏其他未安装的工具。卸载当前工具后可选择其他工具。',
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.blue.shade50,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.blue.shade200),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Bootstrap.info_circle, size: 12, color: Colors.blue.shade700),
+                      const SizedBox(width: 4),
+                      Text(
+                        '单工具模式',
+                        style: TextStyle(
+                          fontSize: 10,
+                          color: Colors.blue.shade700,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
             const Spacer(),
             TextButton.icon(
               onPressed: () async {
@@ -337,6 +373,72 @@ class _NodeManagerScreenState extends State<NodeManagerScreen> {
           ],
         ),
         const SizedBox(height: 12),
+        // 如果没有工具安装，显示选择提示
+        if (installedManagers.isEmpty)
+          Container(
+            padding: const EdgeInsets.all(16),
+            margin: const EdgeInsets.only(bottom: 16),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Colors.blue.shade50,
+                  Colors.purple.shade50,
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: Colors.blue.shade200, width: 2),
+            ),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Icon(
+                    Bootstrap.info_circle_fill,
+                    color: Colors.blue.shade600,
+                    size: 28,
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '🎯 请选择一个版本管理工具',
+                        style: theme.textTheme.titleSmall?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blue.shade900,
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        '为了避免冲突，系统只允许安装一个工具。安装后，其他工具将自动隐藏。',
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: Colors.blue.shade800,
+                          height: 1.4,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        '💡 提示：如需更换工具，请先卸载当前工具',
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: Colors.purple.shade700,
+                          fontStyle: FontStyle.italic,
+                          fontSize: 11,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
         LayoutBuilder(
           builder: (context, constraints) {
             // 智能计算一行最多显示几个卡片
@@ -417,14 +519,16 @@ class _NodeManagerScreenState extends State<NodeManagerScreen> {
           width: isActive ? 2 : 1,
         ),
       ),
-      child: InkWell(
-        onTap: isInstalled ? () => _navigateToManagerDetail(manager) : null,
-        borderRadius: BorderRadius.circular(16),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
+      child: Stack(
+        children: [
+          InkWell(
+            onTap: isInstalled ? () => _navigateToManagerDetail(manager) : null,
+            borderRadius: BorderRadius.circular(16),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
               // 顶部：图标 + 名称 + 操作按钮
               Row(
                 children: [
@@ -591,9 +695,50 @@ class _NodeManagerScreenState extends State<NodeManagerScreen> {
                 const SizedBox(height: 12),
                 _buildManagerVersionInfo(theme, l10n, manager, service),
               ],
-            ],
+                ],
+              ),
+            ),
           ),
-        ),
+          // 如果不是当前工具，显示一个淡淡的遮罩提示
+          if (isInstalled && !isActive && manager.installedVersions.isNotEmpty)
+            Positioned(
+              top: 0,
+              right: 0,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade100,
+                  borderRadius: const BorderRadius.only(
+                    topRight: Radius.circular(16),
+                    bottomLeft: Radius.circular(8),
+                  ),
+                  border: Border(
+                    left: BorderSide(color: Colors.grey.shade300),
+                    bottom: BorderSide(color: Colors.grey.shade300),
+                  ),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Bootstrap.eye,
+                      size: 12,
+                      color: Colors.grey.shade600,
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      '预览',
+                      style: TextStyle(
+                        fontSize: 10,
+                        color: Colors.grey.shade600,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }
