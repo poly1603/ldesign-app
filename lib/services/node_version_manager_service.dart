@@ -23,6 +23,7 @@ class NodeVersionManager {
   final List<String> supportedPlatforms;
   final String installCommand;
   final String website;
+  final List<NodeVersion> installedVersions;  // 该工具已安装的 Node.js 版本列表
 
   NodeVersionManager({
     required this.type,
@@ -35,6 +36,7 @@ class NodeVersionManager {
     required this.supportedPlatforms,
     required this.installCommand,
     required this.website,
+    this.installedVersions = const [],  // 默认为空列表
   });
 
   Map<String, dynamic> toJson() {
@@ -49,6 +51,7 @@ class NodeVersionManager {
       'supportedPlatforms': supportedPlatforms,
       'installCommand': installCommand,
       'website': website,
+      'installedVersions': installedVersions.map((v) => v.toJson()).toList(),
     };
   }
 
@@ -67,6 +70,7 @@ class NodeVersionManager {
       supportedPlatforms: List<String>.from(json['supportedPlatforms'] ?? []),
       installCommand: json['installCommand'] ?? '',
       website: json['website'] ?? '',
+      installedVersions: (json['installedVersions'] as List<dynamic>?)?.map((v) => NodeVersion.fromJson(v)).toList() ?? [],
     );
   }
 
@@ -75,6 +79,7 @@ class NodeVersionManager {
     bool? isInstalled,
     String? version,
     String? installPath,
+    List<NodeVersion>? installedVersions,
   }) {
     return NodeVersionManager(
       type: type,
@@ -87,6 +92,7 @@ class NodeVersionManager {
       supportedPlatforms: supportedPlatforms,
       installCommand: installCommand,
       website: website,
+      installedVersions: installedVersions ?? this.installedVersions,
     );
   }
 
@@ -230,6 +236,7 @@ class NodeVersionManagerService extends ChangeNotifier {
             isInstalled: newState.isInstalled,
             version: newState.version,
             installPath: newState.installPath,
+            installedVersions: newState.installedVersions,
           );
         }
       }
@@ -383,6 +390,33 @@ class NodeVersionManagerService extends ChangeNotifier {
         print('Error checking NVM: $e');
       }
     }
+    
+    // 如果工具已安装，加载其已安装的 Node.js 版本
+    List<NodeVersion> installedVersions = [];
+    if (isInstalled) {
+      final tempManager = NodeVersionManager(
+        type: NodeVersionManagerType.nvm,
+        name: 'nvm',
+        displayName: 'NVM (Node Version Manager)',
+        description: Platform.isWindows 
+            ? '适用于 Windows 的 Node.js 版本管理工具'
+            : '适用于 Unix 系统的 Node.js 版本管理工具',
+        isInstalled: isInstalled,
+        version: version,
+        installPath: installPath,
+        supportedPlatforms: Platform.isWindows ? ['Windows'] : ['macOS', 'Linux'],
+        installCommand: Platform.isWindows 
+            ? 'winget install CoreyButler.NVMforWindows --silent'
+            : 'curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash',
+        website: Platform.isWindows 
+            ? 'https://github.com/coreybutler/nvm-windows'
+            : 'https://github.com/nvm-sh/nvm',
+      );
+      installedVersions = await _getInstalledVersions(tempManager);
+      if (kDebugMode) {
+        print('  📦 NVM 已安装版本数: ${installedVersions.length}');
+      }
+    }
 
     return NodeVersionManager(
       type: NodeVersionManagerType.nvm,
@@ -401,6 +435,7 @@ class NodeVersionManagerService extends ChangeNotifier {
       website: Platform.isWindows 
           ? 'https://github.com/coreybutler/nvm-windows'
           : 'https://github.com/nvm-sh/nvm',
+      installedVersions: installedVersions,
     );
   }
 
@@ -548,6 +583,25 @@ class NodeVersionManagerService extends ChangeNotifier {
         print('Error checking FNM: $e');
       }
     }
+    
+    // 如果工具已安装，加载其已安装的 Node.js 版本
+    List<NodeVersion> installedVersions = [];
+    if (isInstalled) {
+      final tempManager = NodeVersionManager(
+        type: NodeVersionManagerType.fnm,
+        name: 'fnm',
+        displayName: 'FNM (Fast Node Manager)',
+        description: '',
+        isInstalled: true,
+        supportedPlatforms: [],
+        installCommand: '',
+        website: '',
+      );
+      installedVersions = await _getInstalledVersions(tempManager);
+      if (kDebugMode) {
+        print('  📦 FNM 已安装版本数: ${installedVersions.length}');
+      }
+    }
 
     return NodeVersionManager(
       type: NodeVersionManagerType.fnm,
@@ -562,6 +616,7 @@ class NodeVersionManagerService extends ChangeNotifier {
           ? 'winget install Schniz.fnm --silent'
           : 'curl -fsSL https://fnm.vercel.app/install | bash',
       website: 'https://github.com/Schniz/fnm',
+      installedVersions: installedVersions,
     );
   }
 
@@ -708,6 +763,25 @@ class NodeVersionManagerService extends ChangeNotifier {
         print('Error checking Volta: $e');
       }
     }
+    
+    // 如果工具已安装，加载其已安装的 Node.js 版本
+    List<NodeVersion> installedVersions = [];
+    if (isInstalled) {
+      final tempManager = NodeVersionManager(
+        type: NodeVersionManagerType.volta,
+        name: 'volta',
+        displayName: 'Volta',
+        description: '',
+        isInstalled: true,
+        supportedPlatforms: [],
+        installCommand: '',
+        website: '',
+      );
+      installedVersions = await _getInstalledVersions(tempManager);
+      if (kDebugMode) {
+        print('  📦 Volta 已安装版本数: ${installedVersions.length}');
+      }
+    }
 
     return NodeVersionManager(
       type: NodeVersionManagerType.volta,
@@ -722,6 +796,7 @@ class NodeVersionManagerService extends ChangeNotifier {
           ? 'winget install Volta.Volta --silent'
           : 'curl https://get.volta.sh | bash',
       website: 'https://volta.sh/',
+      installedVersions: installedVersions,
     );
   }
 
@@ -748,6 +823,25 @@ class NodeVersionManagerService extends ChangeNotifier {
         print('Error checking n: $e');
       }
     }
+    
+    // 如果工具已安装，加载其已安装的 Node.js 版本
+    List<NodeVersion> installedVersions = [];
+    if (isInstalled) {
+      final tempManager = NodeVersionManager(
+        type: NodeVersionManagerType.n,
+        name: 'n',
+        displayName: 'n',
+        description: '',
+        isInstalled: true,
+        supportedPlatforms: [],
+        installCommand: '',
+        website: '',
+      );
+      installedVersions = await _getInstalledVersions(tempManager);
+      if (kDebugMode) {
+        print('  📦 n 已安装版本数: ${installedVersions.length}');
+      }
+    }
 
     return NodeVersionManager(
       type: NodeVersionManagerType.n,
@@ -760,6 +854,7 @@ class NodeVersionManagerService extends ChangeNotifier {
       supportedPlatforms: ['macOS', 'Linux'],
       installCommand: 'npm install -g n',
       website: 'https://github.com/tj/n',
+      installedVersions: installedVersions,
     );
   }
 
@@ -893,6 +988,25 @@ class NodeVersionManagerService extends ChangeNotifier {
         print('Error checking NVS: $e');
       }
     }
+    
+    // 如果工具已安装，加载其已安装的 Node.js 版本
+    List<NodeVersion> installedVersions = [];
+    if (isInstalled) {
+      final tempManager = NodeVersionManager(
+        type: NodeVersionManagerType.nvs,
+        name: 'nvs',
+        displayName: 'NVS (Node Version Switcher)',
+        description: '',
+        isInstalled: true,
+        supportedPlatforms: [],
+        installCommand: '',
+        website: '',
+      );
+      installedVersions = await _getInstalledVersions(tempManager);
+      if (kDebugMode) {
+        print('  📦 NVS 已安装版本数: ${installedVersions.length}');
+      }
+    }
 
     return NodeVersionManager(
       type: NodeVersionManagerType.nvs,
@@ -907,6 +1021,7 @@ class NodeVersionManagerService extends ChangeNotifier {
           ? 'git clone https://github.com/jasongin/nvs "%LOCALAPPDATA%\\nvs" && "%LOCALAPPDATA%\\nvs\\nvs.cmd" install'
           : 'export NVS_HOME="\$HOME/.nvs" && git clone https://github.com/jasongin/nvs "\$NVS_HOME" && . "\$NVS_HOME/nvs.sh" install',
       website: 'https://github.com/jasongin/nvs',
+      installedVersions: installedVersions,
     );
   }
 
@@ -1126,47 +1241,117 @@ class NodeVersionManagerService extends ChangeNotifier {
     }
   }
 
-  /// 安装 Node 版本
-  Future<void> installNodeVersion(String version) async {
+  /// 安装 Node 版本（支持日志回调）
+  Future<void> installNodeVersion(
+    String version, {
+    Function(String)? onLog,
+  }) async {
     if (_activeManager == null) {
       throw Exception('没有活跃的版本管理工具');
     }
 
     _setLoading(true);
     try {
-      ProcessResult result;
+      onLog?.call('开始安装 Node.js $version...');
+      
+      Process? process;
+      List<String> command;
+      List<String> args;
       
       switch (_activeManager!.type) {
         case NodeVersionManagerType.nvm:
           if (Platform.isWindows) {
-            result = await Process.run('nvm', ['install', version.replaceAll('v', '')], runInShell: true);
+            command = ['nvm'];
+            args = ['install', version.replaceAll('v', '')];
           } else {
-            result = await Process.run('bash', ['-c', 'source ~/.nvm/nvm.sh && nvm install $version'], runInShell: true);
+            command = ['bash'];
+            args = ['-c', 'source ~/.nvm/nvm.sh && nvm install $version'];
           }
           break;
         case NodeVersionManagerType.fnm:
-          result = await Process.run('fnm', ['install', version], runInShell: true);
+          command = ['fnm'];
+          args = ['install', version];
+          // 使用国内镜像源加速下载
+          args.addAll(['--node-dist-mirror', 'https://npmmirror.com/mirrors/node']);
           break;
         case NodeVersionManagerType.volta:
-          result = await Process.run('volta', ['install', 'node@$version'], runInShell: true);
+          command = ['volta'];
+          args = ['install', 'node@$version'];
           break;
         case NodeVersionManagerType.n:
-          result = await Process.run('n', [version.replaceAll('v', '')], runInShell: true);
+          command = ['n'];
+          args = [version.replaceAll('v', '')];
           break;
         case NodeVersionManagerType.nvs:
-          result = await Process.run('nvs', ['add', version], runInShell: true);
+          command = ['nvs'];
+          args = ['add', version];
           break;
       }
 
-      if (result.exitCode != 0) {
-        throw Exception('安装版本失败: ${result.stderr}');
+      // 为 FNM 设置镜像源环境变量
+      Map<String, String>? environment;
+      if (_activeManager!.type == NodeVersionManagerType.fnm) {
+        environment = {
+          ...Platform.environment,
+          'FNM_NODE_DIST_MIRROR': 'https://npmmirror.com/mirrors/node',
+        };
       }
+      
+      // 启动进程
+      process = await Process.start(
+        command[0],
+        args,
+        runInShell: true,
+        environment: environment,
+      );
+
+      // 监听标准输出
+      process.stdout.transform(utf8.decoder).listen((data) {
+        final lines = data.trim().split('\n');
+        for (final line in lines) {
+          if (line.isNotEmpty) {
+            onLog?.call(line);
+          }
+        }
+      });
+
+      // 监听错误输出
+      process.stderr.transform(utf8.decoder).listen((data) {
+        final lines = data.trim().split('\n');
+        for (final line in lines) {
+          if (line.isNotEmpty) {
+            onLog?.call(line);
+          }
+        }
+      });
+
+      // 等待进程完成
+      final exitCode = await process.exitCode;
+
+      if (exitCode != 0) {
+        // 为 FNM 提供更详细的错误信息
+        if (_activeManager!.type == NodeVersionManagerType.fnm) {
+          throw Exception(
+            '安装版本失败 (exit code: $exitCode)\n\n'
+            '如果遇到网络错误，请尝试以下解决方案：\n'
+            '1. 手动设置 FNM 镜像源：\n'
+            '   PowerShell: \$env:FNM_NODE_DIST_MIRROR="https://npmmirror.com/mirrors/node"\n'
+            '   然后再执行: fnm install $version\n\n'
+            '2. 检查网络连接和代理设置\n'
+            '3. 尝试更新 FNM： winget upgrade Schniz.fnm'
+          );
+        }
+        throw Exception('安装版本失败 (exit code: $exitCode)');
+      }
+
+      onLog?.call('✅ Node.js $version 安装完成');
 
       // 重新加载版本列表
       await _loadInstalledVersions();
       _error = null;
     } catch (e) {
       _error = e.toString();
+      onLog?.call('❌ 安装失败: $e');
       rethrow;
     } finally {
       _setLoading(false);

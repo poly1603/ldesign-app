@@ -339,61 +339,43 @@ class _NodeManagerScreenState extends State<NodeManagerScreen> {
         const SizedBox(height: 12),
         LayoutBuilder(
           builder: (context, constraints) {
-            // 鏍规嵁宸ュ叿鎬绘暟鍜屽睆骞曞搴︽櫤鑳藉喅瀹氬垪鏁?
-            final totalItems = supportedManagers.length;
-            int crossAxisCount;
-            double childAspectRatio;
+            // 智能计算一行最多显示几个卡片
+            // 假设每个卡片的最小宽度为 400px，间距为 12px
+            const double minCardWidth = 400;
+            const double cardSpacing = 12;
             
-            // 鏍规嵁宸ュ叿鏁伴噺鍐冲畾鏈€浣冲垪鏁?
-            if (totalItems <= 2) {
-              // 1-2涓伐鍏凤細濮嬬粓鏄剧ず 2鍒楋紙鎴?鍒楀湪灏忓睆骞曪級
-              crossAxisCount = constraints.maxWidth > 600 ? 2 : 1;
-              childAspectRatio = constraints.maxWidth > 600 ? 2.8 : 4.0;
-            } else if (totalItems == 3) {
-              // 3涓伐鍏凤細鏄剧ず 3鍒楋紙鎴?鍒楁垨1鍒楀湪灏忓睆骞曪級
-              if (constraints.maxWidth > 900) {
-                crossAxisCount = 3;
-                childAspectRatio = 3.0;
-              } else if (constraints.maxWidth > 600) {
-                crossAxisCount = 2;  // 灏忓睆鏄剧ず 2鍒楋紝绗簩琛?涓?
-                childAspectRatio = 2.8;
+            // 计算可以容纳的最大列数
+            final availableWidth = constraints.maxWidth;
+            int maxCrossAxisCount = 1;
+            
+            // 从1开始尝试，找出最大可容纳的列数
+            for (int i = 1; i <= 2; i++) {  // 最多只尝试2列
+              final totalSpacing = (i - 1) * cardSpacing;
+              final requiredWidth = (i * minCardWidth) + totalSpacing;
+              if (requiredWidth <= availableWidth) {
+                maxCrossAxisCount = i;
               } else {
-                crossAxisCount = 1;
-                childAspectRatio = 4.0;
-              }
-            } else if (totalItems == 4) {
-              // 4涓伐鍏凤細鏄剧ず 4鍒楁垨 2鍒楋紝閬垮厤 3鍒?
-              if (constraints.maxWidth > 1000) {
-                crossAxisCount = 4;
-                childAspectRatio = 3.0;
-              } else if (constraints.maxWidth > 600) {
-                crossAxisCount = 2;  // 2x2 瀹岀編甯冨眬
-                childAspectRatio = 2.8;
-              } else {
-                crossAxisCount = 1;
-                childAspectRatio = 4.0;
-              }
-            } else {
-              // 5涓垨鏇村宸ュ叿锛氫紭鍏?鍒楁垨 2鍒?
-              if (constraints.maxWidth > 1000) {
-                crossAxisCount = 4;
-                childAspectRatio = 3.0;
-              } else if (constraints.maxWidth > 600) {
-                crossAxisCount = 2;
-                childAspectRatio = 2.8;
-              } else {
-                crossAxisCount = 1;
-                childAspectRatio = 4.0;
+                break;
               }
             }
+            
+            // 确保至少显示1列，最多2列
+            final crossAxisCount = maxCrossAxisCount.clamp(1, 2);
+            
+            // 根据实际列数计算卡片宽度和高度比
+            // 卡片高度约为220px（包含描述和按钮的情况，留有余量）
+            final totalSpacing = (crossAxisCount - 1) * cardSpacing;
+            final cardWidth = (availableWidth - totalSpacing) / crossAxisCount;
+            const cardHeight = 220.0;
+            final childAspectRatio = cardWidth / cardHeight;
             
             return GridView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: crossAxisCount,
-                crossAxisSpacing: 12,
-                mainAxisSpacing: 12,
+                crossAxisSpacing: cardSpacing,
+                mainAxisSpacing: cardSpacing,
                 childAspectRatio: childAspectRatio,
               ),
               itemCount: supportedManagers.length,
@@ -424,72 +406,98 @@ class _NodeManagerScreenState extends State<NodeManagerScreen> {
     final isActive = service.activeManager?.type == manager.type;
     final isInstalled = manager.isInstalled;
     
-    Widget card = Card(
+    return Card(
       key: key,
       color: Colors.white,
       elevation: 0,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(16),
         side: BorderSide(
           color: isActive ? theme.colorScheme.primary : Colors.grey.shade200,
           width: isActive ? 2 : 1,
         ),
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
+      child: InkWell(
+        onTap: isInstalled ? () => _navigateToManagerDetail(manager) : null,
+        borderRadius: BorderRadius.circular(16),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // 椤堕儴涓€琛岋細鍥炬爣 + 鍚嶇О/鐗堟湰/鐘舵€?+ 鎸夐挳
+              // 顶部：图标 + 名称 + 操作按钮
               Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // 宸ュ叿鍥炬爣
+                  // 工具图标
                   Container(
-                    width: 32,
-                    height: 32,
+                    width: 48,
+                    height: 48,
                     decoration: BoxDecoration(
                       color: _getManagerColor(manager.type).withValues(alpha: 0.15),
-                      borderRadius: BorderRadius.circular(6),
+                      borderRadius: BorderRadius.circular(12),
                     ),
                     child: Icon(
                       Bootstrap.terminal,
                       color: _getManagerColor(manager.type),
-                      size: 16,
+                      size: 24,
                     ),
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: 12),
                   
-                  // 涓棿锛氬悕绉般€佺増鏈€佺姸鎬?
+                  // 名称和状态
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // 绗竴琛岋細鍚嶇О + 鐗堟湰鍙?
                         Row(
                           children: [
                             Text(
                               manager.name.toUpperCase(),
-                              style: theme.textTheme.titleSmall?.copyWith(
+                              style: theme.textTheme.titleMedium?.copyWith(
                                 fontWeight: FontWeight.w600,
-                                fontSize: 13,
-                                color: theme.colorScheme.onSurface,
+                                fontSize: 16,
                               ),
                             ),
-                            if (isInstalled && manager.version != null) ...[
-                              const SizedBox(width: 6),
-                              VersionText(
-                                'v${manager.version}',
-                                fontSize: 10,
-                                color: theme.colorScheme.onSurface.withValues(alpha: 0.15),
+                            if (isActive) ...[
+                              const SizedBox(width: 8),
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                decoration: BoxDecoration(
+                                  color: theme.colorScheme.primary,
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                                child: Text(
+                                  '当前使用',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
                               ),
                             ],
                           ],
                         ),
-                        const SizedBox(height: 2),
-                        // 绗簩琛岋細鐘舵€佹寚绀哄櫒
+                        const SizedBox(height: 4),
                         Row(
                           children: [
+                            if (isInstalled && manager.version != null) ...[
+                              VersionText(
+                                'v${manager.version}',
+                                fontSize: 12,
+                                color: Colors.grey.shade600,
+                              ),
+                              const SizedBox(width: 8),
+                              Container(
+                                width: 4,
+                                height: 4,
+                                decoration: BoxDecoration(
+                                  color: Colors.grey.shade400,
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                            ],
                             Container(
                               width: 6,
                               height: 6,
@@ -498,143 +506,195 @@ class _NodeManagerScreenState extends State<NodeManagerScreen> {
                                 shape: BoxShape.circle,
                               ),
                             ),
-                            const SizedBox(width: 4),
+                            const SizedBox(width: 6),
                             Text(
                               isInstalled ? l10n.installed : l10n.notInstalled,
-                              style: theme.textTheme.bodySmall?.copyWith(
-                                fontSize: 11,
+                              style: TextStyle(
+                                fontSize: 12,
                                 color: isInstalled ? Colors.green : Colors.grey.shade600,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
-                            if (isActive) ...[
-                              const SizedBox(width: 4),
-                              Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
-                                decoration: BoxDecoration(
-                                  color: theme.colorScheme.primary,
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: Text(
-                                  l10n.active,
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 9,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ),
-                            ],
                           ],
                         ),
                       ],
                     ),
                   ),
                   
-                  // 鍙充晶鎸夐挳
+                  // 右侧操作区
                   if (isInstalled) ...[
-                    // "选择" 按钮 - 进入详情页
-                    SizedBox(
-                      height: 28,
-                      child: OutlinedButton(
-                        onPressed: () => _navigateToManagerDetail(manager),
-                        style: OutlinedButton.styleFrom(
-                          foregroundColor: theme.colorScheme.primary,
-                          side: BorderSide(color: theme.colorScheme.primary),
-                          padding: const EdgeInsets.symmetric(horizontal: 12),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(6),
-                          ),
-                          minimumSize: const Size(0, 28),
-                        ),
-                        child: Text(l10n.details, style: const TextStyle(fontSize: 11)),
-                      ),
-                    ),
-                    const SizedBox(width: 4),
-                    // "使用" / "当前" 按钮
-                    if (!isActive)
+                    // 只有安装了 Node.js 版本的工具才能切换使用
+                    if (!isActive && manager.installedVersions.isNotEmpty)
                       SizedBox(
-                        height: 28,
+                        height: 32,
                         child: ElevatedButton(
                           onPressed: () => _setActiveManager(manager, service),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: theme.colorScheme.primary,
                             foregroundColor: Colors.white,
-                            padding: const EdgeInsets.symmetric(horizontal: 12),
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            elevation: 0,
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(6),
+                              borderRadius: BorderRadius.circular(8),
                             ),
-                            minimumSize: const Size(0, 28),
                           ),
-                          child: Text(l10n.inUse, style: const TextStyle(fontSize: 11)),
-                        ),
-                      )
-                    else
-                      Container(
-                        height: 28,
-                        padding: const EdgeInsets.symmetric(horizontal: 12),
-                        decoration: BoxDecoration(
-                          color: theme.colorScheme.primary.withValues(alpha: 0.15),
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        alignment: Alignment.center,
-                        child: Text(
-                          l10n.current,
-                          style: TextStyle(
-                            fontSize: 11,
-                            color: theme.colorScheme.primary,
-                            fontWeight: FontWeight.w600,
-                          ),
+                          child: Text(l10n.inUse, style: const TextStyle(fontSize: 12)),
                         ),
                       ),
-                    const SizedBox(width: 4),
+                    const SizedBox(width: 8),
                     IconButton(
                       onPressed: () => _showManagerOptions(manager),
-                      icon: const Icon(Bootstrap.three_dots_vertical, size: 14),
+                      icon: const Icon(Bootstrap.three_dots_vertical, size: 16),
                       style: IconButton.styleFrom(
                         backgroundColor: Colors.grey.shade100,
-                        padding: const EdgeInsets.all(6),
-                        minimumSize: const Size(28, 28),
+                        padding: const EdgeInsets.all(8),
                       ),
                     ),
                   ] else ...[
                     SizedBox(
-                      height: 28,
+                      height: 32,
                       child: ElevatedButton.icon(
                         onPressed: () => _showInstallDialog(manager),
-                        icon: const Icon(Bootstrap.download, size: 12),
-                        label: Text(l10n.install, style: const TextStyle(fontSize: 11)),
+                        icon: const Icon(Bootstrap.download, size: 14),
+                        label: Text(l10n.install),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.green,
                           foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          elevation: 0,
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(6),
+                            borderRadius: BorderRadius.circular(8),
                           ),
-                          minimumSize: const Size(0, 28),
                         ),
                       ),
                     ),
                   ],
                 ],
               ),
-              const SizedBox(height: 8),
+              
+              const SizedBox(height: 16),
+              
+              // 描述
               Text(
                 manager.description,
                 style: theme.textTheme.bodySmall?.copyWith(
-                  fontSize: 11,
-                  color: theme.colorScheme.onSurface.withValues(alpha: 0.15),
-                  height: 1.3,
+                  fontSize: 12,
+                  color: Colors.grey.shade600,
+                  height: 1.4,
                 ),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
+              
+              // 显示所有已安装工具的版本信息
+              if (isInstalled && manager.installedVersions.isNotEmpty) ...[
+                const SizedBox(height: 12),
+                _buildManagerVersionInfo(theme, l10n, manager, service),
+              ],
             ],
           ),
         ),
+      ),
     );
+  }
 
-    return card;
+  Widget _buildManagerVersionInfo(
+    ThemeData theme,
+    AppLocalizations l10n,
+    NodeVersionManager manager,
+    NodeVersionManagerService service,
+  ) {
+    // 使用工具自己的已安装版本列表
+    final installedVersions = manager.installedVersions;
+    final activeVersion = installedVersions.firstWhere(
+      (v) => v.isActive,
+      orElse: () => NodeVersion(
+        version: '未知',
+        isInstalled: false,
+        isActive: false,
+        isLts: false,
+      ),
+    );
+    
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.primary.withValues(alpha: 0.05),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(
+          color: theme.colorScheme.primary.withValues(alpha: 0.1),
+        ),
+      ),
+      child: Row(
+        children: [
+          // 当前默认版本
+          Expanded(
+            child: Row(
+              children: [
+                Icon(
+                  Bootstrap.check_circle_fill,
+                  size: 14,
+                  color: Colors.green.shade600,
+                ),
+                const SizedBox(width: 6),
+                Text(
+                  '默认版本',
+                  style: TextStyle(
+                    fontSize: 11,
+                    color: Colors.grey.shade700,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                const SizedBox(width: 6),
+                Flexible(
+                  child: VersionText(
+                    activeVersion.version,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.green.shade700,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // 分隔线
+          Container(
+            width: 1,
+            height: 16,
+            color: Colors.grey.shade300,
+            margin: const EdgeInsets.symmetric(horizontal: 12),
+          ),
+          // 已安装版本数量
+          Row(
+            children: [
+              Icon(
+                Bootstrap.layers_fill,
+                size: 14,
+                color: theme.colorScheme.primary,
+              ),
+              const SizedBox(width: 6),
+              NumberText(
+                '${installedVersions.length}',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: theme.colorScheme.primary,
+                ),
+              ),
+              const SizedBox(width: 4),
+              Text(
+                '个版本',
+                style: TextStyle(
+                  fontSize: 11,
+                  color: Colors.grey.shade700,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 
   Color _getManagerColor(NodeVersionManagerType type) {
@@ -965,6 +1025,7 @@ class _NodeManagerScreenState extends State<NodeManagerScreen> {
   Future<void> _installVersion(String version, NodeVersionManagerService service) async {
     final l10n = AppLocalizations.of(context)!;
     try {
+      // 使用简单的安装方式，不显示详细日志
       await service.installNodeVersion(version);
       setState(() => _newVersionInput = '');
       if (mounted) {
