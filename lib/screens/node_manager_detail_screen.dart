@@ -7,6 +7,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../services/node_version_manager_service.dart';
 import '../l10n/app_localizations.dart';
 import '../widgets/number_text.dart';
+import '../providers/app_provider.dart';
 
 class NodeManagerDetailScreen extends StatefulWidget {
   final NodeVersionManager manager;
@@ -52,18 +53,27 @@ class _NodeManagerDetailScreenState extends State<NodeManagerDetailScreen> {
               return _buildNotInstalledView(theme, l10n);
             }
 
-            return SingleChildScrollView(
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildInfoCard(theme, l10n),
-                  const SizedBox(height: 24),
-                  _buildInstalledVersionsSection(theme, l10n, service),
-                  const SizedBox(height: 24),
-                  _buildInstallNewVersionSection(theme, l10n, service),
-                ],
-              ),
+            return Column(
+              children: [
+                // 顶部标题栏
+                _buildHeader(context, theme, l10n),
+                // 内容区域
+                Expanded(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.all(24),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildInfoCard(theme, l10n),
+                        const SizedBox(height: 24),
+                        _buildInstalledVersionsSection(theme, l10n, service),
+                        const SizedBox(height: 24),
+                        _buildInstallNewVersionSection(theme, l10n, service),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             );
           },
         ),
@@ -71,37 +81,130 @@ class _NodeManagerDetailScreenState extends State<NodeManagerDetailScreen> {
     );
   }
 
-  Widget _buildNotInstalledView(ThemeData theme, AppLocalizations l10n) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+  // 构建顶部标题栏
+  Widget _buildHeader(BuildContext context, ThemeData theme, AppLocalizations l10n) {
+    final appProvider = context.read<AppProvider>();
+    
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border(
+          bottom: BorderSide(
+            color: theme.dividerColor.withValues(alpha: 0.3),
+            width: 1,
+          ),
+        ),
+      ),
+      child: Row(
         children: [
-          Icon(Bootstrap.exclamation_circle, size: 64, color: Colors.grey.shade400),
-          const SizedBox(height: 16),
-          Text(
-            l10n.notInstalledMessage(widget.manager.displayName),
-            style: theme.textTheme.titleLarge?.copyWith(
-              color: Colors.grey.shade700,
+          // 返回按钮
+          IconButton(
+            icon: const Icon(Bootstrap.arrow_left, size: 20),
+            onPressed: () => appProvider.setCurrentRoute('/node-manager'),
+            tooltip: l10n.back,
+          ),
+          const SizedBox(width: 12),
+          // 工具图标
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: _getManagerColor(widget.manager.type).withValues(alpha: 0.15),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Icon(
+              Bootstrap.terminal,
+              color: _getManagerColor(widget.manager.type),
+              size: 20,
             ),
           ),
-          const SizedBox(height: 8),
-          Text(
-            l10n.installFirstMessage,
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: Colors.grey.shade600,
+          const SizedBox(width: 12),
+          // 工具名称和版本
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  widget.manager.displayName,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                if (widget.manager.version != null)
+                  Text(
+                    'v${widget.manager.version}',
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                    ),
+                  ),
+              ],
             ),
           ),
-          const SizedBox(height: 24),
-          ElevatedButton.icon(
-            onPressed: () => Navigator.of(context).pop(),
-            icon: const Icon(Bootstrap.arrow_left),
-            label: Text(l10n.back),
-            style: ElevatedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+          // 访问官网按钮（小尺寸）
+          OutlinedButton.icon(
+            onPressed: () async {
+              final url = Uri.parse(widget.manager.website);
+              if (await canLaunchUrl(url)) {
+                await launchUrl(url);
+              }
+            },
+            icon: const Icon(Bootstrap.globe, size: 14),
+            label: Text(l10n.visitWebsite),
+            style: OutlinedButton.styleFrom(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              minimumSize: Size.zero,
             ),
           ),
         ],
       ),
+    );
+  }
+
+  Color _getManagerColor(NodeVersionManagerType type) {
+    switch (type) {
+      case NodeVersionManagerType.nvm:
+        return Colors.green;
+      case NodeVersionManagerType.fnm:
+        return Colors.blue;
+      case NodeVersionManagerType.volta:
+        return Colors.purple;
+      case NodeVersionManagerType.n:
+        return Colors.orange;
+      case NodeVersionManagerType.nvs:
+        return Colors.teal;
+    }
+  }
+
+  Widget _buildNotInstalledView(ThemeData theme, AppLocalizations l10n) {
+    return Column(
+      children: [
+        _buildHeader(context, theme, l10n),
+        Expanded(
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Bootstrap.exclamation_circle, size: 64, color: Colors.grey.shade400),
+                const SizedBox(height: 16),
+                Text(
+                  l10n.notInstalledMessage(widget.manager.displayName),
+                  style: theme.textTheme.titleLarge?.copyWith(
+                    color: Colors.grey.shade700,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  l10n.installFirstMessage,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: Colors.grey.shade600,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -135,23 +238,6 @@ class _NodeManagerDetailScreenState extends State<NodeManagerDetailScreen> {
               _buildInfoRow(theme, l10n.version, widget.manager.version ?? l10n.unknown),
               _buildInfoRow(theme, l10n.installPath, widget.manager.installPath ?? l10n.unknown),
               _buildInfoRow(theme, l10n.description, widget.manager.description),
-              const SizedBox(height: 12),
-              Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton.icon(
-                      onPressed: () async {
-                        final url = Uri.parse(widget.manager.website);
-                        if (await canLaunchUrl(url)) {
-                          await launchUrl(url);
-                        }
-                      },
-                      icon: const Icon(Bootstrap.globe, size: 16),
-                      label: Text(l10n.visitWebsite),
-                  ),
-                ),
-              ],
-            ),
           ],
         ),
       ),
@@ -432,21 +518,6 @@ class _NodeManagerDetailScreenState extends State<NodeManagerDetailScreen> {
         ),
       ),
     );
-  }
-
-  Color _getManagerColor() {
-    switch (widget.manager.type) {
-      case NodeVersionManagerType.nvm:
-        return Colors.green;
-      case NodeVersionManagerType.fnm:
-        return Colors.blue;
-      case NodeVersionManagerType.volta:
-        return Colors.purple;
-      case NodeVersionManagerType.n:
-        return Colors.orange;
-      case NodeVersionManagerType.nvs:
-        return Colors.teal;
-    }
   }
 
   Future<void> _switchVersion(String version, NodeVersionManagerService service) async {
