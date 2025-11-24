@@ -117,52 +117,6 @@ class Breadcrumb extends StatelessWidget {
       return items;
     }
 
-    // 鐗规畩澶勭悊 Node 版本管理器详情页面
-    if (route == '/node-manager-detail') {
-      items.add(BreadcrumbItem(
-        label: l10n.nodeManager,
-        route: '/node-manager',
-        icon: Icons.terminal,
-      ));
-      
-      // 尝试获取管理器名称
-      final managerType = appProvider.routeParams['managerType'] as String?;
-      if (managerType != null) {
-        // 将 type 转换为显示名称
-        String managerName;
-        switch (managerType) {
-          case 'nvm':
-            managerName = 'NVM';
-            break;
-          case 'fnm':
-            managerName = 'FNM';
-            break;
-          case 'volta':
-            managerName = 'Volta';
-            break;
-          case 'n':
-            managerName = 'n';
-            break;
-          case 'nvs':
-            managerName = 'NVS';
-            break;
-          default:
-            managerName = managerType.toUpperCase();
-        }
-        items.add(BreadcrumbItem(
-          label: managerName,
-          route: null, // 当前页面，不可点击
-        ));
-      } else {
-        items.add(BreadcrumbItem(
-          label: l10n.details,
-          route: null,
-        ));
-      }
-      
-      return items;
-    }
-
     // 鐗规畩澶勭悊椤圭洰鎿嶄綔椤甸潰
     if (route.startsWith('/project/') && route.split('/').length >= 4) {
       final parts = route.split('/');
@@ -237,10 +191,6 @@ class Breadcrumb extends StatelessWidget {
         case 'projects':
           label = l10n.projects;
           icon = Icons.folder;
-          break;
-        case 'node-manager':
-          label = l10n.nodeManager;
-          icon = Icons.terminal;
           break;
         case 'settings':
           label = l10n.settings;

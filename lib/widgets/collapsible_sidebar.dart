@@ -44,17 +44,11 @@ class _CollapsibleSidebarState extends State<CollapsibleSidebar> {
     // 绮剧‘鍖归厤
     if (currentRoute == itemRoute) return true;
     
-    // 椤圭洰鐩稿叧璺敱鐨勭壒娈婂鐞?
+    // 项目相关路由的特殊处理
     if (itemRoute == '/projects') {
       return currentRoute == '/projects' || 
              currentRoute == '/project-detail' ||
-             currentRoute.startsWith('/project/');  // 鍖归厤鎵€鏈夐」鐩搷浣滆矾鐢?
-    }
-    
-    // Node 版本管理器相关路由的特殊处理
-    if (itemRoute == '/node-manager') {
-      return currentRoute == '/node-manager' || 
-             currentRoute == '/node-manager-detail';
+             currentRoute.startsWith('/project/');  // 匹配所有项目操作路由
     }
     
     return false;
@@ -223,8 +217,6 @@ class _CollapsibleSidebarState extends State<CollapsibleSidebar> {
         return l10n.home;
       case 'projects':
         return l10n.projects;
-      case 'nodeManager':
-        return l10n.nodeManager;
       case 'settings':
         return l10n.settings;
       default:

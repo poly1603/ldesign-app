@@ -74,7 +74,7 @@ class SystemInfoService {
         _getInstalledBrowsers().timeout(const Duration(seconds: 3), onTimeout: () => <String>[]),
         _getSystemInfo().timeout(const Duration(seconds: 2), onTimeout: () => <String, dynamic>{}),
         _getHardwareInfo().timeout(const Duration(seconds: 2), onTimeout: () => <String, dynamic>{}),
-        _getNetworkInfo().timeout(const Duration(seconds: 1), onTimeout: () => '未知'),
+        _getNetworkInfo().timeout(const Duration(seconds: 1), onTimeout: () => 'Unknown'),
       ]);
 
       final editors = secondaryResults[0] as List<String>;
@@ -84,17 +84,17 @@ class SystemInfoService {
       final networkInfo = secondaryResults[4] as String;
 
       _cachedInfo = SystemInfo(
-        nodeVersion: nodeInfo['version'] ?? '未安装',
+        nodeVersion: nodeInfo['version'] ?? 'Not Installed',
         hasNodeVersionManager: nodeInfo['hasVersionManager'] ?? false,
         nodeVersionManager: nodeInfo['versionManager'] ?? '',
-        gitVersion: gitInfo['version'] ?? '未安装',
+        gitVersion: gitInfo['version'] ?? 'Not Installed',
         hasGit: gitInfo['hasGit'] ?? false,
         installedEditors: editors,
         installedBrowsers: browsers,
-        osVersion: systemInfo['os'] ?? '未知',
-        cpuInfo: hardwareInfo['cpu'] ?? '未知',
-        memoryInfo: hardwareInfo['memory'] ?? '未知',
-        diskInfo: hardwareInfo['disk'] ?? '未知',
+        osVersion: systemInfo['os'] ?? 'Unknown',
+        cpuInfo: hardwareInfo['cpu'] ?? 'Unknown',
+        memoryInfo: hardwareInfo['memory'] ?? 'Unknown',
+        diskInfo: hardwareInfo['disk'] ?? 'Unknown',
         networkInfo: networkInfo,
         totalProjects: projectStats['total'] ?? 0,
         runningProjects: projectStats['running'] ?? 0,
@@ -119,7 +119,7 @@ class SystemInfoService {
       final nodeResult = await Process.run('node', ['--version']);
       final nodeVersion = nodeResult.exitCode == 0 
           ? nodeResult.stdout.toString().trim() 
-          : '未安装';
+          : 'Not Installed';
       
       if (kDebugMode) {
         print('SystemInfoService: Node.js版本: $nodeVersion');
@@ -173,7 +173,7 @@ class SystemInfoService {
       };
     } catch (e) {
       return {
-        'version': '未安装',
+        'version': 'Not Installed',
         'hasVersionManager': false,
         'versionManager': '',
       };
@@ -201,7 +201,7 @@ class SystemInfoService {
       }
       return {
         'hasGit': false,
-        'version': '未安装',
+        'version': 'Not Installed',
       };
     } catch (e) {
       if (kDebugMode) {
@@ -209,7 +209,7 @@ class SystemInfoService {
       }
       return {
         'hasGit': false,
-        'version': '未安装',
+        'version': 'Not Installed',
       };
     }
   }
@@ -359,7 +359,7 @@ class SystemInfoService {
           final output = result.stdout.toString();
           final lines = output.split('\n');
           
-          String osName = '未知';
+          String osName = 'Unknown';
           for (final line in lines) {
             if (line.contains('OS Name:')) {
               osName = line.split(':')[1].trim();
@@ -385,16 +385,16 @@ class SystemInfoService {
           Process.run('wmic', ['logicaldisk', 'get', 'size,freespace', '/format:value']),
         ]);
 
-        String cpu = '未知';
-        String memory = '未知';
-        String disk = '未知';
+        String cpu = 'Unknown';
+        String memory = 'Unknown';
+        String disk = 'Unknown';
 
         // CPU 信息
         if (results[0].exitCode == 0) {
           final output = results[0].stdout.toString();
           final match = RegExp(r'Name=(.+)').firstMatch(output);
           if (match != null) {
-            cpu = match.group(1)?.trim() ?? '未知';
+            cpu = match.group(1)?.trim() ?? 'Unknown';
           }
         }
 
@@ -442,15 +442,15 @@ class SystemInfoService {
       }
       
       return {
-        'cpu': '未知',
-        'memory': '未知',
-        'disk': '未知',
+        'cpu': 'Unknown',
+        'memory': 'Unknown',
+        'disk': 'Unknown',
       };
     } catch (e) {
       return {
-        'cpu': '未知',
-        'memory': '未知',
-        'disk': '未知',
+        'cpu': 'Unknown',
+        'memory': 'Unknown',
+        'disk': 'Unknown',
       };
     }
   }
@@ -476,9 +476,9 @@ class SystemInfoService {
           return ips.isNotEmpty ? ips.join(', ') : '未获取到IP地址';
         }
       }
-      return '未知';
+      return 'Unknown';
     } catch (e) {
-      return '未知';
+      return 'Unknown';
     }
   }
 
@@ -524,18 +524,18 @@ class SystemInfoService {
 
   SystemInfo _getDefaultSystemInfo() {
     return SystemInfo(
-      nodeVersion: '未安装',
+      nodeVersion: 'Not Installed',
       hasNodeVersionManager: false,
       nodeVersionManager: '',
-      gitVersion: '未安装',
+      gitVersion: 'Not Installed',
       hasGit: false,
       installedEditors: [],
       installedBrowsers: [],
       osVersion: Platform.operatingSystem,
-      cpuInfo: '未知',
-      memoryInfo: '未知',
-      diskInfo: '未知',
-      networkInfo: '未知',
+      cpuInfo: 'Unknown',
+      memoryInfo: 'Unknown',
+      diskInfo: 'Unknown',
+      networkInfo: 'Unknown',
       totalProjects: 0,
       runningProjects: 0,
     );

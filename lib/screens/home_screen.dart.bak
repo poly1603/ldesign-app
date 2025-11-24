@@ -36,7 +36,23 @@ class _HomeScreenState extends State<HomeScreen> {
       final systemInfo = await systemInfoService.getSystemInfo();
       print('HomeScreen: 系统信息获取完成');
       print('HomeScreen: Node版本: ${systemInfo.nodeVersion}');
-      print('HomeScreen: Git版本: ${systemInfo.gitVersion}');
+      print('HomeScreen: Git版本: ${systemInfo.gitVersion}
+
+  // 翻译系统信息文本
+  String _translateSystemInfo(String? text, AppLocalizations l10n) {
+    if (text == null || text.isEmpty) return l10n.unknown;
+    switch (text) {
+      case 'Not Installed':
+        return l10n.notInstalled;
+      case 'Unknown':
+      case 'Unknown System':
+        return l10n.unknown;
+      case 'Installed':
+        return l10n.installed;
+      default:
+        return text;
+    }
+  }');
       print('HomeScreen: 编辑器数�? ${systemInfo.installedEditors.length}');
       print('HomeScreen: 浏览器数�? ${systemInfo.installedBrowsers.length}');
       
@@ -345,19 +361,17 @@ class _HomeScreenState extends State<HomeScreen> {
             Expanded(
               child: _buildInfoCard(
                 theme: theme,
-                l10n: l10n,
                 title: 'Node.js',
-                subtitle: _systemInfo?.nodeVersion ?? l10n.notInstalled,
+                subtitle: _translateSystemInfo(_systemInfo?.nodeVersion, l10n),
                 icon: Bootstrap.terminal,
                 iconColor: Colors.green,
-                status: _systemInfo?.nodeVersion != l10n.notInstalled ? 'installed' : 'not_installed',
+                status: _systemInfo?.nodeVersion != 'Not Installed' ? 'installed' : 'not_installed',
               ),
             ),
             const SizedBox(width: 16),
             Expanded(
               child: _buildInfoCard(
                 theme: theme,
-                l10n: l10n,
                 title: l10n.versionManager,
                 subtitle: _systemInfo?.hasNodeVersionManager == true 
                     ? _systemInfo!.nodeVersionManager 
@@ -371,7 +385,6 @@ class _HomeScreenState extends State<HomeScreen> {
             Expanded(
               child: _buildInfoCard(
                 theme: theme,
-                l10n: l10n,
                 title: 'Git',
                 subtitle: _systemInfo?.hasGit == true 
                     ? _systemInfo!.gitVersion.replaceAll('git version ', '') 
@@ -422,7 +435,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 theme: theme,
                 icon: Bootstrap.pc,
                 title: l10n.cpu,
-                value: _systemInfo?.cpuInfo ?? l10n.unknown,
+                value: _translateSystemInfo(_systemInfo?.cpuInfo, l10n),
                 iconColor: Colors.blue,
               ),
               const SizedBox(height: 16),
@@ -430,7 +443,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 theme: theme,
                 icon: Bootstrap.cpu,
                 title: l10n.battery,
-                value: _systemInfo?.memoryInfo ?? l10n.unknown,
+                value: _translateSystemInfo(_systemInfo?.memoryInfo, l10n),
                 iconColor: Colors.green,
               ),
               const SizedBox(height: 16),
@@ -438,7 +451,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 theme: theme,
                 icon: Bootstrap.device_hdd,
                 title: l10n.storage,
-                value: _systemInfo?.diskInfo ?? l10n.unknown,
+                value: _translateSystemInfo(_systemInfo?.diskInfo, l10n),
                 iconColor: Colors.orange,
               ),
               const SizedBox(height: 16),
@@ -446,7 +459,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 theme: theme,
                 icon: Bootstrap.wifi,
                 title: l10n.network,
-                value: _systemInfo?.networkInfo ?? l10n.unknown,
+                value: _translateSystemInfo(_systemInfo?.networkInfo, l10n),
                 iconColor: Colors.purple,
               ),
             ],
@@ -569,7 +582,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildInfoCard({
     required ThemeData theme,
-    required AppLocalizations l10n,
     required String title,
     required String subtitle,
     required IconData icon,

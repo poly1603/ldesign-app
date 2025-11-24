@@ -569,7 +569,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get offline => '离线';
 
   @override
-  String get projectStats => '移动目统计窗口';
+  String get projectStats => '项目统计窗口';
 
   @override
   String get runningProjects => '运行中项目';
@@ -581,7 +581,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get versionManager => '版本管理器';
 
   @override
-  String get systemInformation => '系统信息统计窗口';
+  String get systemInformation => '系统信息统计';
 
   @override
   String get cpu => 'CPU';
@@ -1313,7 +1313,7 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
   String get offline => '離線';
 
   @override
-  String get projectStats => '項目統計';
+  String get projectStats => '專案統計視窗';
 
   @override
   String get runningProjects => '運行中項目';

@@ -72,7 +72,6 @@
   "importFirstProject": "Click the button above to import your first project",
   "projectType": "Type",
   "framework": "Framework",
-  "language": "Language",
   "lastModified": "Last Modified",
   "delete": "Delete",
   "openFolder": "Open Folder",

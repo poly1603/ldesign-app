@@ -33,12 +33,6 @@ class _MainLayoutState extends State<MainLayout> {
       route: '/projects',
     ),
     MenuItem(
-      id: 'node_manager',
-      titleKey: 'nodeManager',
-      icon: Bootstrap.tools,
-      route: '/node-manager',
-    ),
-    MenuItem(
       id: 'settings',
       titleKey: 'settings',
       icon: Bootstrap.gear,

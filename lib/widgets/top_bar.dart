@@ -144,50 +144,6 @@ class _BreadcrumbInTopBar extends StatelessWidget {
       return items;
     }
 
-    // 特殊处理 Node 版本管理器详情页面
-    if (route == '/node-manager-detail') {
-      items.add(BreadcrumbItem(
-        label: l10n.nodeManager,
-        route: '/node-manager',
-        icon: Icons.terminal,
-      ));
-      
-      final managerType = appProvider.routeParams['managerType'] as String?;
-      if (managerType != null) {
-        String managerName;
-        switch (managerType) {
-          case 'nvm':
-            managerName = 'NVM';
-            break;
-          case 'fnm':
-            managerName = 'FNM';
-            break;
-          case 'volta':
-            managerName = 'Volta';
-            break;
-          case 'n':
-            managerName = 'n';
-            break;
-          case 'nvs':
-            managerName = 'NVS';
-            break;
-          default:
-            managerName = managerType.toUpperCase();
-        }
-        items.add(BreadcrumbItem(
-          label: managerName,
-          route: null,
-        ));
-      } else {
-        items.add(BreadcrumbItem(
-          label: l10n.details,
-          route: null,
-        ));
-      }
-      
-      return items;
-    }
-
     // 特殊处理项目操作页面
     if (route.startsWith('/project/') && route.split('/').length >= 4) {
       final parts = route.split('/');
@@ -260,10 +216,6 @@ class _BreadcrumbInTopBar extends StatelessWidget {
         case 'projects':
           label = l10n.projects;
           icon = Icons.folder;
-          break;
-        case 'node-manager':
-          label = l10n.nodeManager;
-          icon = Icons.terminal;
           break;
         case 'settings':
           label = l10n.settings;

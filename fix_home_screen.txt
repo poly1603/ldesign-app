@@ -1,0 +1,77 @@
+修复 home_screen.dart 中文乱码问题的步骤：
+
+1. 在 _HomeScreenState 类中，在 _loadSystemInfo() 方法之后添加以下辅助函数：
+
+```dart
+  // 翻译系统信息文本
+  String _translateSystemInfo(String? text) {
+    final l10n = AppLocalizations.of(context)!;
+    if (text == null || text.isEmpty) return l10n.unknown;
+    
+    switch (text) {
+      case 'Not Installed':
+        return l10n.notInstalled;
+      case 'Unknown':
+      case 'Unknown System':
+        return l10n.unknown;
+      case 'Installed':
+        return l10n.installed;
+      default:
+        return text;
+    }
+  }
+```
+
+2. 在开发环境卡片中，找到以下代码并替换：
+
+原代码（约第350-380行）：
+```dart
+subtitle: _systemInfo?.nodeVersion ?? l10n.notInstalled,
+```
+
+替换为：
+```dart
+subtitle: _translateSystemInfo(_systemInfo?.nodeVersion),
+```
+
+3. 在_buildEnvironmentInfoCard方法中，将硬编码的状态文本替换：
+
+查找：
+```dart
+status == 'installed' ? '已安装' : '未安装',
+```
+
+替换为：
+```dart
+status == 'installed' ? l10n.installed : l10n.notInstalled,
+```
+
+4. 在系统信息部分（约第430-450行），替换所有：
+
+```dart
+value: _systemInfo?.cpuInfo ?? l10n.unknown,
+value: _systemInfo?.memoryInfo ?? l10n.unknown,
+value: _systemInfo?.diskInfo ?? l10n.unknown,
+value: _systemInfo?.networkInfo ?? l10n.unknown,
+```
+
+替换为：
+```dart
+value: _translateSystemInfo(_systemInfo?.cpuInfo),
+value: _translateSystemInfo(_systemInfo?.memoryInfo),
+value: _translateSystemInfo(_systemInfo?.diskInfo),
+value: _translateSystemInfo(_systemInfo?.networkInfo),
+```
+
+5. 在顶部系统版本显示（约第209行），查找：
+
+```dart
+_systemInfo?.osVersion ?? '未知系统',
+```
+
+替换为：
+```dart
+_translateSystemInfo(_systemInfo?.osVersion),
+```
+
+完成后保存文件并重新运行应用。
