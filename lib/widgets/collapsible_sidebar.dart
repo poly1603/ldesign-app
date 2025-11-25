@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/app_provider.dart';
@@ -217,6 +217,8 @@ class _CollapsibleSidebarState extends State<CollapsibleSidebar> {
         return l10n.home;
       case 'projects':
         return l10n.projects;
+            case 'nodeManager':
+        return l10n.nodeManager;
       case 'settings':
         return l10n.settings;
       default:

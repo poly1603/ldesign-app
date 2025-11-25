@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:icons_plus/icons_plus.dart';
 import '../providers/app_provider.dart';
@@ -31,6 +31,12 @@ class _MainLayoutState extends State<MainLayout> {
       titleKey: 'projects',
       icon: Bootstrap.folder,
       route: '/projects',
+    ),
+        MenuItem(
+      id: 'node_manager',
+      titleKey: 'nodeManager',
+      icon: Bootstrap.layers,
+      route: '/node-manager',
     ),
     MenuItem(
       id: 'settings',

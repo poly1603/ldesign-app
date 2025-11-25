@@ -11,6 +11,8 @@ import 'screens/projects_screen.dart';
 import 'screens/project_detail_screen.dart';
 import 'screens/project_action_screen.dart';
 import 'screens/settings_screen.dart';
+import 'screens/node_manager_screen.dart';
+import 'screens/node_manager_detail_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -165,6 +167,20 @@ class AppNavigator extends StatelessWidget {
             appProvider.setCurrentRoute('/projects');
           });
           screen = const ProjectsScreen();
+        }
+        break;
+            case '/node-manager':
+        screen = const NodeManagerScreen();
+        break;
+      case '/node-manager-detail':
+        final managerType = routeParams['managerType'] as String?;
+        if (managerType != null) {
+          screen = NodeManagerDetailScreen(managerType: managerType);
+        } else {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            appProvider.setCurrentRoute('/node-manager');
+          });
+          screen = const NodeManagerScreen();
         }
         break;
       case '/settings':
