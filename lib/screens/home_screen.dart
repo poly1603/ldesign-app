@@ -71,7 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
         _isLoading = false;
       });
     } catch (e) {
-      print('HomeScreen: ��ȡϵͳ��Ϣʧ��: $e');
+      print('HomeScreen: 获取系统信息失败: $e');
       final l10n = AppLocalizations.of(context)!;
       setState(() {
         _systemInfo = SystemInfo(

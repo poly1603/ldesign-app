@@ -8,6 +8,7 @@ import 'installer/enhanced_installer.dart';
 import 'installer/system_detector.dart';
 import 'installer/pre_check.dart';
 import 'installer/auto_installer.dart';
+import 'installer/improved_auto_installer.dart';
 
 /// Node版本管理工具类型
 enum NodeManagerType {
@@ -105,6 +106,7 @@ class NodeManagerService extends ChangeNotifier {
   bool _isLoading = false;
   EnhancedInstaller? _enhancedInstaller;
   AutoInstaller? _autoInstaller;
+  ImprovedAutoInstaller? _improvedAutoInstaller;
 
   List<NodeManagerInfo> get managers => List.unmodifiable(_managers);
   bool get isLoading => _isLoading;
@@ -117,6 +119,11 @@ class NodeManagerService extends ChangeNotifier {
   AutoInstaller get autoInstaller {
     _autoInstaller ??= AutoInstaller();
     return _autoInstaller!;
+  }
+  
+  ImprovedAutoInstaller get improvedAutoInstaller {
+    _improvedAutoInstaller ??= ImprovedAutoInstaller();
+    return _improvedAutoInstaller!;
   }
 
   /// 初始化，添加所有已知的工具

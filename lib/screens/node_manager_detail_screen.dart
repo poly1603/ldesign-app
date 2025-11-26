@@ -17,7 +17,7 @@ class NodeManagerDetailScreen extends StatefulWidget {
 }
 
 class _NodeManagerDetailScreenState extends State<NodeManagerDetailScreen> {
-  final NodeManagerService _service = NodeManagerService();
+  late final NodeManagerService _service;
   NodeManagerInfo? _manager;
   bool _isLoading = true;
   final TextEditingController _versionController = TextEditingController();
@@ -25,6 +25,7 @@ class _NodeManagerDetailScreenState extends State<NodeManagerDetailScreen> {
   @override
   void initState() {
     super.initState();
+    _service = NodeManagerService(); // 使用单例
     _loadManager();
   }
 

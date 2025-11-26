@@ -472,8 +472,8 @@ class _InstallDialogState extends State<_InstallDialog> {
     });
 
     try {
-      // 使用自动安装服务
-      final autoInstaller = widget.service.autoInstaller;
+      // 使用改进的自动安装服务
+      final autoInstaller = widget.service.improvedAutoInstaller;
       
       // 设置回调
       autoInstaller.onLog = _addLog;
@@ -530,14 +530,16 @@ class _InstallDialogState extends State<_InstallDialog> {
 
   void _showManualInstallDialog() {
     final installCommand = _getInstallCommand(widget.manager.type);
+    final theme = Theme.of(context);
+    
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Row(
+        title: Row(
           children: [
-            Icon(Icons.warning_amber_rounded, color: Colors.orange, size: 28),
-            SizedBox(width: 12),
-            Text('自动安装失败'),
+            Icon(Icons.warning_amber_rounded, color: Colors.orange.shade700, size: 28),
+            const SizedBox(width: 12),
+            const Text('自动安装失败'),
           ],
         ),
         content: SingleChildScrollView(
@@ -545,79 +547,112 @@ class _InstallDialogState extends State<_InstallDialog> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
+              Text(
                 '自动安装遇到问题，您可以尝试手动安装。',
-                style: TextStyle(fontSize: 14),
+                style: theme.textTheme.bodyMedium,
               ),
               const SizedBox(height: 16),
-              const Text(
+              Text(
                 '手动安装步骤：',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                style: theme.textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: 12),
               Container(
-                padding: const EdgeInsets.all(12),
+                padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   color: Colors.blue.shade50,
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.blue.shade200),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: Colors.blue.shade200, width: 1.5),
                 ),
-                child: const Column(
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
                       children: [
-                        Icon(Icons.terminal, size: 20, color: Colors.blue),
-                        SizedBox(width: 8),
-                        Text(
-                          '步骤 1: 打开 PowerShell（管理员）',
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                        Icon(Icons.terminal, size: 20, color: Colors.blue.shade700),
+                        const SizedBox(width: 8),
+                        const Expanded(
+                          child: Text(
+                            '步骤 1: 打开终端（管理员权限）',
+                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                          ),
                         ),
                       ],
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     Text(
-                      '右键点击开始菜单 > Windows PowerShell (管理员)',
-                      style: TextStyle(fontSize: 12, color: Colors.grey),
+                      Platform.isWindows
+                          ? '右键点击开始菜单 > Windows PowerShell (管理员)'
+                          : Platform.isMacOS
+                              ? '打开终端应用程序'
+                              : '打开终端',
+                      style: TextStyle(fontSize: 12, color: Colors.grey.shade700),
                     ),
                   ],
                 ),
               ),
               const SizedBox(height: 12),
               Container(
-                padding: const EdgeInsets.all(12),
+                padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   color: Colors.green.shade50,
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.green.shade200),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: Colors.green.shade200, width: 1.5),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Row(
+                    Row(
                       children: [
-                        Icon(Icons.content_copy, size: 20, color: Colors.green),
-                        SizedBox(width: 8),
-                        Text(
-                          '步骤 2: 复制并执行以下命令',
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                        Icon(Icons.content_copy, size: 20, color: Colors.green.shade700),
+                        const SizedBox(width: 8),
+                        const Expanded(
+                          child: Text(
+                            '步骤 2: 复制并执行以下命令',
+                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                          ),
                         ),
                       ],
                     ),
                     const SizedBox(height: 12),
                     Container(
-                      padding: const EdgeInsets.all(8),
+                      padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: Colors.black87,
-                        borderRadius: BorderRadius.circular(4),
+                        color: Colors.grey.shade900,
+                        borderRadius: BorderRadius.circular(8),
                       ),
-                      child: SelectableText(
-                        installCommand,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 12,
-                          fontFamily: 'Courier',
-                        ),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: SelectableText(
+                              installCommand,
+                              style: const TextStyle(
+                                color: Colors.greenAccent,
+                                fontSize: 12,
+                                fontFamily: 'Consolas',
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.copy, size: 18),
+                            color: Colors.white70,
+                            onPressed: () {
+                              Clipboard.setData(ClipboardData(text: installCommand));
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: const Text('✓ 命令已复制到剪贴板'),
+                                  backgroundColor: Colors.green.shade700,
+                                  behavior: SnackBarBehavior.floating,
+                                  duration: const Duration(seconds: 2),
+                                ),
+                              );
+                            },
+                            tooltip: '复制命令',
+                          ),
+                        ],
                       ),
                     ),
                   ],
@@ -625,19 +660,20 @@ class _InstallDialogState extends State<_InstallDialog> {
               ),
               const SizedBox(height: 12),
               Container(
-                padding: const EdgeInsets.all(8),
+                padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
                   color: Colors.amber.shade50,
-                  borderRadius: BorderRadius.circular(4),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.amber.shade200),
                 ),
-                child: const Row(
+                child: Row(
                   children: [
-                    Icon(Icons.info_outline, size: 16, color: Colors.amber),
-                    SizedBox(width: 8),
+                    Icon(Icons.info_outline, size: 18, color: Colors.amber.shade800),
+                    const SizedBox(width: 12),
                     Expanded(
                       child: Text(
-                        '安装完成后请重新打开此应用',
-                        style: TextStyle(fontSize: 11, color: Colors.orange),
+                        '安装完成后请重启终端并重新打开此应用',
+                        style: TextStyle(fontSize: 12, color: Colors.amber.shade900, fontWeight: FontWeight.w500),
                       ),
                     ),
                   ],
@@ -648,17 +684,22 @@ class _InstallDialogState extends State<_InstallDialog> {
         ),
         actions: [
           TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('关闭'),
+          ),
+          FilledButton.icon(
             onPressed: () {
               Clipboard.setData(ClipboardData(text: installCommand));
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('命令已复制到剪贴板')),
+                SnackBar(
+                  content: const Text('✓ 命令已复制到剪贴板'),
+                  backgroundColor: Colors.green.shade700,
+                  behavior: SnackBarBehavior.floating,
+                ),
               );
             },
-            child: const Text('复制命令'),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('关闭'),
+            icon: const Icon(Icons.copy, size: 18),
+            label: const Text('复制命令'),
           ),
         ],
       ),

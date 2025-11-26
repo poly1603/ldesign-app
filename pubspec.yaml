@@ -33,6 +33,10 @@ dependencies:
   flutter_localizations:
     sdk: flutter
 
+  # Rust FFI 支持
+  ffi: ^2.1.0
+  flutter_rust_bridge: ^2.0.0
+
   cupertino_icons: ^1.0.8
   provider: ^6.1.2
   shared_preferences: ^2.3.3
