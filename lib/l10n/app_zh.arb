@@ -397,5 +397,7 @@
   "start": "开始",
   "serviceUrl": "服务地址",
   "details": "详情",
-  "inUse": "使用"
+  "inUse": "使用",
+  "manageDependencies": "依赖管理",
+  "dependencyManagement": "依赖管理"
 }

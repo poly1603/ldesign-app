@@ -10,6 +10,7 @@ import 'screens/home_screen.dart';
 import 'screens/projects_screen.dart';
 import 'screens/project_detail_screen.dart';
 import 'screens/project_action_screen.dart';
+import 'screens/dependency_management_screen.dart';
 import 'screens/settings_screen.dart';
 import 'screens/node_manager_screen.dart';
 import 'screens/node_manager_detail_screen.dart';
@@ -187,13 +188,23 @@ class AppNavigator extends StatelessWidget {
         screen = const SettingsScreen();
         break;
       default:
-        // 检查是否是项目操作路由
-        if (currentRoute.startsWith('/project/') && currentRoute.contains('/')) {
+        // 检查是否是项目路由
+        if (currentRoute.startsWith('/project/')) {
           final parts = currentRoute.split('/');
           if (parts.length >= 4) {
+            // 项目操作路由: /project/{id}/{action}
             final projectId = parts[2];
             final action = parts[3];
-            screen = ProjectActionScreen(projectId: projectId, action: action);
+            // 检查是否是依赖管理页面
+            if (action == 'dependencies') {
+              screen = DependencyManagementScreen(projectId: projectId);
+            } else {
+              screen = ProjectActionScreen(projectId: projectId, action: action);
+            }
+          } else if (parts.length == 3 && parts[2].isNotEmpty) {
+            // 项目详情路由: /project/{id}
+            final projectId = parts[2];
+            screen = ProjectDetailScreen(projectId: projectId);
           } else {
             screen = const HomeScreen();
           }

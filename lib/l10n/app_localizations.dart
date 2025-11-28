@@ -1476,8 +1476,20 @@ abstract class AppLocalizations {
   /// No description provided for @inUse.
   ///
   /// In en, this message translates to:
-  /// **'Use'**
+  /// **'In Use'**
   String get inUse;
+
+  /// No description provided for @manageDependencies.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage Dependencies'**
+  String get manageDependencies;
+
+  /// No description provided for @dependencyManagement.
+  ///
+  /// In en, this message translates to:
+  /// **'Dependency Management'**
+  String get dependencyManagement;
 }
 
 class _AppLocalizationsDelegate

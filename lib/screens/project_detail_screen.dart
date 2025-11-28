@@ -627,21 +627,23 @@ class ProjectDetailScreen extends StatelessWidget {
       case ProjectType.webApp:
       case ProjectType.mobileApp:
       case ProjectType.desktopApp:
-        // 搴旂敤绫婚」鐩殑鎿嶄綔
+        // 懼梛泗也で器孴瓊粻紥盄梁烏瓨婥咳缔
         actions.addAll([
           _ProjectAction(_ActionType.start, l10n.startProject, Bootstrap.play_fill, Colors.green),
           _ProjectAction(_ActionType.build, l10n.buildProject, Bootstrap.hammer, Colors.blue),
           _ProjectAction(_ActionType.preview, l10n.previewProject, Bootstrap.eye, Colors.purple),
           _ProjectAction(_ActionType.deploy, l10n.deployProject, Bootstrap.cloud_upload, Colors.orange),
+          _ProjectAction(_ActionType.dependencies, l10n.manageDependencies, Bootstrap.box, Colors.indigo),
         ]);
         break;
       
       case ProjectType.backendApp:
-        // 鍚庣搴旂敤鐨勬搷浣?
+        // 閘沅海须铨牭乾媃暑绱恌嚅江鑭马慙为
         actions.addAll([
           _ProjectAction(_ActionType.start, l10n.startProject, Bootstrap.play_fill, Colors.green),
           _ProjectAction(_ActionType.build, l10n.buildProject, Bootstrap.hammer, Colors.blue),
           _ProjectAction(_ActionType.deploy, l10n.deployProject, Bootstrap.cloud_upload, Colors.orange),
+          _ProjectAction(_ActionType.dependencies, l10n.manageDependencies, Bootstrap.box, Colors.indigo),
         ]);
         break;
 
@@ -649,35 +651,39 @@ class ProjectDetailScreen extends StatelessWidget {
       case ProjectType.utilityLibrary:
       case ProjectType.frameworkLibrary:
       case ProjectType.nodeLibrary:
-        // 搴撶被椤圭洰鐨勬搷浣?
+        // 懼梜琪镱乢寪窆恮嚅江鑭马慙为
         actions.addAll([
           _ProjectAction(_ActionType.build, l10n.buildProject, Bootstrap.hammer, Colors.blue),
           _ProjectAction(_ActionType.publish, l10n.publishProject, Bootstrap.box_arrow_up, Colors.teal),
+          _ProjectAction(_ActionType.dependencies, l10n.manageDependencies, Bootstrap.box, Colors.indigo),
         ]);
         break;
 
       case ProjectType.cliTool:
-        // CLI宸ュ叿鐨勬搷浣?
+        // CLI婥儒捱当太御铨棙沂
         actions.addAll([
           _ProjectAction(_ActionType.build, l10n.buildProject, Bootstrap.hammer, Colors.blue),
           _ProjectAction(_ActionType.publish, l10n.publishProject, Bootstrap.box_arrow_up, Colors.teal),
           _ProjectAction(_ActionType.test, l10n.testProject, Bootstrap.check_circle, Colors.green),
+          _ProjectAction(_ActionType.dependencies, l10n.manageDependencies, Bootstrap.box, Colors.indigo),
         ]);
         break;
 
       case ProjectType.monorepo:
-        // Monorepo鐨勬搷浣?
+        // Monorepo閘恌嚅江鑭马慙为
         actions.addAll([
           _ProjectAction(_ActionType.build, l10n.buildProject, Bootstrap.hammer, Colors.blue),
           _ProjectAction(_ActionType.test, l10n.testProject, Bootstrap.check_circle, Colors.green),
           _ProjectAction(_ActionType.deploy, l10n.deployProject, Bootstrap.cloud_upload, Colors.orange),
+          _ProjectAction(_ActionType.dependencies, l10n.manageDependencies, Bootstrap.box, Colors.indigo),
         ]);
         break;
 
       case ProjectType.unknown:
-        // 鏈煡绫诲瀷椤圭洰鐨勫熀鏈搷浣?
+        // 閘坼锉代猱队乢寪窆恮嚅江扱飗樂閘堡镙江鑭马慙为
         actions.addAll([
           _ProjectAction(_ActionType.build, l10n.buildProject, Bootstrap.hammer, Colors.blue),
+          _ProjectAction(_ActionType.dependencies, l10n.manageDependencies, Bootstrap.box, Colors.indigo),
         ]);
         break;
     }
@@ -711,14 +717,18 @@ class ProjectDetailScreen extends StatelessWidget {
         appProvider.setCurrentRoute('/project/${project.id}/publish');
         break;
       case _ActionType.test:
-        // 瀵艰埅鍒版祴璇曢〉闈?
+        // 鑼汖壩呠铨乾媊灓铲缞郣瀏煗仩奆钄惷奔棃铨黵
         appProvider.setCurrentRoute('/project/${project.id}/test');
+        break;
+      case _ActionType.dependencies:
+        // 鑼汖壩呠铨乾媊灓铲缞閘沅海亚悭骂仩奆钄惷奔棃铨黵
+        appProvider.setCurrentRoute('/project/${project.id}/dependencies');
         break;
     }
   }
 }
 
-// 椤圭洰鎿嶄綔绫诲瀷鏋氫妇
+// 妞ゅ湱娲伴幙宥勭稊缁鐎烽弸姘
 enum _ActionType {
   start,
   build,
@@ -726,6 +736,7 @@ enum _ActionType {
   deploy,
   publish,
   test,
+  dependencies,
 }
 
 // 椤圭洰鎿嶄綔鏁版嵁绫?

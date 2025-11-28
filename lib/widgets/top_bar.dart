@@ -144,63 +144,98 @@ class _BreadcrumbInTopBar extends StatelessWidget {
       return items;
     }
 
-    // 特殊处理项目操作页面
-    if (route.startsWith('/project/') && route.split('/').length >= 4) {
+    // 特殊处理项目路由
+    if (route.startsWith('/project/')) {
       final parts = route.split('/');
-      final projectId = parts[2];
-      final action = parts[3];
       
-      items.add(BreadcrumbItem(
-        label: l10n.projects,
-        route: '/projects',
-        icon: Icons.folder,
-      ));
-      
-      try {
-        final project = appProvider.allProjects.firstWhere(
-          (p) => p.id == projectId,
-        );
+      // 项目详情页面: /project/{id}
+      if (parts.length == 3 && parts[2].isNotEmpty) {
+        final projectId = parts[2];
+        
         items.add(BreadcrumbItem(
-          label: project.name,
+          label: l10n.projects,
+          route: '/projects',
+          icon: Icons.folder,
+        ));
+        
+        try {
+          final project = appProvider.allProjects.firstWhere(
+            (p) => p.id == projectId,
+          );
+          items.add(BreadcrumbItem(
+            label: project.name,
+            route: null,
+          ));
+        } catch (e) {
+          items.add(BreadcrumbItem(
+            label: l10n.projectDetails,
+            route: null,
+          ));
+        }
+        
+        return items;
+      }
+      
+      // 项目操作页面: /project/{id}/{action}
+      if (parts.length >= 4) {
+        final projectId = parts[2];
+        final action = parts[3];
+        
+        items.add(BreadcrumbItem(
+          label: l10n.projects,
+          route: '/projects',
+          icon: Icons.folder,
+        ));
+        
+        try {
+          final project = appProvider.allProjects.firstWhere(
+            (p) => p.id == projectId,
+          );
+          items.add(BreadcrumbItem(
+            label: project.name,
+            route: '/project/$projectId',
+          ));
+        } catch (e) {
+          items.add(BreadcrumbItem(
+            label: '项目详情',
+            route: '/project-detail',
+          ));
+        }
+        
+        String actionLabel;
+        switch (action) {
+          case 'start':
+            actionLabel = '启动';
+            break;
+          case 'build':
+            actionLabel = '构建';
+            break;
+          case 'preview':
+            actionLabel = '预览';
+            break;
+          case 'deploy':
+            actionLabel = '部署';
+            break;
+          case 'publish':
+            actionLabel = '发布';
+            break;
+          case 'test':
+            actionLabel = '测试';
+            break;
+          case 'dependencies':
+            actionLabel = '依赖管理';
+            break;
+          default:
+            actionLabel = action;
+        }
+      
+        items.add(BreadcrumbItem(
+          label: actionLabel,
           route: null,
         ));
-      } catch (e) {
-        items.add(BreadcrumbItem(
-          label: '项目详情',
-          route: '/project-detail',
-        ));
+        
+        return items;
       }
-      
-      String actionLabel;
-      switch (action) {
-        case 'start':
-          actionLabel = '启动';
-          break;
-        case 'build':
-          actionLabel = '构建';
-          break;
-        case 'preview':
-          actionLabel = '预览';
-          break;
-        case 'deploy':
-          actionLabel = '部署';
-          break;
-        case 'publish':
-          actionLabel = '发布';
-          break;
-        case 'test':
-          actionLabel = '测试';
-          break;
-        default:
-          actionLabel = action;
-      }
-      
-      items.add(BreadcrumbItem(
-        label: actionLabel,
-        route: null,
-      ));
-      
-      return items;
     }
 
     final pathSegments = route.split('/').where((s) => s.isNotEmpty).toList();

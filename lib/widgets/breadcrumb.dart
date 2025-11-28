@@ -117,65 +117,101 @@ class Breadcrumb extends StatelessWidget {
       return items;
     }
 
-    // 鐗规畩澶勭悊椤圭洰鎿嶄綔椤甸潰
-    if (route.startsWith('/project/') && route.split('/').length >= 4) {
+    // 特殊处理项目路由
+    if (route.startsWith('/project/')) {
       final parts = route.split('/');
-      final projectId = parts[2];
-      final action = parts[3];
       
-      items.add(BreadcrumbItem(
-        label: l10n.projects,
-        route: '/projects',
-        icon: Icons.folder,
-      ));
-      
-      // 灏濊瘯鑾峰彇椤圭洰鍚嶇О
-      try {
-        final project = appProvider.allProjects.firstWhere(
-          (p) => p.id == projectId,
-        );
+      // 项目详情页面: /project/{id}
+      if (parts.length == 3 && parts[2].isNotEmpty) {
+        final projectId = parts[2];
+        
         items.add(BreadcrumbItem(
-          label: project.name,
-          route: null, // 闇€瑕佺壒娈婂鐞嗭紝鍥犱负闇€瑕佷紶閫抪rojectId鍙傛暟
+          label: l10n.projects,
+          route: '/projects',
+          icon: Icons.folder,
         ));
-      } catch (e) {
-        items.add(BreadcrumbItem(
-          label: '椤圭洰璇︽儏',
-          route: '/project-detail',
-        ));
+        
+        // 尝试获取项目名称
+        try {
+          final project = appProvider.allProjects.firstWhere(
+            (p) => p.id == projectId,
+          );
+          items.add(BreadcrumbItem(
+            label: project.name,
+            route: null, // 当前页面，不可点击
+          ));
+        } catch (e) {
+          items.add(BreadcrumbItem(
+            label: l10n.projectDetails,
+            route: null,
+          ));
+        }
+        
+        return items;
       }
       
-      // 娣诲姞鎿嶄綔鍚嶇О
-      String actionLabel;
-      switch (action) {
-        case 'start':
-          actionLabel = '鍚姩';
-          break;
-        case 'build':
-          actionLabel = '鏋勫缓';
-          break;
-        case 'preview':
-          actionLabel = '棰勮';
-          break;
-        case 'deploy':
-          actionLabel = '閮ㄧ讲';
-          break;
-        case 'publish':
-          actionLabel = '鍙戝竷';
-          break;
-        case 'test':
-          actionLabel = '娴嬭瘯';
-          break;
-        default:
-          actionLabel = action;
+      // 项目操作页面: /project/{id}/{action}
+      if (parts.length >= 4) {
+        final projectId = parts[2];
+        final action = parts[3];
+        
+        items.add(BreadcrumbItem(
+          label: l10n.projects,
+          route: '/projects',
+          icon: Icons.folder,
+        ));
+      
+        // 尝试获取项目名称
+        try {
+          final project = appProvider.allProjects.firstWhere(
+            (p) => p.id == projectId,
+          );
+          items.add(BreadcrumbItem(
+            label: project.name,
+            route: '/project/$projectId', // 使用项目路径以便返回项目详情
+          ));
+        } catch (e) {
+          items.add(BreadcrumbItem(
+            label: '项目详情',
+            route: '/project-detail',
+          ));
+        }
+        
+        // 添加操作名称
+        String actionLabel;
+        switch (action) {
+          case 'start':
+            actionLabel = '启动';
+            break;
+          case 'build':
+            actionLabel = '构建';
+            break;
+          case 'preview':
+            actionLabel = '预览';
+            break;
+          case 'deploy':
+            actionLabel = '部署';
+            break;
+          case 'publish':
+            actionLabel = '发布';
+            break;
+          case 'test':
+            actionLabel = '测试';
+            break;
+          case 'dependencies':
+            actionLabel = '依赖管理';
+            break;
+          default:
+            actionLabel = action;
+        }
+        
+        items.add(BreadcrumbItem(
+          label: actionLabel,
+          route: null, // 当前页面，不可点击
+        ));
+        
+        return items;
       }
-      
-      items.add(BreadcrumbItem(
-        label: actionLabel,
-        route: null, // 褰撳墠椤甸潰锛屼笉鍙偣鍑?
-      ));
-      
-      return items;
     }
 
     final pathSegments = route.split('/').where((s) => s.isNotEmpty).toList();

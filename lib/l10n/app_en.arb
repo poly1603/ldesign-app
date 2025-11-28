@@ -397,5 +397,7 @@
   "start": "Start",
   "serviceUrl": "Service URL",
   "details": "Details",
-  "inUse": "Use"
+  "inUse": "In Use",
+  "manageDependencies": "Manage Dependencies",
+  "dependencyManagement": "Dependency Management"
 }

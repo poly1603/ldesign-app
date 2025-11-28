@@ -753,5 +753,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get details => 'Details';
 
   @override
-  String get inUse => 'Use';
+  String get inUse => 'In Use';
+
+  @override
+  String get manageDependencies => 'Manage Dependencies';
+
+  @override
+  String get dependencyManagement => 'Dependency Management';
 }

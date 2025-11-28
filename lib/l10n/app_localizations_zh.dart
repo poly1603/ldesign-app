@@ -746,6 +746,12 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get inUse => '使用';
+
+  @override
+  String get manageDependencies => '依赖管理';
+
+  @override
+  String get dependencyManagement => '依赖管理';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hant`).
@@ -1490,4 +1496,10 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get inUse => '使用';
+
+  @override
+  String get manageDependencies => '依賴管理';
+
+  @override
+  String get dependencyManagement => '依賴管理';
 }
