@@ -443,7 +443,7 @@ class SettingsScreen extends StatelessWidget {
     final messenger = ScaffoldMessenger.of(context);
     
     try {
-      // 显示加载提示
+      // 鏄剧ず鍔犺浇鎻愮ず
       messenger.showSnackBar(
         SnackBar(
           content: Row(
@@ -464,15 +464,15 @@ class SettingsScreen extends StatelessWidget {
         ),
       );
 
-      // 执行清理
+      // 鎵ц娓呯悊
       await StorageUtil.resetAllPreferences();
 
-      // 重新加载设置
+      // 閲嶆柊鍔犺浇璁剧疆
       if (context.mounted) {
         await context.read<AppProvider>().initialize();
       }
 
-      // 显示成功消息
+      // 鏄剧ず鎴愬姛娑堟伅
       messenger.clearSnackBars();
       messenger.showSnackBar(
         SnackBar(
