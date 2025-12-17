@@ -42,13 +42,4 @@ app.*.map.json
 # Android Studio will place build artifacts here
 /android/app/debug
 /android/app/profile
-
-# Rust related
-*.dll
-*.dylib
-*.so
-/rust/target/
-bridge_generated.dart
-bridge_generated.freezed.dart
-bridge_generated.g.dart
 /android/app/release

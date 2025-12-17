@@ -1,403 +1,62 @@
 {
   "@@locale": "en",
-  "appTitle": "Admin System",
+  "appTitle": "Flutter Toolbox",
+  "@appTitle": {
+    "description": "The title of the application"
+  },
   "home": "Home",
-  "dashboard": "Dashboard",
   "projects": "Projects",
-  "projectList": "Project List",
-  "createProject": "Create Project",
+  "nodeManagement": "Node",
+  "gitManagement": "Git",
+  "svgManagement": "SVG",
+  "fontManagement": "Fonts",
   "settings": "Settings",
-  "theme": "Theme",
-  "language": "Language",
-  "size": "Size",
-  "themeMode": "Theme Mode",
-  "lightMode": "Light Mode",
-  "darkMode": "Dark Mode",
+  "addProject": "Add Project",
+  "removeProject": "Remove Project",
+  "projectName": "Project Name",
+  "projectPath": "Path",
+  "projectVersion": "Version",
+  "projectFramework": "Framework",
+  "lastAccessed": "Last Accessed",
+  "dependencies": "Dependencies",
+  "devDependencies": "Dev Dependencies",
+  "scripts": "Scripts",
+  "nodeVersion": "Node.js Version",
+  "npmVersion": "npm Version",
+  "pnpmVersion": "pnpm Version",
+  "yarnVersion": "yarn Version",
+  "installPath": "Install Path",
+  "globalPackages": "Global Packages",
+  "notInstalled": "Not Installed",
+  "installGuide": "Please install {tool} to use this feature",
+  "@installGuide": {
+    "placeholders": {
+      "tool": {
+        "type": "String"
+      }
+    }
+  },
+  "gitVersion": "Git Version",
+  "gitUserName": "User Name",
+  "gitUserEmail": "User Email",
+  "importAssets": "Import",
+  "search": "Search",
+  "export": "Export",
+  "copyToClipboard": "Copy to Clipboard",
+  "fileSize": "File Size",
+  "importedAt": "Imported At",
+  "previewText": "Preview Text",
   "themeColor": "Theme Color",
-  "presetColors": "Preset Colors",
-  "customColor": "Custom Color",
-  "globalSize": "Global Size",
-  "compact": "Compact",
-  "standard": "Standard",
-  "comfortable": "Comfortable",
-  "chinese": "简体中文",
-  "english": "English",
-  "traditionalChinese": "繁體中文",
-  "minimize": "Minimize",
-  "maximize": "Maximize",
-  "restore": "Restore",
-  "close": "Close",
-  "collapse": "Collapse",
-  "expand": "Expand",
-  "save": "Save",
+  "darkMode": "Dark Mode",
+  "followSystem": "Follow System",
+  "language": "Language",
+  "general": "General",
+  "appearance": "Appearance",
+  "resetSettings": "Reset Settings",
+  "resetConfirm": "Are you sure you want to reset all settings?",
   "cancel": "Cancel",
   "confirm": "Confirm",
-  "welcome": "Welcome Back",
-  "welcomeMessage": "Start managing your projects",
-  "quickStats": "Quick Stats",
-  "totalProjects": "Total Projects",
-  "activeProjects": "Active",
-  "completedProjects": "Completed",
-  "recentActivity": "Recent Activity",
-  "importProject": "Import Project",
-  "selectDirectory": "Select Directory",
-  "search": "Search",
-  "searchProjects": "Search projects...",
-  "sortBy": "Sort By",
-  "filterBy": "Filter",
-  "all": "All",
-  "webApp": "Web App",
-  "mobileApp": "Mobile App",
-  "desktopApp": "Desktop App",
-  "backendApp": "Backend",
-  "componentLibrary": "Component Library",
-  "utilityLibrary": "Utility Library",
-  "frameworkLibrary": "Framework Library",
-  "nodeLibrary": "Node Library",
-  "cliTool": "CLI Tool",
-  "monorepo": "Monorepo",
-  "projectActions": "Project Actions",
-  "startProject": "Start",
-  "buildProject": "Build",
-  "previewProject": "Preview",
-  "deployProject": "Deploy",
-  "publishProject": "Publish",
-  "testProject": "Test",
-  "sortByName": "By Name",
-  "sortByDate": "By Date",
-  "sortByType": "By Type",
-  "ascending": "Ascending",
-  "descending": "Descending",
-  "noProjects": "No Projects",
-  "importFirstProject": "Click the button above to import your first project",
-  "projectType": "Type",
-  "framework": "Framework",
-  "lastModified": "Last Modified",
-  "delete": "Delete",
-  "openFolder": "Open Folder",
-  "projectDetails": "Project Details",
-  "importProjectDialog": "Import Project",
-  "selectProjectDirectory": "Select Project Directory",
-  "analyzingProject": "Analyzing project...",
-  "projectInfo": "Project Information",
-  "projectName": "Project Name",
-  "projectVersion": "Version",
-  "projectDescription": "Description",
-  "noDescription": "No description",
-  "confirmImport": "Confirm Import",
-  "reselect": "Reselect",
-  "analyzing": "Analyzing",
-  "unknown": "Unknown",
-  "vite": "Vite",
-  "webpack": "Webpack",
-  "parcel": "Parcel",
-  "rollup": "Rollup",
-  "svelte": "Svelte",
-  "solidjs": "Solid.js",
-  "preact": "Preact",
-  "gatsby": "Gatsby",
-  "remix": "Remix",
-  "astro": "Astro",
-  "qwik": "Qwik",
-  "react_native": "React Native",
-  "ionic": "Ionic",
-  "capacitor": "Capacitor",
-  "cordova": "Cordova",
-  "todayLabel": "Today",
-  "yesterdayLabel": "Yesterday",
-  "xDaysAgo": "{count} days ago",
-  "@xDaysAgo": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "xWeeksAgo": "{count} weeks ago",
-  "@xWeeksAgo": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "projectImportedSuccess": "Project '{name}' imported successfully",
-  "@projectImportedSuccess": {
-    "placeholders": {
-      "name": {
-        "type": "String"
-      }
-    }
-  },
-  "confirmRemoveFromList": "Remove project '{name}' from the list?",
-  "@confirmRemoveFromList": {
-    "placeholders": {
-      "name": {
-        "type": "String"
-      }
-    }
-  },
-  "projectRemoved": "Project '{name}' removed",
-  "@projectRemoved": {
-    "placeholders": {
-      "name": {
-        "type": "String"
-      }
-    }
-  },
-  "failedToAnalyzeProjectDirectory": "Failed to analyze project directory",
-  "errorWithMessage": "Error: {message}",
-  "@errorWithMessage": {
-    "placeholders": {
-      "message": {
-        "type": "String"
-      }
-    }
-  },
-  "back": "Back",
-  "projectPath": "Project Path",
-  "timeInfo": "Time Information",
-  "addedAt": "Added At",
-  "tags": "Tags",
-  "failedToOpenFolder": "Failed to open folder",
-  "pageTransition": "Page Transition Animation",
-  "disabled": "Disabled",
-  "fadeTransition": "Fade",
-  "slideLeftTransition": "Slide Left",
-  "slideRightTransition": "Slide Right",
-  "slideUpTransition": "Slide Up",
-  "slideDownTransition": "Slide Down",
-  "scaleTransition": "Scale",
-  "rotationTransition": "Rotation",
-  "nodeManager": "Node Version Manager",
-  "nodeManagerDescription": "Manage Node.js versions and version management tools",
-  "versionManagers": "Version Managers",
-  "refresh": "Refresh",
-  "installedVersions": "Installed Versions",
-  "noVersionsInstalled": "No Node.js versions installed yet",
-  "use": "Use",
-  "current": "Current",
-  "installNewVersion": "Install New Version",
-  "enterVersionNumber": "Enter version number, e.g., 18.17.0",
-  "install": "Install",
-  "versionFormatHint": "Examples: 18.17.0, 20.x, lts",
-  "uninstall": "Uninstall",
-  "update": "Update",
-  "viewWebsite": "View Website",
-  "installCommand": "Install Command",
-  "confirmUninstall": "Confirm Uninstall",
-  "confirmUninstallMessage": "Are you sure you want to uninstall Node.js {version}?",
-  "@confirmUninstallMessage": {
-    "placeholders": {
-      "version": {
-        "type": "String"
-      }
-    }
-  },
-  "confirmInstallManager": "Install {name}",
-  "@confirmInstallManager": {
-    "placeholders": {
-      "name": {
-        "type": "String"
-      }
-    }
-  },
-  "confirmInstallManagerMessage": "Are you sure you want to install {name}?",
-  "@confirmInstallManagerMessage": {
-    "placeholders": {
-      "name": {
-        "type": "String"
-      }
-    }
-  },
-  "confirmUpdateManager": "Update {name}",
-  "@confirmUpdateManager": {
-    "placeholders": {
-      "name": {
-        "type": "String"
-      }
-    }
-  },
-  "confirmUpdateManagerMessage": "Are you sure you want to update {name} to the latest version?",
-  "@confirmUpdateManagerMessage": {
-    "placeholders": {
-      "name": {
-        "type": "String"
-      }
-    }
-  },
-  "switchedToManager": "Switched to {name}",
-  "@switchedToManager": {
-    "placeholders": {
-      "name": {
-        "type": "String"
-      }
-    }
-  },
-  "switchFailed": "Switch failed",
-  "switchedToNodeVersion": "Switched to Node.js {version}",
-  "@switchedToNodeVersion": {
-    "placeholders": {
-      "version": {
-        "type": "String"
-      }
-    }
-  },
-  "nodeVersionInstalled": "Node.js {version} installed successfully",
-  "@nodeVersionInstalled": {
-    "placeholders": {
-      "version": {
-        "type": "String"
-      }
-    }
-  },
-  "installFailed": "Installation failed",
-  "nodeVersionUninstalled": "Node.js {version} uninstalled successfully",
-  "@nodeVersionUninstalled": {
-    "placeholders": {
-      "version": {
-        "type": "String"
-      }
-    }
-  },
-  "uninstallFailed": "Uninstall failed",
-  "managerInstalled": "{name} installed successfully",
-  "@managerInstalled": {
-    "placeholders": {
-      "name": {
-        "type": "String"
-      }
-    }
-  },
-  "managerUpdated": "{name} updated successfully",
-  "@managerUpdated": {
-    "placeholders": {
-      "name": {
-        "type": "String"
-      }
-    }
-  },
-  "updateFailed": "Update failed",
-  "uninstallComplete": "Uninstall Complete",
-  "uninstallFailedTitle": "Uninstall Failed",
-  "preparingUninstall": "Preparing to uninstall {name}...",
-  "@preparingUninstall": {
-    "placeholders": {
-      "name": {
-        "type": "String"
-      }
-    }
-  },
-  "uninstalling": "Uninstalling {name}",
-  "@uninstalling": {
-    "placeholders": {
-      "name": {
-        "type": "String"
-      }
-    }
-  },
-  "failedToOpenFolderWithError": "Error occurred while opening folder",
-  "currentEnvironmentVersion": "Current Environment Version",
-  "notInstalled": "Not Installed",
-  "installed": "Installed",
-  "active": "Active",
-  "uninstallWarning": "After uninstalling, all Node.js versions installed with this tool will also be removed. This action cannot be undone.",
-  "uninstallLog": "Uninstall Log",
-  "systemInfoOverview": "System Information Overview",
-  "realtimeMonitoring": "Real-time monitoring of your development environment and system status",
-  "online": "Online",
-  "offline": "Offline",
-  "projectStats": "Project Statistics",
-  "runningProjects": "Running Projects",
-  "developmentEnvironment": "Development Environment",
-  "versionManager": "Version Manager",
-  "systemInformation": "System Information",
-  "cpu": "CPU",
-  "battery": "Battery",
-  "storage": "Storage",
-  "network": "Network",
-  "installedSoftware": "Installed Software",
-  "codeEditors": "Code Editors",
-  "browsers": "Browsers",
-  "noEditorsDetected": "No code editors detected",
-  "noBrowsersDetected": "No browsers detected",
-  "debugTools": "Debug Tools",
-  "storageDebugInfo": "Storage Debug Info",
-  "view": "View",
-  "clearCorruptedData": "Clear Corrupted Data",
-  "clear": "Clear",
-  "confirmClear": "Confirm Clear",
-  "clearDataWarning": "This operation will clear all cached data in SharedPreferences and reset all settings to default values.\n\nProject data will not be affected (stored in files).\n\nContinue?",
-  "clearingData": "Clearing data...",
-  "clearSuccess": "Cleared successfully, settings have been reset to default values.",
-  "clearFailed": "Clear failed",
-  "notInstalledMessage": "{name} is not installed",
-  "@notInstalledMessage": {
-    "placeholders": {
-      "name": {
-        "type": "String"
-      }
-    }
-  },
-  "installFirstMessage": "Please install this tool first before managing its versions.",
-  "toolInfo": "Tool Information",
-  "name": "Name",
-  "version": "Version",
-  "installPath": "Install Path",
-  "description": "Description",
-  "visitWebsite": "Visit Website",
-  "switchedToNode": "Switched to Node.js {version}",
-  "@switchedToNode": {
-    "placeholders": {
-      "version": {
-        "type": "String"
-      }
-    }
-  },
-  "switchToNodeFailed": "Switch failed",
-  "nodeInstalled": "Node.js {version} installed successfully",
-  "@nodeInstalled": {
-    "placeholders": {
-      "version": {
-        "type": "String"
-      }
-    }
-  },
-  "nodeInstallFailed": "Installation failed",
-  "nodeUninstalled": "Node.js {version} uninstalled successfully",
-  "@nodeUninstalled": {
-    "placeholders": {
-      "version": {
-        "type": "String"
-      }
-    }
-  },
-  "nodeUninstallFailed": "Uninstallation failed",
-  "confirmUninstallNode": "Are you sure you want to uninstall Node.js {version}?",
-  "@confirmUninstallNode": {
-    "placeholders": {
-      "version": {
-        "type": "String"
-      }
-    }
-  },
-  "developmentEnv": "Development",
-  "stagingEnv": "Staging",
-  "productionEnv": "Production",
-  "building": "Building...",
-  "startBuild": "Start Build",
-  "retry": "Retry",
-  "stopping": "Stopping...",
-  "starting": "Starting...",
-  "previewing": "Previewing...",
-  "processing": "Processing...",
-  "stopService": "Stop Service",
-  "startDevServer": "Start Dev Server",
-  "startPreviewServer": "Start Preview Server",
-  "start": "Start",
-  "serviceUrl": "Service URL",
-  "details": "Details",
-  "inUse": "In Use",
-  "manageDependencies": "Manage Dependencies",
-  "dependencyManagement": "Dependency Management"
+  "projectCount": "Projects",
+  "svgCount": "SVG Files",
+  "fontCount": "Fonts"
 }

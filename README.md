@@ -1,43 +1,16 @@
-# 🎨 现代化 Flutter 后台管理系统
+# flutter_toolbox
 
-设计精美的 Flutter 桌面后台管理系统，采用现代化UI设计。
+A new Flutter project.
 
-## ✨ 核心特性
+## Getting Started
 
-### 功能模块
-- 📊 **仪表盘首页**: 统计卡片、最近活动
-- 📁 **项目管理**: 项目展示、状态管理
-- ⚙️ **设置中心**: 主题/语言/尺寸切换
+This project is a starting point for a Flutter application.
 
-### 设计系统
-- 字体: Google Fonts Inter
-- 图标: Bootstrap Icons
-- 8种渐变主题色
-- 圆角阴影设计
-- 流畅动画效果
+A few resources to get you started if this is your first Flutter project:
 
-## 🚀 快速开始
+- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
+- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
 
-```bash
-cd d:\WorkBench\ldesign\tools\app
-flutter pub get
-flutter gen-l10n
-flutter run -d windows
-```
-
-## 📦 主要依赖
-
-- provider ^6.1.2
-- google_fonts ^6.2.1  
-- icons_plus ^5.0.0
-- window_manager ^0.4.3
-
-## 🎮 使用
-
-1. 切换主题: 设置 → 主题设置
-2. 调整尺寸: 设置 → 显示设置
-3. 切换语言: 设置 → 语言设置
-4. 管理项目: 侧边栏 → 项目管理
-
----
-**版本**: 2.0.0 | **更新**: 2025-11-18
+For help getting started with Flutter development, view the
+[online documentation](https://docs.flutter.dev/), which offers tutorials,
+samples, guidance on mobile development, and a full API reference.
