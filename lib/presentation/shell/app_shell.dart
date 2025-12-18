@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_toolbox/core/constants/app_constants.dart';
+import 'package:flutter_toolbox/core/router/app_router.dart';
 import 'package:flutter_toolbox/l10n/app_localizations.dart';
 import 'package:flutter_toolbox/providers/app_providers.dart';
 
@@ -276,7 +277,10 @@ class AppShell extends ConsumerWidget {
           Expanded(
             child: Container(
               color: colorScheme.surfaceContainerLow,
-              child: child,
+              child: _ContentArea(
+                location: location,
+                child: child,
+              ),
             ),
           ),
         ],
@@ -483,5 +487,46 @@ class _ModernMenuItemState extends State<_ModernMenuItem> with SingleTickerProvi
         ),
       ),
     );
+  }
+}
+
+
+/// 内容区域包装器 - 监听路由变化并清理导航栈
+class _ContentArea extends StatefulWidget {
+  final String location;
+  final Widget child;
+
+  const _ContentArea({
+    required this.location,
+    required this.child,
+  });
+
+  @override
+  State<_ContentArea> createState() => _ContentAreaState();
+}
+
+class _ContentAreaState extends State<_ContentArea> {
+  @override
+  void didUpdateWidget(_ContentArea oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    
+    // 当路由变化时，清除所有通过 Navigator.push 打开的页面
+    if (widget.location != oldWidget.location) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          // 使用 shellNavigatorKey 直接访问 shell navigator
+          final shellNavigator = AppRouter.shellNavigatorKey.currentState;
+          if (shellNavigator != null && shellNavigator.canPop()) {
+            // 弹出所有通过 Navigator.push 打开的页面
+            shellNavigator.popUntil((route) => route.isFirst);
+          }
+        }
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return widget.child;
   }
 }

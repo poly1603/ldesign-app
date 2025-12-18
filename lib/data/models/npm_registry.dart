@@ -145,26 +145,83 @@ class NpmRegistry {
 
 // 预设的公共 NPM 源
 class PresetRegistries {
-  static const List<Map<String, String>> publicRegistries = [
+  static const List<Map<String, dynamic>> publicRegistries = [
     {
       'name': 'npm 官方源',
       'url': 'https://registry.npmjs.org/',
+      'supportsAuth': true,
+      'authType': 'npm', // npm 标准认证
+      'authDescription': '支持 npm 账号登录，可发布包和访问私有包',
+      'requiresEmail': true,
     },
     {
       'name': '淘宝镜像',
       'url': 'https://registry.npmmirror.com/',
+      'supportsAuth': false,
+      'authType': 'none',
+      'authDescription': '只读镜像源，不支持认证和发布',
+      'requiresEmail': false,
     },
     {
       'name': '腾讯云镜像',
       'url': 'https://mirrors.cloud.tencent.com/npm/',
+      'supportsAuth': false,
+      'authType': 'none',
+      'authDescription': '只读镜像源，不支持认证和发布',
+      'requiresEmail': false,
     },
     {
       'name': '华为云镜像',
       'url': 'https://mirrors.huaweicloud.com/repository/npm/',
+      'supportsAuth': false,
+      'authType': 'none',
+      'authDescription': '只读镜像源，不支持认证和发布',
+      'requiresEmail': false,
     },
     {
       'name': 'cnpm 镜像',
       'url': 'https://r.cnpmjs.org/',
+      'supportsAuth': false,
+      'authType': 'none',
+      'authDescription': '只读镜像源，不支持认证和发布',
+      'requiresEmail': false,
+    },
+    {
+      'name': 'GitHub Package Registry',
+      'url': 'https://npm.pkg.github.com/',
+      'supportsAuth': true,
+      'authType': 'token', // Token 认证
+      'authDescription': '使用 GitHub Personal Access Token 认证',
+      'requiresEmail': false,
+    },
+    {
+      'name': 'Yarn Registry',
+      'url': 'https://registry.yarnpkg.com/',
+      'supportsAuth': true,
+      'authType': 'npm',
+      'authDescription': '支持 npm 账号登录',
+      'requiresEmail': true,
     },
   ];
+  
+  /// 获取预设源的认证信息
+  static Map<String, dynamic>? getAuthInfo(String name) {
+    try {
+      return publicRegistries.firstWhere((r) => r['name'] == name);
+    } catch (e) {
+      return null;
+    }
+  }
+  
+  /// 检查源是否支持认证
+  static bool supportsAuth(String name) {
+    final info = getAuthInfo(name);
+    return info?['supportsAuth'] == true;
+  }
+  
+  /// 获取认证类型
+  static String getAuthType(String name) {
+    final info = getAuthInfo(name);
+    return info?['authType'] ?? 'none';
+  }
 }

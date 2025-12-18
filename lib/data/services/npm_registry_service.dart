@@ -303,6 +303,11 @@ logs: { type: stdout, format: pretty, level: http }
   /// 尝试使用 npm-cli-login 工具登录
   Future<bool> _tryNpmCliLogin(NpmRegistry registry) async {
     try {
+      // Token 认证不支持 npm-cli-login
+      if (registry.username == '_token_') {
+        return false;
+      }
+      
       // 检查是否安装了 npm-cli-login
       final checkResult = await PlatformUtils.runCommand(
         'npm-cli-login',
@@ -358,16 +363,26 @@ logs: { type: stdout, format: pretty, level: http }
       final uri = Uri.parse(registry.url);
       final registryHost = '${uri.host}${uri.path}'.replaceAll(RegExp(r'/$'), '');
       
-      // 生成 base64 编码的认证信息
-      final auth = base64Encode(utf8.encode('${registry.username}:${registry.password}'));
-      
       // 构建新的认证配置
-      final authLines = [
-        '//$registryHost/:_auth=$auth',
-        '//$registryHost/:username=${registry.username}',
-        '//$registryHost/:email=${registry.email ?? 'user@example.com'}',
-        '//$registryHost/:always-auth=true',
-      ];
+      List<String> authLines;
+      
+      // 检查是否是 Token 认证
+      if (registry.username == '_token_' && registry.password != null) {
+        // Token 认证（如 GitHub Package Registry）
+        authLines = [
+          '//$registryHost/:_authToken=${registry.password}',
+          '//$registryHost/:always-auth=true',
+        ];
+      } else {
+        // 标准 npm 认证
+        final auth = base64Encode(utf8.encode('${registry.username}:${registry.password}'));
+        authLines = [
+          '//$registryHost/:_auth=$auth',
+          '//$registryHost/:username=${registry.username}',
+          '//$registryHost/:email=${registry.email ?? 'user@example.com'}',
+          '//$registryHost/:always-auth=true',
+        ];
+      }
 
       // 移除旧的该 registry 的配置
       final lines = content.split('\n');

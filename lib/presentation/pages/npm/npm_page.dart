@@ -374,19 +374,23 @@ class NpmPage extends ConsumerWidget {
                 ],
               ),
             ),
-            // 显示用户名
+            // 显示用户名或认证状态
             if (registry.username != null && registry.username!.isNotEmpty) ...[
               const SizedBox(height: 12),
               Row(
                 children: [
                   Icon(
-                    Icons.person_rounded,
+                    registry.username == '_token_' 
+                        ? Icons.vpn_key_rounded 
+                        : Icons.person_rounded,
                     size: 16,
                     color: colorScheme.onSurfaceVariant,
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    '登录用户: ${registry.username}',
+                    registry.username == '_token_'
+                        ? '已配置 Token 认证'
+                        : '登录用户: ${registry.username}',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           fontWeight: FontWeight.w500,
                         ),
@@ -785,12 +789,17 @@ class _AddRegistryDialogState extends State<_AddRegistryDialog> {
   final _formKey = GlobalKey<FormState>();
   NpmRegistryType _selectedType = NpmRegistryType.public;
   String? _selectedPreset;
+  bool _showAuthFields = false; // 是否显示认证字段
+  String _authType = 'none'; // 认证类型：none, npm, token
+  String _authDescription = ''; // 认证说明
+  bool _requiresEmail = false; // 是否需要邮箱
   
   final _nameController = TextEditingController();
   final _urlController = TextEditingController();
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
   final _emailController = TextEditingController();
+  final _tokenController = TextEditingController(); // Token 认证
   final _portController = TextEditingController(text: '4873');
   final _storagePathController = TextEditingController();
 
@@ -801,6 +810,7 @@ class _AddRegistryDialogState extends State<_AddRegistryDialog> {
     _usernameController.dispose();
     _passwordController.dispose();
     _emailController.dispose();
+    _tokenController.dispose();
     _portController.dispose();
     _storagePathController.dispose();
     super.dispose();
@@ -876,7 +886,7 @@ class _AddRegistryDialogState extends State<_AddRegistryDialog> {
                       ...PresetRegistries.publicRegistries.map((preset) {
                         return DropdownMenuItem(
                           value: preset['name'],
-                          child: Text(preset['name']!),
+                          child: Text(preset['name'] as String),
                         );
                       }),
                     ],
@@ -886,8 +896,25 @@ class _AddRegistryDialogState extends State<_AddRegistryDialog> {
                         if (value != null) {
                           final preset = PresetRegistries.publicRegistries
                               .firstWhere((p) => p['name'] == value);
-                          _nameController.text = preset['name']!;
-                          _urlController.text = preset['url']!;
+                          _nameController.text = preset['name'] as String;
+                          _urlController.text = preset['url'] as String;
+                          
+                          // 更新认证信息
+                          _authType = preset['authType'] as String? ?? 'none';
+                          _authDescription = preset['authDescription'] as String? ?? '';
+                          _requiresEmail = preset['requiresEmail'] as bool? ?? false;
+                          _showAuthFields = false; // 默认不显示，让用户选择
+                          
+                          // 清空认证字段
+                          _usernameController.clear();
+                          _passwordController.clear();
+                          _emailController.clear();
+                          _tokenController.clear();
+                        } else {
+                          _authType = 'npm'; // 自定义默认使用 npm 认证
+                          _authDescription = '';
+                          _requiresEmail = true;
+                          _showAuthFields = false;
                         }
                       });
                     },
@@ -933,60 +960,195 @@ class _AddRegistryDialogState extends State<_AddRegistryDialog> {
                   ),
                 if (_selectedType != NpmRegistryType.local) const SizedBox(height: 16),
 
-                // 远程私有源认证信息
-                if (_selectedType == NpmRegistryType.remote) ...[
-                  Text(
-                    '认证信息',
-                    style: Theme.of(context).textTheme.titleSmall,
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    '填写用户名和密码后，添加时将自动登录到该源',
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                // 认证信息（公共源和远程私有源都可以选择性填写）
+                if (_selectedType != NpmRegistryType.local) ...[
+                  // 认证说明和开关
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '认证信息',
+                              style: Theme.of(context).textTheme.titleSmall,
+                            ),
+                            if (_authDescription.isNotEmpty) ...[
+                              const SizedBox(height: 4),
+                              Text(
+                                _authDescription,
+                                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                    ),
+                              ),
+                            ],
+                          ],
                         ),
+                      ),
+                      if (_authType != 'none') ...[
+                        const SizedBox(width: 12),
+                        Switch(
+                          value: _showAuthFields,
+                          onChanged: (value) {
+                            setState(() {
+                              _showAuthFields = value;
+                              if (!value) {
+                                // 清空认证字段
+                                _usernameController.clear();
+                                _passwordController.clear();
+                                _emailController.clear();
+                                _tokenController.clear();
+                              }
+                            });
+                          },
+                        ),
+                      ],
+                    ],
                   ),
-                  const SizedBox(height: 12),
-                  TextFormField(
-                    controller: _usernameController,
-                    decoration: const InputDecoration(
-                      labelText: '用户名 *',
-                      border: OutlineInputBorder(),
-                      hintText: '输入用户名',
+                  
+                  // 如果不支持认证，显示提示
+                  if (_authType == 'none') ...[
+                    const SizedBox(height: 8),
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.info_outline_rounded,
+                            size: 20,
+                            color: Theme.of(context).colorScheme.onSurfaceVariant,
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Text(
+                              '该源为只读镜像，不支持认证和发布包',
+                              style: Theme.of(context).textTheme.bodySmall,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return '请输入用户名';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 12),
-                  TextFormField(
-                    controller: _passwordController,
-                    decoration: const InputDecoration(
-                      labelText: '密码 *',
-                      border: OutlineInputBorder(),
-                      hintText: '输入密码',
+                    const SizedBox(height: 16),
+                  ],
+                  
+                  // 认证字段
+                  if (_showAuthFields && _authType != 'none') ...[
+                    const SizedBox(height: 12),
+                    
+                    // Token 认证
+                    if (_authType == 'token') ...[
+                      TextFormField(
+                        controller: _tokenController,
+                        decoration: InputDecoration(
+                          labelText: 'Access Token *',
+                          border: const OutlineInputBorder(),
+                          hintText: '输入 Personal Access Token',
+                          helperText: _selectedPreset == 'GitHub Package Registry'
+                              ? '需要 read:packages 和 write:packages 权限'
+                              : null,
+                        ),
+                        validator: (value) {
+                          if (_showAuthFields && (value == null || value.isEmpty)) {
+                            return '请输入 Access Token';
+                          }
+                          return null;
+                        },
+                      ),
+                    ]
+                    // npm 标准认证
+                    else if (_authType == 'npm') ...[
+                      TextFormField(
+                        controller: _usernameController,
+                        decoration: const InputDecoration(
+                          labelText: '用户名 *',
+                          border: OutlineInputBorder(),
+                          hintText: '输入用户名',
+                        ),
+                        validator: (value) {
+                          if (_showAuthFields && (value == null || value.isEmpty)) {
+                            return '请输入用户名';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 12),
+                      TextFormField(
+                        controller: _passwordController,
+                        decoration: const InputDecoration(
+                          labelText: '密码 *',
+                          border: OutlineInputBorder(),
+                          hintText: '输入密码',
+                        ),
+                        obscureText: true,
+                        validator: (value) {
+                          if (_showAuthFields && (value == null || value.isEmpty)) {
+                            return '请输入密码';
+                          }
+                          return null;
+                        },
+                      ),
+                      if (_requiresEmail) ...[
+                        const SizedBox(height: 12),
+                        TextFormField(
+                          controller: _emailController,
+                          decoration: const InputDecoration(
+                            labelText: '邮箱 *',
+                            border: OutlineInputBorder(),
+                            hintText: '输入邮箱',
+                          ),
+                          keyboardType: TextInputType.emailAddress,
+                          validator: (value) {
+                            if (_showAuthFields && _requiresEmail && (value == null || value.isEmpty)) {
+                              return '请输入邮箱';
+                            }
+                            if (_showAuthFields && value != null && value.isNotEmpty && !value.contains('@')) {
+                              return '请输入有效的邮箱地址';
+                            }
+                            return null;
+                          },
+                        ),
+                      ],
+                    ],
+                    const SizedBox(height: 16),
+                  ],
+                  
+                  // 远程私有源始终显示认证字段
+                  if (_selectedType == NpmRegistryType.remote && !_showAuthFields) ...[
+                    const SizedBox(height: 12),
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.3),
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                          color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.lock_outline_rounded,
+                            size: 20,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Text(
+                              '私有源通常需要认证才能访问，建议开启认证',
+                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                    color: Theme.of(context).colorScheme.primary,
+                                  ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                    obscureText: true,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return '请输入密码';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 12),
-                  TextFormField(
-                    controller: _emailController,
-                    decoration: const InputDecoration(
-                      labelText: '邮箱',
-                      border: OutlineInputBorder(),
-                      hintText: '输入邮箱（可选）',
-                    ),
-                  ),
-                  const SizedBox(height: 16),
+                    const SizedBox(height: 16),
+                  ],
                 ],
 
                 // 本地私有源配置
@@ -1095,6 +1257,30 @@ class _AddRegistryDialogState extends State<_AddRegistryDialog> {
     );
 
     final uuid = const Uuid();
+    
+    // 处理认证信息
+    String? username;
+    String? password;
+    String? email;
+    
+    if (_showAuthFields) {
+      if (_authType == 'token') {
+        // Token 认证：将 token 存储在 password 字段，username 设为特殊标识
+        username = '_token_';
+        password = _tokenController.text.trim();
+      } else if (_authType == 'npm') {
+        username = _usernameController.text.trim().isEmpty
+            ? null
+            : _usernameController.text.trim();
+        password = _passwordController.text.trim().isEmpty
+            ? null
+            : _passwordController.text.trim();
+        email = _emailController.text.trim().isEmpty
+            ? null
+            : _emailController.text.trim();
+      }
+    }
+    
     final registry = NpmRegistry(
       id: uuid.v4(),
       name: _nameController.text.trim(),
@@ -1102,15 +1288,9 @@ class _AddRegistryDialogState extends State<_AddRegistryDialog> {
           ? 'http://localhost:${_portController.text.trim()}/'
           : _urlController.text.trim(),
       type: _selectedType,
-      username: _usernameController.text.trim().isEmpty
-          ? null
-          : _usernameController.text.trim(),
-      password: _passwordController.text.trim().isEmpty
-          ? null
-          : _passwordController.text.trim(),
-      email: _emailController.text.trim().isEmpty
-          ? null
-          : _emailController.text.trim(),
+      username: username,
+      password: password,
+      email: email,
       port: _selectedType == NpmRegistryType.local
           ? int.parse(_portController.text.trim())
           : null,
@@ -1121,17 +1301,41 @@ class _AddRegistryDialogState extends State<_AddRegistryDialog> {
 
     await widget.ref.read(npmRegistryNotifierProvider.notifier).addRegistry(registry);
 
+    // 如果提供了认证信息，自动登录
+    bool loginSuccess = false;
+    if (registry.username != null && 
+        registry.username!.isNotEmpty && 
+        registry.password != null && 
+        registry.password!.isNotEmpty) {
+      try {
+        loginSuccess = await widget.ref
+            .read(npmRegistryNotifierProvider.notifier)
+            .loginToRegistry(registry);
+      } catch (e) {
+        debugPrint('Auto login failed: $e');
+      }
+    }
+
     if (mounted) {
       Navigator.pop(context); // 关闭加载对话框
       Navigator.pop(context); // 关闭添加对话框
       
       String message = '已添加 ${registry.name}';
-      if (registry.username != null && registry.password != null) {
-        message += '，并已自动登录';
+      if (registry.username != null && registry.username!.isNotEmpty) {
+        if (loginSuccess) {
+          message += '，并已自动登录';
+        } else {
+          message += '，但登录失败，请稍后手动登录';
+        }
       }
       
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(message)),
+        SnackBar(
+          content: Text(message),
+          backgroundColor: loginSuccess || registry.username == null || registry.username!.isEmpty
+              ? null
+              : Colors.orange,
+        ),
       );
     }
   }
@@ -1340,6 +1544,19 @@ class _NpmPackageListPageState extends State<NpmPackageListPage> {
         ? widget.registry.url.substring(0, widget.registry.url.length - 1)
         : widget.registry.url;
     
+    // 如果有登录用户，优先获取该用户发布的包
+    if (widget.registry.username != null && widget.registry.username!.isNotEmpty) {
+      try {
+        final userPackages = await _loadUserPackages(baseUrl);
+        if (userPackages.isNotEmpty) {
+          return userPackages;
+        }
+      } catch (e) {
+        debugPrint('Error loading user packages: $e');
+        // 如果获取用户包失败，继续尝试获取所有包
+      }
+    }
+    
     // 方法1: 尝试 Verdaccio 的 data/packages 端点（只返回本地发布的包）
     try {
       final apiUrl = '$baseUrl/-/verdaccio/data/packages';
@@ -1480,6 +1697,79 @@ class _NpmPackageListPageState extends State<NpmPackageListPage> {
     return [];
   }
 
+  /// 获取当前登录用户发布的包
+  Future<List<String>> _loadUserPackages(String baseUrl) async {
+    final username = widget.registry.username;
+    if (username == null || username.isEmpty) {
+      return [];
+    }
+
+    // 方法1: 尝试使用 npm search 搜索用户的包
+    try {
+      final searchUrl = '$baseUrl/-/v1/search?text=maintainer:$username&size=250';
+      final response = await http.get(
+        Uri.parse(searchUrl),
+        headers: _getAuthHeaders(),
+      ).timeout(const Duration(seconds: 10));
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body) as Map<String, dynamic>;
+        final objects = data['objects'] as List<dynamic>?;
+        if (objects != null && objects.isNotEmpty) {
+          return objects
+              .map((obj) => obj['package']['name'] as String)
+              .toList();
+        }
+      }
+    } catch (e) {
+      debugPrint('Error searching user packages: $e');
+    }
+
+    // 方法2: 获取所有包，然后过滤出用户的包
+    try {
+      final allPackagesUrl = '$baseUrl/-/all';
+      final response = await http.get(
+        Uri.parse(allPackagesUrl),
+        headers: _getAuthHeaders(),
+      ).timeout(const Duration(seconds: 15));
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body) as Map<String, dynamic>;
+        final userPackages = <String>[];
+        
+        for (var entry in data.entries) {
+          final key = entry.key;
+          if (key == '_updated' || key.startsWith('_')) continue;
+          
+          final value = entry.value;
+          if (value is Map<String, dynamic>) {
+            // 检查维护者信息
+            final maintainers = value['maintainers'] as List<dynamic>?;
+            if (maintainers != null) {
+              final hasUser = maintainers.any((m) {
+                if (m is Map<String, dynamic>) {
+                  return m['name'] == username;
+                }
+                return false;
+              });
+              if (hasUser) {
+                userPackages.add(key);
+              }
+            }
+          }
+        }
+        
+        if (userPackages.isNotEmpty) {
+          return userPackages;
+        }
+      }
+    } catch (e) {
+      debugPrint('Error filtering user packages: $e');
+    }
+
+    return [];
+  }
+
   /// 获取认证头（如果有用户名和密码）
   Map<String, String> _getAuthHeaders() {
     final headers = <String, String>{
@@ -1560,6 +1850,51 @@ class _NpmPackageListPageState extends State<NpmPackageListPage> {
       ),
       body: Column(
         children: [
+          // 用户信息提示
+          if (widget.registry.username != null && widget.registry.username!.isNotEmpty)
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              decoration: BoxDecoration(
+                color: colorScheme.primaryContainer,
+                border: Border(
+                  bottom: BorderSide(
+                    color: colorScheme.outlineVariant,
+                  ),
+                ),
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    widget.registry.username == '_token_' 
+                        ? Icons.vpn_key_rounded 
+                        : Icons.person_rounded,
+                    size: 20,
+                    color: colorScheme.onPrimaryContainer,
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      widget.registry.username == '_token_'
+                          ? '已使用 Token 认证'
+                          : '当前登录用户: ${widget.registry.username}',
+                      style: TextStyle(
+                        color: colorScheme.onPrimaryContainer,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                  Text(
+                    widget.registry.username == '_token_'
+                        ? '显示已认证的包'
+                        : '显示该用户发布的包',
+                    style: TextStyle(
+                      color: colorScheme.onPrimaryContainer.withValues(alpha: 0.8),
+                      fontSize: 12,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           // 搜索栏和排序
           Container(
             padding: const EdgeInsets.all(16),
@@ -1728,6 +2063,8 @@ class _NpmPackageListPageState extends State<NpmPackageListPage> {
   }
 
   Widget _buildEmptyState(BuildContext context) {
+    final hasUser = widget.registry.username != null && widget.registry.username!.isNotEmpty;
+    
     return Center(
       child: Container(
         constraints: const BoxConstraints(maxWidth: 400),
@@ -1736,18 +2073,20 @@ class _NpmPackageListPageState extends State<NpmPackageListPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.inventory_2_outlined,
+              hasUser ? Icons.person_off_rounded : Icons.inventory_2_outlined,
               size: 64,
               color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
             const SizedBox(height: 16),
             Text(
-              '暂无包',
+              hasUser ? '该用户暂无发布的包' : '暂无包',
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 8),
             Text(
-              '该源中还没有发布任何包，或者无法获取包列表',
+              hasUser
+                  ? '用户 ${widget.registry.username} 还没有发布任何包到该源'
+                  : '该源中还没有发布任何包，或者无法获取包列表',
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -1759,15 +2098,17 @@ class _NpmPackageListPageState extends State<NpmPackageListPage> {
               icon: const Icon(Icons.refresh_rounded),
               label: const Text('重新加载'),
             ),
-            const SizedBox(height: 12),
-            Text(
-              '提示：某些私有源可能需要特殊的 API 配置才能获取包列表',
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    fontStyle: FontStyle.italic,
-                  ),
-            ),
+            if (!hasUser) ...[
+              const SizedBox(height: 12),
+              Text(
+                '提示：某些私有源可能需要特殊的 API 配置才能获取包列表',
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      fontStyle: FontStyle.italic,
+                    ),
+              ),
+            ],
           ],
         ),
       ),
