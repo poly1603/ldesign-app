@@ -25,10 +25,39 @@ class NodeEnvironmentNotifier extends StateNotifier<AsyncValue<NodeEnvironment>>
     state = const AsyncValue.loading();
     try {
       final env = await _systemService.getNodeEnvironment();
-      state = AsyncValue.data(env);
+      if (mounted) {
+        state = AsyncValue.data(env);
+      }
     } catch (e, st) {
-      state = AsyncValue.error(e, st);
+      if (mounted) {
+        state = AsyncValue.error(e, st);
+      }
     }
+  }
+
+  /// 更新当前 Node 版本（不刷新整个环境）
+  void updateCurrentVersion(String newVersion) {
+    state.whenData((env) {
+      // 更新已安装版本的激活状态
+      final updatedVersions = env.installedVersions.map((v) {
+        return NodeVersion(
+          version: v.version,
+          path: v.path,
+          isActive: v.version == newVersion,
+          source: v.source,
+        );
+      }).toList();
+
+      // 使用 copyWith 创建新的环境对象
+      final updatedEnv = env.copyWith(
+        nodeVersion: newVersion,
+        installedVersions: updatedVersions,
+      );
+
+      if (mounted) {
+        state = AsyncValue.data(updatedEnv);
+      }
+    });
   }
 }
 

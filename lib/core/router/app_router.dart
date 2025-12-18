@@ -6,6 +6,7 @@ import 'package:flutter_toolbox/presentation/pages/home/home_page.dart';
 import 'package:flutter_toolbox/presentation/pages/projects/projects_page.dart';
 import 'package:flutter_toolbox/presentation/pages/projects/project_detail_page.dart';
 import 'package:flutter_toolbox/presentation/pages/node/node_page.dart';
+import 'package:flutter_toolbox/presentation/pages/npm/npm_page.dart';
 import 'package:flutter_toolbox/presentation/pages/git/git_page.dart';
 import 'package:flutter_toolbox/presentation/pages/svg/svg_page.dart';
 import 'package:flutter_toolbox/presentation/pages/fonts/fonts_page.dart';
@@ -52,6 +53,12 @@ class AppRouter {
             path: RoutePaths.node,
             pageBuilder: (context, state) => const NoTransitionPage(
               child: NodePage(),
+            ),
+          ),
+          GoRoute(
+            path: RoutePaths.npm,
+            pageBuilder: (context, state) => const NoTransitionPage(
+              child: NpmPage(),
             ),
           ),
           GoRoute(

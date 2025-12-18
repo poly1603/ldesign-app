@@ -49,6 +49,7 @@ class RoutePaths {
   static const String projects = '/projects';
   static const String projectDetail = '/projects/:id';
   static const String node = '/node';
+  static const String npm = '/npm';
   static const String git = '/git';
   static const String svg = '/svg';
   static const String fonts = '/fonts';

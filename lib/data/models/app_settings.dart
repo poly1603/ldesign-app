@@ -8,6 +8,7 @@ class AppSettings {
   final bool followSystemTheme;
   final String defaultProjectPath;
   final String previewText;
+  final bool enableAnimations;
 
   const AppSettings({
     this.themeMode = ThemeMode.system,
@@ -16,6 +17,7 @@ class AppSettings {
     this.followSystemTheme = true,
     this.defaultProjectPath = '',
     this.previewText = 'The quick brown fox jumps over the lazy dog',
+    this.enableAnimations = true,
   });
 
   /// 默认设置
@@ -36,6 +38,7 @@ class AppSettings {
       defaultProjectPath: json['defaultProjectPath'] as String? ?? '',
       previewText: json['previewText'] as String? ?? 
           'The quick brown fox jumps over the lazy dog',
+      enableAnimations: json['enableAnimations'] as bool? ?? true,
     );
   }
 
@@ -47,6 +50,7 @@ class AppSettings {
       'followSystemTheme': followSystemTheme,
       'defaultProjectPath': defaultProjectPath,
       'previewText': previewText,
+      'enableAnimations': enableAnimations,
     };
   }
 
@@ -57,6 +61,7 @@ class AppSettings {
     bool? followSystemTheme,
     String? defaultProjectPath,
     String? previewText,
+    bool? enableAnimations,
   }) {
     return AppSettings(
       themeMode: themeMode ?? this.themeMode,
@@ -65,6 +70,7 @@ class AppSettings {
       followSystemTheme: followSystemTheme ?? this.followSystemTheme,
       defaultProjectPath: defaultProjectPath ?? this.defaultProjectPath,
       previewText: previewText ?? this.previewText,
+      enableAnimations: enableAnimations ?? this.enableAnimations,
     );
   }
 
@@ -98,7 +104,8 @@ class AppSettings {
         other.localeCode == localeCode &&
         other.followSystemTheme == followSystemTheme &&
         other.defaultProjectPath == defaultProjectPath &&
-        other.previewText == previewText;
+        other.previewText == previewText &&
+        other.enableAnimations == enableAnimations;
   }
 
   @override
@@ -108,7 +115,8 @@ class AppSettings {
         localeCode.hashCode ^
         followSystemTheme.hashCode ^
         defaultProjectPath.hashCode ^
-        previewText.hashCode;
+        previewText.hashCode ^
+        enableAnimations.hashCode;
   }
 
   @override

@@ -35,6 +35,39 @@ class NpmPackage {
   String toString() => 'NpmPackage(name: $name, version: $version)';
 }
 
+/// Node 版本信息
+class NodeVersion {
+  final String version;
+  final String path;
+  final bool isActive;
+  final String? source; // 'system', 'nvm', 'fnm', 'volta', etc.
+
+  const NodeVersion({
+    required this.version,
+    required this.path,
+    this.isActive = false,
+    this.source,
+  });
+
+  factory NodeVersion.fromJson(Map<String, dynamic> json) {
+    return NodeVersion(
+      version: json['version'] as String,
+      path: json['path'] as String,
+      isActive: json['isActive'] as bool? ?? false,
+      source: json['source'] as String?,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'version': version,
+      'path': path,
+      'isActive': isActive,
+      'source': source,
+    };
+  }
+}
+
 /// Node 环境信息
 class NodeEnvironment {
   final String? nodeVersion;
@@ -43,6 +76,8 @@ class NodeEnvironment {
   final String? pnpmVersion;
   final String? yarnVersion;
   final List<NpmPackage> globalPackages;
+  final List<NodeVersion> installedVersions;
+  final String? versionManager; // 'nvm', 'fnm', 'volta', 'n', null
   final bool isInstalled;
 
   const NodeEnvironment({
@@ -52,6 +87,8 @@ class NodeEnvironment {
     this.pnpmVersion,
     this.yarnVersion,
     this.globalPackages = const [],
+    this.installedVersions = const [],
+    this.versionManager,
     this.isInstalled = false,
   });
 
@@ -71,6 +108,11 @@ class NodeEnvironment {
               ?.map((e) => NpmPackage.fromJson(e as Map<String, dynamic>))
               .toList() ??
           [],
+      installedVersions: (json['installedVersions'] as List<dynamic>?)
+              ?.map((e) => NodeVersion.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
+      versionManager: json['versionManager'] as String?,
       isInstalled: json['isInstalled'] as bool? ?? false,
     );
   }
@@ -83,6 +125,8 @@ class NodeEnvironment {
       'pnpmVersion': pnpmVersion,
       'yarnVersion': yarnVersion,
       'globalPackages': globalPackages.map((e) => e.toJson()).toList(),
+      'installedVersions': installedVersions.map((e) => e.toJson()).toList(),
+      'versionManager': versionManager,
       'isInstalled': isInstalled,
     };
   }
@@ -94,6 +138,8 @@ class NodeEnvironment {
     String? pnpmVersion,
     String? yarnVersion,
     List<NpmPackage>? globalPackages,
+    List<NodeVersion>? installedVersions,
+    String? versionManager,
     bool? isInstalled,
   }) {
     return NodeEnvironment(
@@ -103,6 +149,8 @@ class NodeEnvironment {
       pnpmVersion: pnpmVersion ?? this.pnpmVersion,
       yarnVersion: yarnVersion ?? this.yarnVersion,
       globalPackages: globalPackages ?? this.globalPackages,
+      installedVersions: installedVersions ?? this.installedVersions,
+      versionManager: versionManager ?? this.versionManager,
       isInstalled: isInstalled ?? this.isInstalled,
     );
   }

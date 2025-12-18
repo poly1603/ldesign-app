@@ -36,6 +36,7 @@ class SettingsPage extends ConsumerWidget {
       BuildContext context, WidgetRef ref, AppLocalizations l10n) {
     final themeMode = ref.watch(themeModeProvider);
     final primaryColor = ref.watch(primaryColorProvider);
+    final enableAnimations = ref.watch(enableAnimationsProvider);
 
     return Card(
       child: Padding(
@@ -54,6 +55,16 @@ class SettingsPage extends ConsumerWidget {
               onChanged: (value) {
                 ref.read(appSettingsProvider.notifier).setThemeMode(
                     value ? ThemeMode.dark : ThemeMode.light);
+              },
+            ),
+            const Divider(),
+            // 动画效果开关
+            SwitchListTile(
+              title: const Text('动画效果'),
+              subtitle: const Text('开启或关闭应用中的所有动画效果'),
+              value: enableAnimations,
+              onChanged: (value) {
+                ref.read(appSettingsProvider.notifier).setEnableAnimations(value);
               },
             ),
             const Divider(),

@@ -63,6 +63,11 @@ class AppSettingsNotifier extends StateNotifier<AppSettings> {
     await _settingsService.saveSettings(state);
   }
 
+  Future<void> setEnableAnimations(bool enable) async {
+    state = state.copyWith(enableAnimations: enable);
+    await _settingsService.saveSettings(state);
+  }
+
   Future<void> resetToDefaults() async {
     await _settingsService.resetToDefaults();
     state = AppSettings.defaults;
@@ -87,4 +92,9 @@ final localeProvider = Provider<Locale>((ref) {
 /// 预览文本 Provider（便捷访问）
 final previewTextProvider = Provider<String>((ref) {
   return ref.watch(appSettingsProvider).previewText;
+});
+
+/// 动画开关 Provider（便捷访问）
+final enableAnimationsProvider = Provider<bool>((ref) {
+  return ref.watch(appSettingsProvider).enableAnimations;
 });

@@ -14,6 +14,8 @@ abstract class SystemService {
   Future<String?> getGitVersion();
   Future<String?> getGitPath();
   Future<GitConfig> getGitConfig();
+  Future<bool> setGitConfigValue(String key, String value);
+  Future<bool> unsetGitConfigValue(String key);
   Future<NodeEnvironment> getNodeEnvironment();
   Future<GitEnvironment> getGitEnvironment();
 }
@@ -112,12 +114,20 @@ class SystemServiceImpl implements SystemService {
 
   @override
   Future<GitConfig> getGitConfig() async {
-    final userName = await _getGitConfigValue('user.name');
-    final userEmail = await _getGitConfigValue('user.email');
-
     return GitConfig(
-      userName: userName,
-      userEmail: userEmail,
+      userName: await _getGitConfigValue('user.name'),
+      userEmail: await _getGitConfigValue('user.email'),
+      editor: await _getGitConfigValue('core.editor'),
+      defaultBranch: await _getGitConfigValue('init.defaultBranch'),
+      autoSetupRemote: await _getGitConfigBool('push.autoSetupRemote'),
+      autoCorrect: await _getGitConfigBool('help.autocorrect'),
+      pullRebase: await _getGitConfigValue('pull.rebase'),
+      pushDefault: await _getGitConfigBool('push.default'),
+      colorUi: await _getGitConfigBool('color.ui'),
+      diffTool: await _getGitConfigValue('diff.tool'),
+      mergeTool: await _getGitConfigValue('merge.tool'),
+      sslVerify: await _getGitConfigBool('http.sslVerify'),
+      credentialHelper: await _getGitConfigValue('credential.helper'),
     );
   }
 
@@ -130,6 +140,28 @@ class SystemServiceImpl implements SystemService {
       return result.output!.trim();
     }
     return null;
+  }
+
+  Future<bool?> _getGitConfigBool(String key) async {
+    final value = await _getGitConfigValue(key);
+    if (value == null) return null;
+    return value.toLowerCase() == 'true';
+  }
+
+  Future<bool> setGitConfigValue(String key, String value) async {
+    final result = await PlatformUtils.runCommand(
+      'git',
+      arguments: ['config', '--global', key, value],
+    );
+    return result.success;
+  }
+
+  Future<bool> unsetGitConfigValue(String key) async {
+    final result = await PlatformUtils.runCommand(
+      'git',
+      arguments: ['config', '--global', '--unset', key],
+    );
+    return result.success;
   }
 
   /// 解析 Git 配置输出
@@ -162,6 +194,10 @@ class SystemServiceImpl implements SystemService {
     final pnpmVersion = await getPnpmVersion();
     final yarnVersion = await getYarnVersion();
     final globalPackages = await getGlobalPackages();
+    
+    // 检测版本管理器和所有已安装的版本
+    final versionManager = await _detectVersionManager();
+    final installedVersions = await _detectInstalledVersions(versionManager, nodePath);
 
     return NodeEnvironment(
       nodeVersion: nodeVersion,
@@ -170,8 +206,176 @@ class SystemServiceImpl implements SystemService {
       pnpmVersion: pnpmVersion,
       yarnVersion: yarnVersion,
       globalPackages: globalPackages,
+      installedVersions: installedVersions,
+      versionManager: versionManager,
       isInstalled: true,
     );
+  }
+
+  /// 检测使用的版本管理器
+  Future<String?> _detectVersionManager() async {
+    // 检测 nvm
+    final nvmResult = await PlatformUtils.runCommand('nvm', arguments: ['version']);
+    if (nvmResult.success) return 'nvm';
+
+    // 检测 fnm
+    final fnmResult = await PlatformUtils.runCommand('fnm', arguments: ['--version']);
+    if (fnmResult.success) return 'fnm';
+
+    // 检测 volta
+    final voltaResult = await PlatformUtils.runCommand('volta', arguments: ['--version']);
+    if (voltaResult.success) return 'volta';
+
+    // 检测 n
+    final nResult = await PlatformUtils.runCommand('n', arguments: ['--version']);
+    if (nResult.success) return 'n';
+
+    return null;
+  }
+
+  /// 检测所有已安装的 Node 版本
+  Future<List<NodeVersion>> _detectInstalledVersions(String? versionManager, String? currentPath) async {
+    final versions = <NodeVersion>[];
+
+    if (versionManager == 'nvm') {
+      versions.addAll(await _detectNvmVersions(currentPath));
+    } else if (versionManager == 'fnm') {
+      versions.addAll(await _detectFnmVersions(currentPath));
+    } else if (versionManager == 'volta') {
+      versions.addAll(await _detectVoltaVersions(currentPath));
+    } else if (versionManager == 'n') {
+      versions.addAll(await _detectNVersions(currentPath));
+    } else {
+      // 系统安装的单个版本
+      final nodeVersion = await getNodeVersion();
+      if (nodeVersion != null && currentPath != null) {
+        versions.add(NodeVersion(
+          version: nodeVersion,
+          path: currentPath,
+          isActive: true,
+          source: 'system',
+        ));
+      }
+    }
+
+    return versions;
+  }
+
+  /// 检测 nvm 安装的版本
+  Future<List<NodeVersion>> _detectNvmVersions(String? currentPath) async {
+    final result = await PlatformUtils.runCommand('nvm', arguments: ['list']);
+    if (!result.success || result.output == null) return [];
+
+    final versions = <NodeVersion>[];
+    final lines = result.output!.split('\n');
+    
+    for (final line in lines) {
+      final trimmed = line.trim();
+      if (trimmed.isEmpty) continue;
+      
+      // nvm list 输出格式: "  * v20.11.0 (Currently using 64-bit executable)"
+      final match = RegExp(r'[*\s]*v?(\d+\.\d+\.\d+)').firstMatch(trimmed);
+      if (match != null) {
+        final version = match.group(1)!;
+        final isActive = trimmed.contains('*') || trimmed.contains('Currently using');
+        
+        versions.add(NodeVersion(
+          version: version,
+          path: isActive ? (currentPath ?? '') : '',
+          isActive: isActive,
+          source: 'nvm',
+        ));
+      }
+    }
+
+    return versions;
+  }
+
+  /// 检测 fnm 安装的版本
+  Future<List<NodeVersion>> _detectFnmVersions(String? currentPath) async {
+    final result = await PlatformUtils.runCommand('fnm', arguments: ['list']);
+    if (!result.success || result.output == null) return [];
+
+    final versions = <NodeVersion>[];
+    final lines = result.output!.split('\n');
+    
+    for (final line in lines) {
+      final trimmed = line.trim();
+      if (trimmed.isEmpty) continue;
+      
+      final match = RegExp(r'v?(\d+\.\d+\.\d+)').firstMatch(trimmed);
+      if (match != null) {
+        final version = match.group(1)!;
+        final isActive = trimmed.contains('default') || trimmed.contains('*');
+        
+        versions.add(NodeVersion(
+          version: version,
+          path: isActive ? (currentPath ?? '') : '',
+          isActive: isActive,
+          source: 'fnm',
+        ));
+      }
+    }
+
+    return versions;
+  }
+
+  /// 检测 volta 安装的版本
+  Future<List<NodeVersion>> _detectVoltaVersions(String? currentPath) async {
+    final result = await PlatformUtils.runCommand('volta', arguments: ['list', 'node']);
+    if (!result.success || result.output == null) return [];
+
+    final versions = <NodeVersion>[];
+    final lines = result.output!.split('\n');
+    
+    for (final line in lines) {
+      final trimmed = line.trim();
+      if (trimmed.isEmpty || !trimmed.contains('node@')) continue;
+      
+      final match = RegExp(r'node@(\d+\.\d+\.\d+)').firstMatch(trimmed);
+      if (match != null) {
+        final version = match.group(1)!;
+        final isActive = trimmed.contains('(current)') || trimmed.contains('(default)');
+        
+        versions.add(NodeVersion(
+          version: version,
+          path: isActive ? (currentPath ?? '') : '',
+          isActive: isActive,
+          source: 'volta',
+        ));
+      }
+    }
+
+    return versions;
+  }
+
+  /// 检测 n 安装的版本
+  Future<List<NodeVersion>> _detectNVersions(String? currentPath) async {
+    final result = await PlatformUtils.runCommand('n', arguments: ['ls']);
+    if (!result.success || result.output == null) return [];
+
+    final versions = <NodeVersion>[];
+    final lines = result.output!.split('\n');
+    
+    for (final line in lines) {
+      final trimmed = line.trim();
+      if (trimmed.isEmpty) continue;
+      
+      final match = RegExp(r'v?(\d+\.\d+\.\d+)').firstMatch(trimmed);
+      if (match != null) {
+        final version = match.group(1)!;
+        final isActive = trimmed.contains('*') || trimmed.contains('ο');
+        
+        versions.add(NodeVersion(
+          version: version,
+          path: isActive ? (currentPath ?? '') : '',
+          isActive: isActive,
+          source: 'n',
+        ));
+      }
+    }
+
+    return versions;
   }
 
   @override

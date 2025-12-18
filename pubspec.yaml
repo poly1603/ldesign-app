@@ -22,12 +22,16 @@ dependencies:
   # 本地存储
   shared_preferences: ^2.3.4
   path_provider: ^2.1.5
+  path: ^1.9.0
 
   # 文件选择
   file_picker: ^8.1.6
 
   # 系统命令执行
   process_run: ^1.2.0
+
+  # HTTP 请求
+  http: ^1.2.0
 
   # SVG 渲染
   flutter_svg: ^2.0.16
@@ -43,6 +47,12 @@ dependencies:
 
   # 图标
   cupertino_icons: ^1.0.8
+
+  # Markdown 渲染
+  flutter_markdown: ^0.7.4+1
+  
+  # URL 启动器
+  url_launcher: ^6.3.1
 
 dev_dependencies:
   flutter_test:
