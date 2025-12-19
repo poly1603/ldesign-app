@@ -7,11 +7,13 @@ import 'package:flutter_toolbox/data/services/storage_service.dart';
 /// SVG 资源服务接口
 abstract class SvgAssetService {
   Future<List<SvgAsset>> importAssets(String path);
+  Future<List<SvgAsset>> importFromFiles(List<String> filePaths);
   Future<List<SvgAsset>> getAllAssets();
   Future<List<SvgAsset>> searchAssets(String query);
   Future<void> deleteAsset(String id);
   Future<void> exportToClipboard(SvgAsset asset);
   Future<void> saveAsset(SvgAsset asset);
+  Future<void> deleteMultipleAssets(List<String> ids);
 }
 
 /// SVG 资源服务实现
@@ -123,6 +125,32 @@ class SvgAssetServiceImpl implements SvgAssetService {
     } else {
       assets.add(asset);
     }
+
+    await _storage.saveJsonList(
+      StorageKeys.svgAssets,
+      assets.map((a) => a.toJson()).toList(),
+    );
+  }
+
+  @override
+  Future<List<SvgAsset>> importFromFiles(List<String> filePaths) async {
+    final List<SvgAsset> imported = [];
+
+    for (final filePath in filePaths) {
+      final asset = await _importSingleFile(filePath);
+      if (asset != null) {
+        imported.add(asset);
+        await saveAsset(asset);
+      }
+    }
+
+    return imported;
+  }
+
+  @override
+  Future<void> deleteMultipleAssets(List<String> ids) async {
+    final assets = await getAllAssets();
+    assets.removeWhere((a) => ids.contains(a.id));
 
     await _storage.saveJsonList(
       StorageKeys.svgAssets,

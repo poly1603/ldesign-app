@@ -42,8 +42,22 @@ class SvgAssetListNotifier extends StateNotifier<AsyncValue<List<SvgAsset>>> {
     }
   }
 
+  Future<void> importFromFiles(List<String> filePaths) async {
+    try {
+      await _svgService.importFromFiles(filePaths);
+      await loadAssets();
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<void> deleteAsset(String id) async {
     await _svgService.deleteAsset(id);
+    await loadAssets();
+  }
+
+  Future<void> deleteMultipleAssets(List<String> ids) async {
+    await _svgService.deleteMultipleAssets(ids);
     await loadAssets();
   }
 

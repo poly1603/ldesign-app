@@ -1360,6 +1360,12 @@ class _NpmPackageListPageState extends State<NpmPackageListPage> {
   String _searchQuery = '';
   String _sortBy = 'name'; // name, version, date
   
+  // 分页相关
+  static const int _pageSize = 20; // 每页加载的包数量
+  int _currentPage = 0; // 当前页码
+  bool _hasMore = true; // 是否还有更多数据
+  final ScrollController _scrollController = ScrollController();
+  
   // 缓存相关
   static final Map<String, Map<String, Map<String, dynamic>>> _detailsCache = {}; // registryId -> packageName -> details
   static final Map<String, DateTime> _cacheTimestamps = {}; // registryId -> timestamp
@@ -1369,6 +1375,20 @@ class _NpmPackageListPageState extends State<NpmPackageListPage> {
   void initState() {
     super.initState();
     _loadPackages();
+    _scrollController.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent * 0.8) {
+      // 滚动到底部 80% 时加载更多
+      _loadMorePackageDetails();
+    }
   }
 
   Future<void> _loadPackages() async {
@@ -1403,22 +1423,76 @@ class _NpmPackageListPageState extends State<NpmPackageListPage> {
         // 使用缓存
         setState(() {
           _packageDetails = Map.from(_detailsCache[registryId]!);
+          _hasMore = false; // 缓存已全部加载
         });
       } else {
-        // 异步加载每个包的详细信息
-        _loadPackageDetails(packages, useCache: false);
+        // 分页加载第一页的包详细信息
+        _currentPage = 0;
+        _hasMore = true;
+        _loadMorePackageDetails();
       }
     } catch (e) {
       setState(() => _isLoading = false);
     }
   }
   
-  /// 异步加载包的详细信息
+  /// 分页加载更多包的详细信息
+  Future<void> _loadMorePackageDetails() async {
+    if (_isLoadingDetails || !_hasMore) return;
+    
+    setState(() {
+      _isLoadingDetails = true;
+    });
+    
+    final startIndex = _currentPage * _pageSize;
+    final endIndex = (startIndex + _pageSize).clamp(0, _packages.length);
+    
+    if (startIndex >= _packages.length) {
+      setState(() {
+        _isLoadingDetails = false;
+        _hasMore = false;
+      });
+      return;
+    }
+    
+    final packagesToLoad = _packages.sublist(startIndex, endIndex);
+    
+    for (final packageName in packagesToLoad) {
+      try {
+        final details = await _fetchPackageInfo(packageName);
+        if (mounted && details != null) {
+          setState(() {
+            _packageDetails[packageName] = details;
+          });
+        }
+      } catch (e) {
+        // 忽略单个包的加载失败
+        debugPrint('Failed to load details for $packageName: $e');
+      }
+    }
+    
+    // 保存到缓存
+    if (mounted) {
+      final registryId = widget.registry.id;
+      _detailsCache[registryId] = Map.from(_packageDetails);
+      _cacheTimestamps[registryId] = DateTime.now();
+      
+      setState(() {
+        _currentPage++;
+        _hasMore = endIndex < _packages.length;
+        _isLoadingDetails = false;
+      });
+    }
+  }
+  
+  /// 异步加载包的详细信息（全量加载，用于刷新）
   Future<void> _loadPackageDetails(List<String> packages, {bool useCache = true}) async {
     setState(() {
       _isLoadingDetails = true;
       if (!useCache) {
         _packageDetails.clear();
+        _currentPage = 0;
+        _hasMore = true;
       }
     });
     
@@ -1444,6 +1518,7 @@ class _NpmPackageListPageState extends State<NpmPackageListPage> {
       
       setState(() {
         _isLoadingDetails = false;
+        _hasMore = false;
       });
     }
   }
@@ -2175,9 +2250,19 @@ class _NpmPackageListPageState extends State<NpmPackageListPage> {
     });
 
     return ListView.builder(
+      controller: _scrollController,
       padding: const EdgeInsets.all(16),
-      itemCount: sortedPackages.length,
+      itemCount: sortedPackages.length + (_hasMore && _isLoadingDetails ? 1 : 0),
       itemBuilder: (context, index) {
+        // 显示加载指示器
+        if (index == sortedPackages.length) {
+          return const Padding(
+            padding: EdgeInsets.all(16),
+            child: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        }
         final packageName = sortedPackages[index];
         final details = _packageDetails[packageName];
         final isLoading = details == null;

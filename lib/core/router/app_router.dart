@@ -38,16 +38,6 @@ class AppRouter {
             pageBuilder: (context, state) => const NoTransitionPage(
               child: ProjectsPage(),
             ),
-            routes: [
-              GoRoute(
-                path: ':id',
-                parentNavigatorKey: _rootNavigatorKey,
-                builder: (context, state) {
-                  final id = state.pathParameters['id']!;
-                  return ProjectDetailPage(projectId: id);
-                },
-              ),
-            ],
           ),
           GoRoute(
             path: RoutePaths.node,

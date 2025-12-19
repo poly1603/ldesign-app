@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_toolbox/data/models/project.dart';
+import 'package:flutter_toolbox/presentation/pages/projects/project_detail_page.dart';
 import 'package:flutter_toolbox/providers/project_providers.dart';
 import 'package:flutter_toolbox/providers/app_providers.dart';
 import 'package:flutter_toolbox/core/extensions/extensions.dart';
@@ -440,7 +441,12 @@ class _ProjectListItem extends ConsumerWidget {
   void _openProject(BuildContext context, WidgetRef ref) {
     ref.read(selectedProjectIdProvider.notifier).state = project.id;
     ref.read(projectListProvider.notifier).updateProjectAccess(project.id);
-    context.go('/projects/${project.id}');
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ProjectDetailPage(projectId: project.id),
+      ),
+    );
   }
 
   Future<void> _confirmDelete(BuildContext context, WidgetRef ref, AppLocalizations l10n) async {
