@@ -6,6 +6,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_toolbox/data/models/project.dart';
 import 'package:flutter_toolbox/providers/project_providers.dart';
+import 'package:flutter_toolbox/presentation/pages/projects/tabs/dependencies_tab.dart';
+import 'package:flutter_toolbox/presentation/pages/projects/tabs/scripts_tab.dart';
+import 'package:flutter_toolbox/presentation/pages/projects/tabs/package_json_tab.dart';
+import 'package:flutter_toolbox/presentation/pages/projects/tabs/typescript_tab.dart';
+import 'package:flutter_toolbox/presentation/pages/projects/tabs/file_browser_tab.dart';
+import 'package:flutter_toolbox/presentation/pages/projects/tabs/config_files_tab.dart';
 import 'package:path/path.dart' as path;
 
 /// 增强版项目详情页面
@@ -126,12 +132,12 @@ class _EnhancedProjectDetailPageState extends ConsumerState<EnhancedProjectDetai
               controller: _tabController,
               children: [
                 _buildReadmeTab(context, project),
-                _buildDependenciesTab(context, project),
-                _buildScriptsTab(context, project),
-                _buildPackageJsonTab(context, project),
-                _buildTypeScriptTab(context, project),
-                _buildFileBrowserTab(context, project),
-                _buildConfigFilesTab(context, project),
+                DependenciesTab(project: project),
+                ScriptsTab(project: project),
+                PackageJsonTab(project: project),
+                TypeScriptTab(project: project),
+                FileBrowserTab(project: project),
+                ConfigFilesTab(project: project),
               ],
             ),
           ),
@@ -161,7 +167,7 @@ class _EnhancedProjectDetailPageState extends ConsumerState<EnhancedProjectDetai
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(
-              project.framework.icon,
+              _getFrameworkIcon(project.framework),
               size: 32,
               color: colorScheme.onPrimaryContainer,
             ),
@@ -231,36 +237,6 @@ class _EnhancedProjectDetailPageState extends ConsumerState<EnhancedProjectDetai
       ),
     );
   }
-
-  // 依赖管理 Tab - 占位符
-  Widget _buildDependenciesTab(BuildContext context, Project project) {
-    return const Center(child: Text('依赖管理功能开发中...'));
-  }
-
-  // 脚本 Tab - 占位符
-  Widget _buildScriptsTab(BuildContext context, Project project) {
-    return const Center(child: Text('脚本管理功能开发中...'));
-  }
-
-  // package.json Tab - 占位符
-  Widget _buildPackageJsonTab(BuildContext context, Project project) {
-    return const Center(child: Text('package.json 编辑功能开发中...'));
-  }
-
-  // TypeScript Tab - 占位符
-  Widget _buildTypeScriptTab(BuildContext context, Project project) {
-    return const Center(child: Text('TypeScript 配置功能开发中...'));
-  }
-
-  // 文件浏览 Tab - 占位符
-  Widget _buildFileBrowserTab(BuildContext context, Project project) {
-    return const Center(child: Text('文件浏览功能开发中...'));
-  }
-
-  // 配置文件 Tab - 占位符
-  Widget _buildConfigFilesTab(BuildContext context, Project project) {
-    return const Center(child: Text('配置文件管理功能开发中...'));
-  }
 }
 
 /// 依赖信息
@@ -276,4 +252,28 @@ class DependencyInfo {
     this.latestVersion,
     required this.hasUpdate,
   });
+}
+
+/// 获取框架图标
+IconData _getFrameworkIcon(FrameworkType framework) {
+  switch (framework) {
+    case FrameworkType.vue:
+      return Icons.web;
+    case FrameworkType.react:
+      return Icons.web;
+    case FrameworkType.angular:
+      return Icons.web;
+    case FrameworkType.svelte:
+      return Icons.web;
+    case FrameworkType.nextjs:
+      return Icons.web;
+    case FrameworkType.nuxt:
+      return Icons.web;
+    case FrameworkType.node:
+      return Icons.dns;
+    case FrameworkType.flutter:
+      return Icons.flutter_dash;
+    case FrameworkType.unknown:
+      return Icons.folder;
+  }
 }

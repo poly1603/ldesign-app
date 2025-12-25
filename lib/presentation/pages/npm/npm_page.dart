@@ -1367,6 +1367,7 @@ class _NpmPackageListPageState extends State<NpmPackageListPage> {
   final ScrollController _scrollController = ScrollController();
   
   // 缓存相关
+  static final Map<String, List<String>> _packagesCache = {}; // registryId -> packages list
   static final Map<String, Map<String, Map<String, dynamic>>> _detailsCache = {}; // registryId -> packageName -> details
   static final Map<String, DateTime> _cacheTimestamps = {}; // registryId -> timestamp
   static const Duration _cacheDuration = Duration(minutes: 10); // 缓存有效期 10 分钟
@@ -1395,32 +1396,43 @@ class _NpmPackageListPageState extends State<NpmPackageListPage> {
     setState(() => _isLoading = true);
     
     try {
+      final registryId = widget.registry.id;
+      final cacheTimestamp = _cacheTimestamps[registryId];
+      final isCacheValid = cacheTimestamp != null && 
+          DateTime.now().difference(cacheTimestamp) < _cacheDuration;
+      
       List<String> packages = [];
       
-      // 方法1: 尝试使用 Verdaccio API 获取包列表
-      packages = await _loadPackagesFromVerdaccioApi();
-      
-      // 方法2: 如果 API 失败，尝试使用 npm search
-      if (packages.isEmpty) {
-        packages = await _loadPackagesFromNpmSearch();
+      // 检查包列表缓存
+      if (isCacheValid && _packagesCache.containsKey(registryId)) {
+        // 使用缓存的包列表
+        packages = List.from(_packagesCache[registryId]!);
+      } else {
+        // 重新获取包列表
+        // 方法1: 尝试使用 Verdaccio API 获取包列表
+        packages = await _loadPackagesFromVerdaccioApi();
+        
+        // 方法2: 如果 API 失败，尝试使用 npm search
+        if (packages.isEmpty) {
+          packages = await _loadPackagesFromNpmSearch();
+        }
+        
+        // 排序包列表
+        packages.sort();
+        
+        // 保存到缓存
+        _packagesCache[registryId] = packages;
+        _cacheTimestamps[registryId] = DateTime.now();
       }
-      
-      // 排序包列表
-      packages.sort();
       
       setState(() {
         _packages = packages;
         _isLoading = false;
       });
       
-      // 检查缓存是否有效
-      final registryId = widget.registry.id;
-      final cacheTimestamp = _cacheTimestamps[registryId];
-      final isCacheValid = cacheTimestamp != null && 
-          DateTime.now().difference(cacheTimestamp) < _cacheDuration;
-      
+      // 检查详细信息缓存
       if (isCacheValid && _detailsCache.containsKey(registryId)) {
-        // 使用缓存
+        // 使用缓存的详细信息
         setState(() {
           _packageDetails = Map.from(_detailsCache[registryId]!);
           _hasMore = false; // 缓存已全部加载
@@ -1547,7 +1559,14 @@ class _NpmPackageListPageState extends State<NpmPackageListPage> {
     );
     
     if (confirmed == true) {
-      await _loadPackageDetails(_packages, useCache: false);
+      // 清除缓存
+      final registryId = widget.registry.id;
+      _packagesCache.remove(registryId);
+      _detailsCache.remove(registryId);
+      _cacheTimestamps.remove(registryId);
+      
+      // 重新加载
+      await _loadPackages();
       
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

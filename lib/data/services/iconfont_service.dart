@@ -37,23 +37,16 @@ class IconFontService {
       final nodeVersion = await _getNodeVersion();
       logs.add('✓ Node.js 版本: $nodeVersion');
       
-      // 2. 检查并安装 svgtofont
+      // 2. 检查 svgtofont（可选）
       onProgress?.call('检查 svgtofont 工具...', 0.2);
       logs.add('[2/7] 检查 svgtofont 工具...');
       
       final isInstalled = await _checkSvgToFontInstalled();
-      if (!isInstalled) {
-        logs.add('✗ svgtofont 未安装，开始自动安装...');
-        onProgress?.call('正在安装 svgtofont (可能需要几分钟)...', 0.25);
-        
-        await _installSvgToFont((message) {
-          logs.add('  $message');
-          onProgress?.call(message, 0.3);
-        });
-        
-        logs.add('✓ svgtofont 安装成功');
-      } else {
+      if (isInstalled) {
         logs.add('✓ svgtofont 已安装');
+      } else {
+        logs.add('⚠ svgtofont 未安装，将使用简化方案');
+        logs.add('  提示: 运行 npm install -g svgtofont 安装完整功能');
       }
       
       // 3. 创建临时目录
@@ -251,37 +244,31 @@ class IconFontService {
     Function(String) onLog,
   ) async {
     try {
-      // 创建 Node.js 脚本来调用 svgtofont
-      final scriptContent = '''
-const svgtofont = require('svgtofont');
-const config = require('${configFile.path.replaceAll('\\', '\\\\')}');
-
-console.log('开始生成字体文件...');
-
-svgtofont({
-  src: config.src,
-  dist: config.dist,
-  fontName: config.fontName,
-  css: config.css,
-  svgicons2svgfont: config.svgicons2svgfont,
-}).then(() => {
-  console.log('✓ 字体文件生成成功');
-  console.log('SUCCESS');
-}).catch((err) => {
-  console.error('✗ 生成失败:', err.message || err);
-  process.exit(1);
-});
-''';
-
-      final scriptFile = File(path.join(workDir, 'generate.js'));
-      await scriptFile.writeAsString(scriptContent);
+      onLog('准备生成字体文件...');
       
-      onLog('执行命令: node ${scriptFile.path}');
-
-      // 使用 Process.start 来实时获取输出
+      // 读取配置获取输出目录
+      final config = jsonDecode(await configFile.readAsString());
+      final outputDir = config['dist'] as String;
+      final fontName = config['fontName'] as String;
+      
+      // 确保输出目录存在
+      final outputDirectory = Directory(outputDir);
+      if (!await outputDirectory.exists()) {
+        await outputDirectory.create(recursive: true);
+        onLog('✓ 创建输出目录: $outputDir');
+      }
+      
+      // 方法1: 尝试使用 npx svgtofont（推荐）
+      onLog('执行命令: npx svgtofont');
+      
       final process = await Process.start(
-        'node',
-        [scriptFile.path],
+        'npx',
+        [
+          'svgtofont',
+          '--sources', path.join(workDir, 'svg'),
+          '--output', outputDir,
+          '--fontName', fontName,
+        ],
         workingDirectory: workDir,
         runInShell: true,
       );
@@ -304,14 +291,15 @@ svgtofont({
         errorBuffer.write(data);
         for (final line in data.split('\n')) {
           if (line.trim().isNotEmpty) {
-            onLog('错误: $line');
+            onLog('  $line');
           }
         }
       });
 
       final exitCode = await process.exitCode;
 
-      if (exitCode == 0 && outputBuffer.toString().contains('SUCCESS')) {
+      if (exitCode == 0) {
+        onLog('✓ 字体文件生成成功');
         return IconFontResult(
           success: true,
           message: '字体生成成功',
@@ -319,10 +307,124 @@ svgtofont({
           logs: [],
         );
       } else {
-        throw Exception('字体生成失败\n退出码: $exitCode\n错误信息: ${errorBuffer.toString()}');
+        // 如果 npx 失败，尝试使用简化方案
+        onLog('npx 方式失败，尝试使用简化方案...');
+        return await _generateSimplifiedIconFont(workDir, configFile, onLog);
       }
     } catch (e) {
-      throw Exception('执行 svgtofont 失败: $e');
+      // 如果出错，使用简化方案
+      return await _generateSimplifiedIconFont(workDir, configFile, onLog);
+    }
+  }
+
+  /// 简化的 IconFont 生成方案（不依赖 svgtofont）
+  Future<IconFontResult> _generateSimplifiedIconFont(
+    String workDir,
+    File configFile,
+    Function(String) onLog,
+  ) async {
+    try {
+      onLog('使用简化方案生成 SVG Sprite...');
+      
+      final svgDir = Directory(path.join(workDir, 'svg'));
+      final svgFiles = svgDir.listSync().whereType<File>().where((f) => f.path.endsWith('.svg')).toList();
+      
+      if (svgFiles.isEmpty) {
+        throw Exception('未找到 SVG 文件');
+      }
+
+      // 生成 SVG Sprite
+      final spriteContent = StringBuffer();
+      spriteContent.writeln('<?xml version="1.0" encoding="UTF-8"?>');
+      spriteContent.writeln('<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">');
+      
+      for (final file in svgFiles) {
+        final fileName = path.basenameWithoutExtension(file.path);
+        final content = await file.readAsString();
+        
+        // 提取 SVG 内容
+        final svgMatch = RegExp(r'<svg[^>]*>(.*)</svg>', dotAll: true).firstMatch(content);
+        if (svgMatch != null) {
+          final innerContent = svgMatch.group(1) ?? '';
+          spriteContent.writeln('  <symbol id="$fileName" viewBox="0 0 24 24">');
+          spriteContent.writeln('    $innerContent');
+          spriteContent.writeln('  </symbol>');
+          onLog('  添加图标: $fileName');
+        }
+      }
+      
+      spriteContent.writeln('</svg>');
+      
+      // 保存 SVG Sprite
+      final config = jsonDecode(await configFile.readAsString());
+      final outputDir = config['dist'] as String;
+      final fontName = config['fontName'] as String;
+      final spriteFile = File(path.join(outputDir, '$fontName.svg'));
+      await spriteFile.writeAsString(spriteContent.toString());
+      
+      onLog('✓ SVG Sprite 已生成: ${spriteFile.path}');
+      
+      // 生成使用说明
+      final readmeContent = '''
+# IconFont 使用说明
+
+由于系统限制，已生成 SVG Sprite 文件而非字体文件。
+
+## 使用方法
+
+### 在 HTML 中使用
+
+\`\`\`html
+<!-- 引入 SVG Sprite -->
+<svg style="display: none;">
+  <!-- 将 $fontName.svg 的内容复制到这里 -->
+</svg>
+
+<!-- 使用图标 -->
+<svg class="icon">
+  <use xlink:href="#icon-name"></use>
+</svg>
+\`\`\`
+
+### 在 CSS 中设置样式
+
+\`\`\`css
+.icon {
+  width: 1em;
+  height: 1em;
+  fill: currentColor;
+}
+\`\`\`
+
+## 生成真正的字体文件
+
+如需生成 TTF/WOFF 等字体文件，请：
+
+1. 安装 Node.js: https://nodejs.org/
+2. 全局安装 svgtofont: \`npm install -g svgtofont\`
+3. 重新尝试导出
+
+## 可用图标
+
+${svgFiles.map((f) => '- ${path.basenameWithoutExtension(f.path)}').join('\n')}
+''';
+      
+      final readmeFile = File(path.join(outputDir, 'README.md'));
+      await readmeFile.writeAsString(readmeContent);
+      
+      onLog('✓ 使用说明已生成: README.md');
+      onLog('');
+      onLog('注意: 已生成 SVG Sprite 文件');
+      onLog('如需真正的字体文件，请安装 svgtofont');
+      
+      return IconFontResult(
+        success: true,
+        message: 'SVG Sprite 生成成功（简化方案）',
+        outputPath: '',
+        logs: [],
+      );
+    } catch (e) {
+      throw Exception('简化方案也失败了: $e');
     }
   }
 

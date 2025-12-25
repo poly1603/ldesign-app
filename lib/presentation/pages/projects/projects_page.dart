@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_toolbox/data/models/project.dart';
-import 'package:flutter_toolbox/presentation/pages/projects/project_detail_page.dart';
+import 'package:flutter_toolbox/presentation/pages/projects/project_detail_page_new.dart';
 import 'package:flutter_toolbox/providers/project_providers.dart';
 import 'package:flutter_toolbox/providers/app_providers.dart';
 import 'package:flutter_toolbox/core/extensions/extensions.dart';
@@ -444,7 +444,7 @@ class _ProjectListItem extends ConsumerWidget {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => ProjectDetailPage(projectId: project.id),
+        builder: (context) => EnhancedProjectDetailPage(projectId: project.id),
       ),
     );
   }

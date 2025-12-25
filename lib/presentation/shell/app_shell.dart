@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import 'package:flutter_toolbox/core/constants/app_constants.dart';
 import 'package:flutter_toolbox/core/router/app_router.dart';
 import 'package:flutter_toolbox/l10n/app_localizations.dart';
@@ -28,42 +29,42 @@ class AppShell extends ConsumerWidget {
   static const List<NavigationItem> menuItems = [
     NavigationItem(
       titleKey: 'home',
-      icon: Icons.dashboard_outlined,
+      icon: LucideIcons.layoutDashboard,
       route: RoutePaths.home,
     ),
     NavigationItem(
       titleKey: 'projects',
-      icon: Icons.folder_outlined,
+      icon: LucideIcons.folder,
       route: RoutePaths.projects,
     ),
     NavigationItem(
       titleKey: 'nodeManagement',
-      icon: Icons.code_outlined,
+      icon: LucideIcons.code2,
       route: RoutePaths.node,
     ),
     NavigationItem(
       titleKey: 'npmManagement',
-      icon: Icons.inventory_2_outlined,
+      icon: LucideIcons.package,
       route: RoutePaths.npm,
     ),
     NavigationItem(
       titleKey: 'gitManagement',
-      icon: Icons.source_outlined,
+      icon: LucideIcons.gitBranch,
       route: RoutePaths.git,
     ),
     NavigationItem(
       titleKey: 'svgManagement',
-      icon: Icons.image_outlined,
+      icon: LucideIcons.image,
       route: RoutePaths.svg,
     ),
     NavigationItem(
       titleKey: 'fontManagement',
-      icon: Icons.text_fields_outlined,
+      icon: LucideIcons.type,
       route: RoutePaths.fonts,
     ),
     NavigationItem(
       titleKey: 'settings',
-      icon: Icons.settings_outlined,
+      icon: LucideIcons.settings,
       route: RoutePaths.settings,
     ),
   ];
