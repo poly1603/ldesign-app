@@ -133,7 +133,7 @@ foreach ($file in $files) {
         $lines = $content -split "`n"
         $lastImportIndex = -1
         
-        for ($i = 0; $i < $lines.Count; $i++) {
+        for ($i = 0; $i -lt $lines.Count; $i++) {
             if ($lines[$i] -match "^import ") {
                 $lastImportIndex = $i
             }
